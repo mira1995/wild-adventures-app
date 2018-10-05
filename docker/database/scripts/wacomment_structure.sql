@@ -5,7 +5,10 @@ CREATE SEQUENCE wacomment.comment_id_seq;
 CREATE TABLE wacomment.comment (
                 id INTEGER NOT NULL DEFAULT nextval('wacomment.comment_id_seq'),
                 content VARCHAR(1000) NOT NULL,
+                reported BOOLEAN NOT NULL,
                 parent_id INTEGER,
+                adventure_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
                 CONSTRAINT comment_pk PRIMARY KEY (id)
 );
 
