@@ -3,8 +3,6 @@ package com.wa.msm.comment.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import java.util.List;
 @Entity
 @Data @AllArgsConstructor @NoArgsConstructor
 public class Comment {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "content")
@@ -22,9 +20,8 @@ public class Comment {
     @Column(name = "reported")
     private Boolean reported;
 
-    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
-    @Cascade(value = CascadeType.MERGE)
     private List<Comment> comments = new ArrayList<>(0);
 
     @Column(name = "adventure_id")
