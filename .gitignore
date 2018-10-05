@@ -1,3 +1,19 @@
+# Eclipse
+.classpath
+.project
+.metadata
+.settings/
+.recommenders/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+log/
+target/
+
 # Compiled class file
 *.class
 
