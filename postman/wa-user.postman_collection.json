@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "aea44d26-5013-4462-938b-07e0b1ab1d00",
+		"name": "wa-user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createUserAccount",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pseudo\": \"test\",\n    \"password\": \"password123\",\n    \"email\": \"test@test.com\",\n    \"firstname\" : \"titi\",\n    \"lastname\" : \"toto\",\n    \"address\" : \"rue des Maronniers\",\n    \"postalCode\" : 75000,\n    \"city\" : \"Paris\",\n    \"country\" : \"France\",\n    \"phoneNumber\": \"0123456789\",\n    \"birthDate\" : \"2000-04-23T18:25:43.511Z\",\n    \"profileImageId\" : 1,\n    \"active\" : true\n}"
+				},
+				"url": {
+					"raw": "localhost:9002/user",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findUserAccountById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:9002/user/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUserAccount",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"1\",\n    \"pseudo\": \"test\",\n    \"password\": \"password12345\",\n    \"email\": \"test@titi.com\",\n    \"firstname\" : \"titi\",\n    \"lastname\" : \"toto\",\n    \"address\" : \"rue des pommiers\",\n    \"postalCode\" : 95000,\n    \"city\" : \"Eabonne\",\n    \"country\" : \"France\",\n    \"phoneNumber\": \"0123456789\",\n    \"birthDate\" : \"2000-04-23T18:25:43.511Z\",\n    \"active\" : true\n}"
+				},
+				"url": {
+					"raw": "localhost:9002/user",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

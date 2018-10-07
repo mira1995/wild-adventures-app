@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "e0d398d8-a152-4401-a819-4a288848a314",
+		"name": "wa-image",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createUserAccountImage",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"alt\" : \"hello world\",\n\t\"description\" : \"hello to the world\",\n\t\"uri\" : \"/test/helloworld.jpg\",\n\t\"type\" : {\n\t\t\"code\" : \"USR\",\n\t\t\"name\" : \"user\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "localhost:9003/image/user",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"image",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findUserAccountImageById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:9003/image/user/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"image",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUserAccountImage",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : 1,\n\t\"alt\" : \"test\",\n\t\"description\" : \"test\",\n\t\"uri\" : \"/test/helloworld2.jpg\",\n\t\"type\" : {\n\t\t\"code\" : \"USR\",\n\t\t\"name\" : \"user\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "localhost:9003/image/user",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"image",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeUserAccountImage",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:9003/image/user/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"image",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

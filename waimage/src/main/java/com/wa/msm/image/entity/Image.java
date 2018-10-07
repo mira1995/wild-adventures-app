@@ -15,6 +15,7 @@ import javax.persistence.*;
 public abstract class Image {
 
     @Id
+    @Column(name = "image_id")
     @GeneratedValue
     private Long id;
 
@@ -29,7 +30,6 @@ public abstract class Image {
 
     @ManyToOne
     @JoinColumn(name = "type_code", referencedColumnName = "code")
-    @Cascade(value = {CascadeType.MERGE, CascadeType.REMOVE})
     private ImageType type;
 
 }
