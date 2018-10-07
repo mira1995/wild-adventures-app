@@ -6,7 +6,7 @@ services:
     restart: always
     hostname: 127.0.0.1
     volumes:
-      - ./database/scripts/wacomment_structure.sql:/docker-entrypoint-initdb.d/wacomment_structure.sql
+      - ./database/scripts/:/docker-entrypoint-initdb.d/
       #- ./database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
