@@ -22,4 +22,7 @@ public class Session {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "adventure_id")
+    private Long adventureId;
 }

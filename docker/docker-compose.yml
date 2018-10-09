@@ -7,7 +7,10 @@ services:
     hostname: 127.0.0.1
     volumes:
       - ./database/scripts/:/docker-entrypoint-initdb.d/
-      #- ./database/data:/var/lib/postgresql/data
+      # - ./database/scripts/wacomment_structure.sql:/docker-entrypoint-initdb.d/wacomment_structure.sql
+      # - ./database/scripts/wacategory_structure.sql:/docker-entrypoint-initdb.d/wacategory_structure.sql
+      # - ./database/scripts/waadventure_structure.sql:/docker-entrypoint-initdb.d/waadventure_structure.sql
+      # - ./database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
