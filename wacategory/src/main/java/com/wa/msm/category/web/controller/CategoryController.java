@@ -1,6 +1,8 @@
 package com.wa.msm.category.web.controller;
 
 import com.wa.msm.category.entity.Category;
+import com.wa.msm.category.entity.CategoryAdventureKey;
+import com.wa.msm.category.repository.CategoryAdventureRepository;
 import com.wa.msm.category.repository.CategoryRepository;
 import com.wa.msm.category.web.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class CategoryController {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    CategoryAdventureRepository categoryAdventureRepository;
 
     @GetMapping(value = "/categories")
     public List<Category> categoryList() {
@@ -46,7 +51,11 @@ public class CategoryController {
     public String deleteCategory(@PathVariable Long id) {
         Optional<Category> categoryToDelete = categoryRepository.findById(id);
         if (!categoryToDelete.isPresent()) throw new CategoryNotFoundException("La catégorie correspondante à l'id " + id + " n'existe pas.");
-        else categoryRepository.deleteById(categoryToDelete.get().getId());
+        else {
+            categoryToDelete.get().getCategoryAdventures().forEach(categoryAdventure ->
+                    categoryAdventureRepository.deleteById(new CategoryAdventureKey(categoryAdventure.getCategoryId(), categoryAdventure.getAdventureId())));
+            categoryRepository.deleteById(categoryToDelete.get().getId());
+        }
         return "La catégorie pour id " + id + " a bien été supprimé.";
     }
 }

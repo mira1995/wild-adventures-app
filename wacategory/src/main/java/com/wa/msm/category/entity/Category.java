@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data @AllArgsConstructor @NoArgsConstructor
@@ -17,4 +19,8 @@ public class Category {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private List<CategoryAdventure> categoryAdventures = new ArrayList<>(0);
 }
