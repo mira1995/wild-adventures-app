@@ -47,6 +47,12 @@ public class UserAccountImageController {
         return userAccount;
     }
 
+    @GetMapping(value = "/image/user/exist/{imageId}")
+    public Boolean userAccountImageExist(@PathVariable Long imageId){
+        Optional<UserAccountImage> userAccount = userAccountImageRepository.findById(imageId);
+        return userAccount.isPresent();
+    }
+
     private void validateUserAccountImage(UserAccountImage userAccountImage){
         if(userAccountImage.getType() == null || !userAccountImage.getType().getCode().equals("USR")) throw new ImageValidationException("Le type de l'image est incorrect");
     }

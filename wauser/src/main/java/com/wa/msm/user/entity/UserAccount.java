@@ -1,5 +1,7 @@
 package com.wa.msm.user.entity;
 
+import com.wa.msm.user.beans.ImageBean;
+import com.wa.msm.user.beans.UserAccountImageBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.Calendar;
 public class UserAccount {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -74,5 +76,8 @@ public class UserAccount {
     @NotNull
     @Column(name = "active")
     private Boolean active;
+
+    @Transient
+    UserAccountImageBean profileImage;
 
 }
