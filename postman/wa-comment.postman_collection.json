@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 1}], \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
 					"raw": "http://localhost:9001/comment",
@@ -66,7 +66,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\": 2, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"id\": 1, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
 					"raw": "http://localhost:9001/comment",
@@ -89,7 +89,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:9001/comment/7",
+					"raw": "http://localhost:9001/comment/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -97,7 +97,7 @@
 					"port": "9001",
 					"path": [
 						"comment",
-						"7"
+						"1"
 					]
 				}
 			},

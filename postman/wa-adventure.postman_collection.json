@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "04f94ffd-f470-4d67-bf3c-b9bb811dc454",
-		"name": "wa-category",
+		"_postman_id": "229ca1c6-61a3-4110-9584-04d4faab78b3",
+		"name": "wa-adventure",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "addCategory",
+			"name": "addAdventure",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -17,63 +17,57 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"title\": \"Mon super titre\", \"description\": \"Je suis une description, yeaah !!\", \"categoryAdventures\": null}"
+					"raw": "{\"title\": \"Un super titre pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": null}"
 				},
 				"url": {
-					"raw": "http://localhost:9002/category",
+					"raw": "http://localhost:9003/adventure",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9003",
 					"path": [
-						"category"
+						"adventure"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "categoryList",
+			"name": "adventureList",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"body": {},
 				"url": {
-					"raw": "http://localhost:9002/categories",
+					"raw": "http://localhost:9003/adventures",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9003",
 					"path": [
-						"categories"
+						"adventures"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "getCategory",
+			"name": "getAdventure",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"body": {},
 				"url": {
-					"raw": "http://localhost:9002/category/1",
+					"raw": "http://localhost:9003/adventure/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9003",
 					"path": [
-						"category",
+						"adventure",
 						"1"
 					]
 				}
@@ -81,7 +75,7 @@
 			"response": []
 		},
 		{
-			"name": "updateCategory",
+			"name": "updateAdventure",
 			"request": {
 				"method": "PATCH",
 				"header": [
@@ -92,40 +86,45 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\": 1, \"title\": \"Mon super titre\", \"description\": \"Je suis une description QUI CASSE TOUT !!\", \"categoryAdventures\": [{\"categoryId\": 1, \"adventureId\": 1}]}"
+					"raw": "{\"id\": 1, \"title\": \"Un super titre de la mort qui tue pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": null}"
 				},
 				"url": {
-					"raw": "http://localhost:9002/category",
+					"raw": "http://localhost:9003/adventure",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9003",
 					"path": [
-						"category"
+						"adventure"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "deleteCategory",
+			"name": "deleteAdventure",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9002/category/1",
+					"raw": "http://localhost:9003/adventure/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9003",
 					"path": [
-						"category",
+						"adventure",
 						"1"
 					]
 				}
