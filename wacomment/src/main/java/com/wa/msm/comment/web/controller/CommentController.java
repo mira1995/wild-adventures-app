@@ -65,6 +65,12 @@ public class CommentController {
         return "Le commentaire pour id " + id + " a bien été supprimé.";
     }
 
+    @DeleteMapping(value = "/comment/adventure/{adventureId}")
+    public String deleteCommentByAdventureId(@PathVariable Long adventureId) {
+        commentRepository.deleteAllByAdventureId(adventureId);
+        return "Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.";
+    }
+
     private void adventureNotFound(Long adventureId) {
         Optional<AdventureBean> adventure = msAdventureProxy.getAdventure(adventureId);
         if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + adventureId + ".");

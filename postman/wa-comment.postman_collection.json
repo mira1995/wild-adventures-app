@@ -102,6 +102,28 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "deleteCommentByAdventureId",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9001/comment/adventure/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"comment",
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

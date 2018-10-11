@@ -26,7 +26,7 @@ public class Adventure {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(targetEntity = Session.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(targetEntity = Session.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "adventure_id", referencedColumnName = "id")
     private List<Session> sessions = new ArrayList<>(0);
 }
