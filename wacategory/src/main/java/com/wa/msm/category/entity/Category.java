@@ -20,7 +20,7 @@ public class Category {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private List<CategoryAdventure> categoryAdventures = new ArrayList<>(0);
 }

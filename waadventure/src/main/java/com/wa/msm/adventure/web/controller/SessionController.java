@@ -24,6 +24,7 @@ public class SessionController {
 
     @GetMapping(value = "/sessions")
     public List<Session> sessionList() {
+        // TODO : Vérifier si l'aventure existe
         List<Session> sessions = new ArrayList<>(0);
         sessionRepository.findAll().iterator().forEachRemaining(sessions::add);
         if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions.");
@@ -32,6 +33,7 @@ public class SessionController {
 
     @PostMapping(value = "/session")
     public Session addSession(@RequestBody Session session) {
+        // TODO : Vérifier si l'aventure existe
         Optional<Adventure> adventure = adventureRepository.findById(session.getAdventureId());
         if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + session.getAdventureId() + ".");
         return sessionRepository.save(session);

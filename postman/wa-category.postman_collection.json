@@ -17,7 +17,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"title\": \"Mon super titre\", \"description\": \"Je suis une description, yeaah !!\", \"categoryAdventures\": null}"
+					"raw": "{\"title\": \"Mon super titre\", \"description\": \"Je suis une description, yeaah !!\"}"
 				},
 				"url": {
 					"raw": "http://localhost:9002/category",

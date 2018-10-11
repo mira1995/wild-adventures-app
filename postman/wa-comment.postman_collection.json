@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
 					"raw": "http://localhost:9001/comment",

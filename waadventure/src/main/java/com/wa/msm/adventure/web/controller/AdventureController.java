@@ -24,6 +24,16 @@ public class AdventureController {
         return adventures;
     }
 
+    @GetMapping(value = "/adventures/{categoryId}")
+    public List<Adventure> adventureList(@PathVariable Long categoryId) {
+        // TODO : Réaliser la méthode
+        // TODO : Vérifier si la catégorie existe
+        List<Adventure> adventures = new ArrayList<>(0);
+        adventureRepository.findAll().iterator().forEachRemaining(adventures::add);
+        if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+        return adventures;
+    }
+
     @GetMapping(value = "/adventure/{id}")
     public Optional<Adventure> getAdventure(@PathVariable Long id) {
         Optional<Adventure> adventure = adventureRepository.findById(id);
@@ -33,6 +43,7 @@ public class AdventureController {
 
     @PostMapping(value = "/adventure")
     public Adventure addAdventure(@RequestBody Adventure adventure) {
+        // TODO : Vérifier si la catégorie existe
         return adventureRepository.save(adventure);
     }
 
@@ -44,6 +55,7 @@ public class AdventureController {
 
     @DeleteMapping(value = "/adventure/{id}")
     public String deleteAdventure(@PathVariable Long id) {
+        // TODO : Si je supprime une aventure, je supprime tout ses commentaires et sessions
         Optional<Adventure> adventureToDelete = adventureRepository.findById(id);
         if (!adventureToDelete.isPresent()) throw new AdventureNotFoundException("L'aventure correspondante à l'id " + id + " n'existe pas.");
         else adventureRepository.deleteById(adventureToDelete.get().getId());

@@ -45,7 +45,8 @@ public class CommentController {
 
     @PatchMapping(value = "/comment")
     public Comment updateComment(@RequestBody Comment comment) {
-        if (comment == null) throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
+        if (comment.getId() == null || !commentRepository.findById(comment.getId()).isPresent())
+            throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
         else {
             // Vérifier que l'aventure existe
             adventureNotFound(comment.getAdventureId());
