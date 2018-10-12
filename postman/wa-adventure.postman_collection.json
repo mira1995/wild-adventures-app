@@ -17,17 +17,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"title\": \"Un super titre pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": null}"
+					"raw": "{\"title\": \"Un super titre pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\"}"
 				},
 				"url": {
-					"raw": "http://localhost:9003/adventure",
+					"raw": "http://localhost:9003/adventure/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9003",
 					"path": [
-						"adventure"
+						"adventure",
+						"1"
 					]
 				}
 			},
@@ -48,6 +49,27 @@
 					"port": "9003",
 					"path": [
 						"adventures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adventureListByCategory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9003/adventures/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventures",
+						"1"
 					]
 				}
 			},
@@ -86,7 +108,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\": 1, \"title\": \"Un super titre de la mort qui tue pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": null}"
+					"raw": "{\"id\": 1, \"title\": \"Un super titre de la mort qui tue pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": [{\"startDate\": 1539291635, \"endDate\": 1539291635, \"price\": 10.00, \"adventureId\": 1}]}"
 				},
 				"url": {
 					"raw": "http://localhost:9003/adventure",

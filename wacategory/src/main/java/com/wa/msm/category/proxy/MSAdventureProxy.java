@@ -12,7 +12,4 @@ import java.util.Optional;
 public interface MSAdventureProxy {
     @GetMapping(value = "/adventure/{id}")
     Optional<AdventureBean> getAdventure(@PathVariable("id") Long id);
-
-    @DeleteMapping(value = "/adventure/{id}")
-    String deleteAdventure(@PathVariable("id") Long id);
 }

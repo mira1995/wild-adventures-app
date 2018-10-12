@@ -1,10 +1,8 @@
 package com.wa.msm.comment.web.controller;
 
-import com.wa.msm.comment.bean.AdventureBean;
 import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.proxy.MSAdventureProxy;
 import com.wa.msm.comment.repository.CommentRepository;
-import com.wa.msm.comment.web.exception.AdventureNotFoundException;
 import com.wa.msm.comment.web.exception.CommentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +22,11 @@ public class CommentController {
 
     @GetMapping(value = "/comments/{adventureId}")
     public List<Comment> commentList(@PathVariable Long adventureId) {
+        // TODO : Renvoyer un boolean pour les performances ?
         // Vérifier que l'aventure existe
-        adventureNotFound(adventureId);
+        msAdventureProxy.getAdventure(adventureId);
 
+        // TODO : parent_id si pas null ne pas mettre
         List<Comment> comments = new ArrayList<>(0);
         commentRepository.findByAdventureId(adventureId).iterator().forEachRemaining(comments::add);
         if (comments.isEmpty()) throw new CommentNotFoundException("Il n'existe aucun commentaires pour cette aventure à l'id " + adventureId + ".");
@@ -35,8 +35,9 @@ public class CommentController {
 
     @PostMapping(value = "/comment")
     public Comment addComment(@RequestBody Comment comment) {
+        // TODO : ResponseEntity
         // Vérifier que l'aventure existe
-        adventureNotFound(comment.getAdventureId());
+        msAdventureProxy.getAdventure(comment.getAdventureId());
 
         // TODO : Vérifier que l'utilisateur existe
 
@@ -49,8 +50,8 @@ public class CommentController {
             throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
         else {
             // Vérifier que l'aventure existe
-            adventureNotFound(comment.getAdventureId());
-            comment.getComments().forEach(item -> adventureNotFound(item.getAdventureId()));
+            msAdventureProxy.getAdventure(comment.getAdventureId());
+            comment.getComments().forEach(item -> msAdventureProxy.getAdventure(item.getAdventureId()));
 
             // TODO : Vérifier que l'utilisateur existe
         }
@@ -69,10 +70,5 @@ public class CommentController {
     public String deleteCommentByAdventureId(@PathVariable Long adventureId) {
         commentRepository.deleteAllByAdventureId(adventureId);
         return "Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.";
-    }
-
-    private void adventureNotFound(Long adventureId) {
-        Optional<AdventureBean> adventure = msAdventureProxy.getAdventure(adventureId);
-        if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + adventureId + ".");
     }
 }

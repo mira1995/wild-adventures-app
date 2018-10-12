@@ -1,8 +1,6 @@
 package com.wa.msm.category.web.controller;
 
-import com.wa.msm.category.bean.AdventureBean;
 import com.wa.msm.category.entity.Category;
-import com.wa.msm.category.entity.CategoryAdventureKey;
 import com.wa.msm.category.proxy.MSAdventureProxy;
 import com.wa.msm.category.repository.CategoryAdventureRepository;
 import com.wa.msm.category.repository.CategoryRepository;
@@ -43,6 +41,7 @@ public class CategoryController {
 
     @PostMapping(value = "/category")
     public Category addCategory(@RequestBody Category category) {
+        // TODO : ResponseEntity
         return categoryRepository.save(category);
     }
 
@@ -51,7 +50,7 @@ public class CategoryController {
         if (category.getId() == null || !categoryRepository.findById(category.getId()).isPresent())
             throw new CategoryNotFoundException("La catégorie envoyée n'existe pas.");
         else {
-        // Vérifier que l'aventure existe
+            // Vérifier que l'aventure existe
             if (!category.getCategoryAdventures().isEmpty())
                 category.getCategoryAdventures().forEach(categoryAdventure -> msAdventureProxy.getAdventure(categoryAdventure.getAdventureId()));
         }
@@ -62,20 +61,7 @@ public class CategoryController {
     public String deleteCategory(@PathVariable Long id) {
         Optional<Category> categoryToDelete = categoryRepository.findById(id);
         if (!categoryToDelete.isPresent()) throw new CategoryNotFoundException("La catégorie correspondante à l'id " + id + " n'existe pas.");
-        else {
-            categoryToDelete.get().getCategoryAdventures().forEach(categoryAdventure -> {
-                // Vérifier que la ligne category_adventure est supprimée si l'aventure n'existe pas
-                try {
-                    Optional<AdventureBean> adventure = msAdventureProxy.getAdventure(categoryAdventure.getAdventureId());
-                    adventure.ifPresent(adventureBean -> msAdventureProxy.deleteAdventure(adventureBean.getId()));
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                } finally {
-                    categoryAdventureRepository.deleteById(new CategoryAdventureKey(categoryAdventure.getCategoryId(), categoryAdventure.getAdventureId()));
-                }
-            });
-            categoryRepository.deleteById(categoryToDelete.get().getId());
-        }
+        else categoryRepository.deleteById(categoryToDelete.get().getId());
         return "La catégorie pour id " + id + " a bien été supprimé.";
     }
 }

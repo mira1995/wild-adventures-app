@@ -22,26 +22,27 @@ public class SessionController {
     @Autowired
     AdventureRepository adventureRepository;
 
-    @GetMapping(value = "/sessions")
-    public List<Session> sessionList() {
-        // TODO : Vérifier si l'aventure existe
+    @GetMapping(value = "/sessions/{adventureId}")
+    public List<Session> sessionList(@PathVariable Long adventureId) {
+        adventureNotFound(adventureId);
         List<Session> sessions = new ArrayList<>(0);
-        sessionRepository.findAll().iterator().forEachRemaining(sessions::add);
-        if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions.");
+        sessionRepository.findAllByAdventureId(adventureId).forEach(sessions::add);
+        if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions pour cette aventure.");
         return sessions;
     }
 
     @PostMapping(value = "/session")
     public Session addSession(@RequestBody Session session) {
-        // TODO : Vérifier si l'aventure existe
-        Optional<Adventure> adventure = adventureRepository.findById(session.getAdventureId());
-        if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + session.getAdventureId() + ".");
+        // TODO : ResponseEntity
+        adventureNotFound(session.getAdventureId());
         return sessionRepository.save(session);
     }
 
     @PatchMapping(value = "/session")
     public Session updateSession(@RequestBody Session session) {
-        if (session == null) throw new SessionNotFoundException("La session envoyée n'existe pas.");
+        adventureNotFound(session.getAdventureId());
+        if (session.getId() == null || !sessionRepository.findById(session.getId()).isPresent())
+            throw new SessionNotFoundException("La session envoyée n'existe pas.");
         return sessionRepository.save(session);
     }
 
@@ -51,5 +52,12 @@ public class SessionController {
         if (!sessionToDelete.isPresent()) throw new SessionNotFoundException("La session correspondante à l'id " + id + " n'existe pas.");
         else sessionRepository.deleteById(sessionToDelete.get().getId());
         return "La session pour id " + id + " a bien été supprimé.";
+    }
+
+    // Vérifier si l'aventure existe
+    private void adventureNotFound(Long adventureId) {
+        Optional<Adventure> adventure = adventureRepository.findById(adventureId);
+        if (!adventure.isPresent())
+            throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + adventureId + ".");
     }
 }

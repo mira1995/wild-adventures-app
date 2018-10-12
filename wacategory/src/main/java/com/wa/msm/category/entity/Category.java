@@ -1,5 +1,6 @@
 package com.wa.msm.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class Category {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "category", targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<CategoryAdventure> categoryAdventures = new ArrayList<>(0);
 }

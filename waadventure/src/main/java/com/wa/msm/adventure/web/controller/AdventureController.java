@@ -1,14 +1,11 @@
 package com.wa.msm.adventure.web.controller;
 
-import com.wa.msm.adventure.bean.CategoryAdventureBean;
 import com.wa.msm.adventure.bean.CategoryBean;
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
-import com.wa.msm.adventure.proxy.MSCommentProxy;
 import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
-import com.wa.msm.adventure.web.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +25,6 @@ public class AdventureController {
     @Autowired
     MSCategoryProxy msCategoryProxy;
 
-    @Autowired
-    MSCommentProxy msCommentProxy;
-
     @GetMapping(value = "/adventures")
     public List<Adventure> adventureList() {
         List<Adventure> adventures = new ArrayList<>(0);
@@ -46,10 +40,8 @@ public class AdventureController {
         // Vérifier si la catégorie existe
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
         category.ifPresent(categoryBean ->
-                categoryBean.getCategoryAdventures().forEach(categoryAdventureBean -> {
-                    Optional<Adventure> adventure = adventureRepository.findById(categoryAdventureBean.getAdventureId());
-                    adventure.ifPresent(adventures::add);
-                }));
+                categoryBean.getCategoryAdventures().forEach(categoryAdventureBean ->
+                        adventureRepository.findById(categoryAdventureBean.getAdventureId()).ifPresent(adventures::add)));
         if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
         return adventures;
     }
@@ -63,15 +55,17 @@ public class AdventureController {
 
     @PostMapping(value = "/adventure/{categoryId}")
     public Adventure addAdventure(@RequestBody Adventure adventure, @PathVariable Long categoryId) {
+        // TODO : ResponseEntity
         Adventure newAdventure = new Adventure();
         // Vérifier si la catégorie existe
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
         if (category.isPresent()) {
             newAdventure = adventureRepository.save(adventure);
-            List<CategoryAdventureBean> categoryAdventures = category.get().getCategoryAdventures();
+            // Pour le client
+            /*List<CategoryAdventureBean> categoryAdventures = category.get().getCategoryAdventures();
             categoryAdventures.add(new CategoryAdventureBean(categoryId, newAdventure.getId()));
             category.get().setCategoryAdventures(categoryAdventures);
-            msCategoryProxy.updateCategory(category.get());
+            msCategoryProxy.updateCategory(category.get());*/
         }
         return newAdventure;
     }
@@ -85,13 +79,12 @@ public class AdventureController {
 
     @DeleteMapping(value = "/adventure/{id}")
     public String deleteAdventure(@PathVariable Long id) {
-        // Si je supprime une aventure, je supprime tout ses commentaires et sessions
         Optional<Adventure> adventureToDelete = adventureRepository.findById(id);
         if (!adventureToDelete.isPresent()) throw new AdventureNotFoundException("L'aventure correspondante à l'id " + id + " n'existe pas.");
         else {
-            msCommentProxy.deleteCommentByAdventureId(adventureToDelete.get().getId());
-            adventureToDelete.get().getSessions().forEach(session -> sessionRepository.deleteById(session.getId()));
-            adventureRepository.deleteById(id);
+            // Pour le client
+            // msCommentProxy.deleteCommentByAdventureId(adventureToDelete.get().getId());
+            adventureRepository.deleteById(adventureToDelete.get().getId());
         }
         return "L'aventure pour id " + id + " a bien été supprimé.";
     }

@@ -46,6 +46,7 @@
 			<!-- Required to use PATCH -->
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-httpclient</artifactId>
+			<version>10.0.1</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
