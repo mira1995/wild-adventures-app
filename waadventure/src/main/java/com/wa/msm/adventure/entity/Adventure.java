@@ -1,4 +1,4 @@
-package com.wa.msm.category.entity;
+package com.wa.msm.adventure.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Data @AllArgsConstructor @NoArgsConstructor
-public class Category {
+public class Adventure {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,7 +21,13 @@ public class Category {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "location")
+    private String location;
+
     @JsonManagedReference
-    @OneToMany(mappedBy = "category", targetEntity = CategoryAdventure.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    private List<CategoryAdventure> categoryAdventures = new ArrayList<>(0);
+    @OneToMany(mappedBy = "adventure", targetEntity = Session.class, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Session> sessions = new ArrayList<>(0);
 }

@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.wa.msm</groupId>
-	<artifactId>wacategory</artifactId>
+	<artifactId>waadventure</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>wa-category</name>
-	<description>MS Category for Wild Adventures</description>
+	<name>wa-adventure</name>
+	<description>MS Adventure for Wild Adventures</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -41,6 +41,12 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Required to use PATCH -->
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-httpclient</artifactId>
+			<version>10.0.1</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
