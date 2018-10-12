@@ -9,4 +9,6 @@ import javax.persistence.Table;
 @Table(name = "image_useraccount", schema = "waimage")
 @Data @AllArgsConstructor
 public class UserAccountImage extends Image {
+
+
 }

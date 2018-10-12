@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "image", schema = "waimage")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data @AllArgsConstructor @NoArgsConstructor
-public abstract class Image {
+public class Image {
 
     @Id
     @Column(name = "image_id")
