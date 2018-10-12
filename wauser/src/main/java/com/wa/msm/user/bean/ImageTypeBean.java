@@ -1,4 +1,4 @@
-package com.wa.msm.user.beans;
+package com.wa.msm.user.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

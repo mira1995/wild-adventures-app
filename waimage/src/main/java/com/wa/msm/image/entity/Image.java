@@ -16,7 +16,7 @@ public abstract class Image {
 
     @Id
     @Column(name = "image_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "alt")

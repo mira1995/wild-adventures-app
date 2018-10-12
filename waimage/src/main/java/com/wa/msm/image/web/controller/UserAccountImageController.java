@@ -43,7 +43,7 @@ public class UserAccountImageController {
     @GetMapping(value = "/image/user/{imageId}")
     public Optional<UserAccountImage> getUserAccountImageById(@PathVariable Long imageId){
         Optional<UserAccountImage> userAccount = userAccountImageRepository.findById(imageId);
-        if(!userAccount.isPresent()) throw new ImageNotFoundException("L'utilisateur d'id "+ imageId +" n'existe pas.");
+        if(!userAccount.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
         return userAccount;
     }
 

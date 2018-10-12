@@ -1,4 +1,4 @@
-package com.wa.msm.user.beans;
+package com.wa.msm.user.bean;
 
 public class UserAccountImageBean extends ImageBean{
 }

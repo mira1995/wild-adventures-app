@@ -1,7 +1,6 @@
 package com.wa.msm.user.entity;
 
-import com.wa.msm.user.beans.ImageBean;
-import com.wa.msm.user.beans.UserAccountImageBean;
+import com.wa.msm.user.bean.UserAccountImageBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,8 +75,5 @@ public class UserAccount {
     @NotNull
     @Column(name = "active")
     private Boolean active;
-
-    @Transient
-    UserAccountImageBean profileImage;
 
 }

@@ -84,6 +84,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<!-- Required to use PATCH -->
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-httpclient</artifactId>
+			<version>10.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
