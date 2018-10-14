@@ -19,9 +19,11 @@ CREATE TABLE waorder.order_demand (
                 order_date TIMESTAMP NOT NULL,
                 status VARCHAR NOT NULL,
                 is_paid BOOLEAN NOT NULL,
-                useraccount_id VARCHAR NOT NULL,
+                useraccount_id INTEGER NOT NULL,
                 order_id INTEGER NOT NULL,
                 demand_type VARCHAR NOT NULL,
+                demand_message VARCHAR NOT NULL,
+                answer_message VARCHAR,
                 CONSTRAINT order_demand_pk PRIMARY KEY (id)
 );
 

@@ -4,6 +4,7 @@ import com.wa.msm.order.entity.Order;
 import com.wa.msm.order.proxy.MSUserAccountProxy;
 import com.wa.msm.order.repository.OrderRepository;
 import com.wa.msm.order.repository.OrderSessionRepository;
+import com.wa.msm.order.util.enumeration.OrderStatusEnum;
 import com.wa.msm.order.web.exception.OrderNotFoundException;
 import com.wa.msm.order.web.exception.OrderValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,7 @@ public class OrderController {
         if (!order.isPresent()) throw new OrderNotFoundException("La commande d'id : "+ orderId + "n'existe pas");
         if(order.get().getIsPaid()) throw new OrderValidationException("La commande fournie est déjà payée");
         order.get().setIsPaid(true);
+        order.get().setStatus(OrderStatusEnum.FINALIZED);
         return orderRepository.save(order.get());
     }
 

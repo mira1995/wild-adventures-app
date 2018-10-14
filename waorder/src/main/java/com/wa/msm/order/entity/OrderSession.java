@@ -10,9 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "order_session", schema = "waorder")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
 @IdClass(OrderSessionKey.class)
 public class OrderSession implements Serializable {
 
@@ -20,7 +18,6 @@ public class OrderSession implements Serializable {
     @ManyToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Order order;
-
 
     @Id
     @Column(name = "order_id")
