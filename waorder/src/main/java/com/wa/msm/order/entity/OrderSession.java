@@ -1,5 +1,6 @@
 package com.wa.msm.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @IdClass(OrderSessionKey.class)
 public class OrderSession implements Serializable {
+
+    @JsonBackReference
+    @ManyToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Order order;
+
+
     @Id
     @Column(name = "order_id")
     private Long orderId;

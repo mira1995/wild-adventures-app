@@ -1,5 +1,6 @@
 package com.wa.msm.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,8 +32,8 @@ public class Order implements Serializable {
     @Column(name = "useraccount_id")
     private Long userAccountId;
 
-    @OneToMany(targetEntity = OrderSession.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", targetEntity = OrderSession.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<OrderSession>  orderSessions = new ArrayList<>(0);
 
 }
