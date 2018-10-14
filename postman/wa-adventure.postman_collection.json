@@ -1,0 +1,157 @@
+{
+	"info": {
+		"_postman_id": "229ca1c6-61a3-4110-9584-04d4faab78b3",
+		"name": "wa-adventure",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "addAdventure",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\": \"Un super titre pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\"}"
+				},
+				"url": {
+					"raw": "http://localhost:9003/adventure/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adventureList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9003/adventures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adventureListByCategory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9003/adventures/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventures",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAdventure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9003/adventure/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateAdventure",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 1, \"title\": \"Un super titre de la mort qui tue pour une superbe aventure.\", \"description\": \"Et voici sa superbe description !\", \"status\": \"PAIEMENT_ATTENTE\", \"location\": \"Ici et là\", \"sessions\": [{\"startDate\": 1539291635, \"endDate\": 1539291635, \"price\": 10.00, \"adventureId\": 1}]}"
+				},
+				"url": {
+					"raw": "http://localhost:9003/adventure",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventure"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteAdventure",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9003/adventure/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
