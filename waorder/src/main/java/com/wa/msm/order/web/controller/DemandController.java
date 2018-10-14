@@ -1,8 +1,11 @@
 package com.wa.msm.order.web.controller;
 
+import com.wa.msm.order.bean.SessionBean;
 import com.wa.msm.order.entity.Order;
 import com.wa.msm.order.entity.OrderDemand;
+import com.wa.msm.order.entity.OrderDemandSession;
 import com.wa.msm.order.entity.OrderSession;
+import com.wa.msm.order.proxy.MSAdventureProxy;
 import com.wa.msm.order.proxy.MSUserAccountProxy;
 import com.wa.msm.order.repository.OrderDemandRepository;
 import com.wa.msm.order.repository.OrderDemandSessionRepository;
@@ -10,10 +13,7 @@ import com.wa.msm.order.repository.OrderRepository;
 import com.wa.msm.order.repository.OrderSessionRepository;
 import com.wa.msm.order.util.enumeration.OrderDemandEnum;
 import com.wa.msm.order.util.enumeration.OrderStatusEnum;
-import com.wa.msm.order.web.exception.OrderDemandNotFoundException;
-import com.wa.msm.order.web.exception.OrderDemandValidationException;
-import com.wa.msm.order.web.exception.OrderNotFoundException;
-import com.wa.msm.order.web.exception.UserAccountNotFoundException;
+import com.wa.msm.order.web.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +40,9 @@ public class DemandController {
 
     @Autowired
     private MSUserAccountProxy msUserAccountProxy;
+
+    @Autowired
+    private MSAdventureProxy msAdventureProxy;
 
     @GetMapping("/demand/{demandId}")
     public Optional<OrderDemand> getOrderDemand(@PathVariable Long demandId){
@@ -76,7 +79,7 @@ public class DemandController {
         if(orderDemand.getId()!= null) throw new OrderDemandValidationException("La demande a déjà été enregistrée");
 
         final OrderDemand orderDemandSaved = orderDemandRepository.save(orderDemand);
-        //TODO tester si les sessions existent
+        validateSessions(orderDemand.getOrderDemandSessions());
         orderDemandSaved.getOrderDemandSessions().iterator().forEachRemaining(orderDemandSession -> {
             orderDemandSession.setDemandId(orderDemandSaved.getId());
             orderDemandSessionRepository.save(orderDemandSession);
@@ -89,7 +92,7 @@ public class DemandController {
     public OrderDemand updateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
-        //TODO tester si les sessions existent
+        validateSessions(orderDemand.getOrderDemandSessions());
         return orderDemandRepository.save(orderDemand);
     }
 
@@ -97,7 +100,7 @@ public class DemandController {
     public OrderDemand validateUpdateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
-        //TODO tester si les sessions existent
+        validateSessions(orderDemand.getOrderDemandSessions());
         if(!orderDemand.getStatus().equals(OrderStatusEnum.UPDATE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         populateOrderWithDemandUpdate(orderDemand);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
@@ -108,7 +111,7 @@ public class DemandController {
     public OrderDemand validateDeleteDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
-        //TODO tester si les sessions existent
+        validateSessions(orderDemand.getOrderDemandSessions());
         if(!orderDemand.getStatus().equals(OrderStatusEnum.DELETE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         orderDemand.getOrder().setStatus(OrderStatusEnum.CANCELED);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
@@ -153,5 +156,13 @@ public class DemandController {
 
         orderDemand.getOrder().setUserAccountId(orderDemand.getUserAccountId());
         orderDemand.getOrder().setOrderDate(orderDemand.getOrderDate());
+    }
+
+    private void validateSessions(List<OrderDemandSession> orderDemandSessions){
+        if(orderDemandSessions.isEmpty())throw new SessionNotFoundException("Aucune session à rechercher");
+        List<Long> sessionIdsList = new ArrayList<>(0);
+        orderDemandSessions.forEach(orderSession -> sessionIdsList.add(orderSession.getSessionId()));
+        List<SessionBean> sessionBeans = msAdventureProxy.getAllById(sessionIdsList);
+        if (sessionBeans == null || sessionBeans.size()!= sessionIdsList.size()) throw new SessionNotFoundException("Certaines des sessions fournies n'existent pas");
     }
 }

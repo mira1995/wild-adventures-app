@@ -31,6 +31,15 @@ public class SessionController {
         return sessions;
     }
 
+    @PostMapping(value = "/sessions")
+    public List<Session> getAllById (@RequestBody List<Long> sessionsIdList){
+        if(sessionsIdList == null || sessionsIdList.isEmpty())throw new SessionNotFoundException("Aucun id de session transmis");
+        List<Session> sessions = new ArrayList<>(0);
+        sessionRepository.findAllByIdIn(sessionsIdList).forEach(sessions::add);
+        if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions pour cette liste d'id.");
+        return sessions;
+    }
+
     @PostMapping(value = "/session")
     public Session addSession(@RequestBody Session session) {
         // TODO : ResponseEntity

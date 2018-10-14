@@ -3,7 +3,9 @@ package com.wa.msm.image.web.controller;
 import com.wa.msm.image.entity.CategoryImage;
 import com.wa.msm.image.entity.CategoryImageKey;
 import com.wa.msm.image.entity.Image;
+import com.wa.msm.image.proxy.MSCategoryProxy;
 import com.wa.msm.image.repository.CategoryImageRepository;
+import com.wa.msm.image.web.exception.CategoryNotFoundException;
 import com.wa.msm.image.web.exception.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,14 @@ public class CategoryImageController extends AbstractImageDependencyController<C
     @Autowired
     private CategoryImageRepository categoryImageRepository;
 
+    @Autowired
+    private MSCategoryProxy msCategoryProxy;
+
     @Override
     @PostMapping(value = "/image/category")
     CategoryImage create(@RequestBody CategoryImage entity) {
         validateImageDependency(entity);
+        validateCategory(entity.getCategoryId());
         return categoryImageRepository.save(entity);
     }
 
@@ -52,5 +58,9 @@ public class CategoryImageController extends AbstractImageDependencyController<C
             images = getImageRepository().findByIdIn(imagesId);
         }
         return images;
+    }
+
+    private void validateCategory(Long categoryId){
+        if(!msCategoryProxy.getCategory(categoryId).isPresent()) throw new CategoryNotFoundException("La catégorie d'id "+ categoryId + " n'existe pas");
     }
 }

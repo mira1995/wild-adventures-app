@@ -1,6 +1,7 @@
 package com.wa.msm.image.web.controller;
 
 import com.wa.msm.image.entity.AdventureImage;
+import com.wa.msm.image.entity.CategoryImage;
 import com.wa.msm.image.entity.Image;
 import com.wa.msm.image.entity.ImageDependency;
 import com.wa.msm.image.repository.ImageRepository;
@@ -29,5 +30,6 @@ public abstract class AbstractImageDependencyController<T, ID> {
         Optional<Image> image = imageRepository.findById(imageDependency.getImageId());
         if(!image.isPresent()) throw new ImageValidationException("L'image d'id : "+ imageDependency.getImageId() +" n'existe pas");
         if(imageDependency instanceof AdventureImage && !image.get().getType().getCode().equals(ImageTypeEnum.ADVENTURE.toString())) throw new ImageValidationException("Le type de l'image est incorrect");
+        if(imageDependency instanceof CategoryImage && !image.get().getType().getCode().equals(ImageTypeEnum.CATEGORY.toString())) throw new ImageValidationException("Le type de l'image est incorrect");
     }
 }

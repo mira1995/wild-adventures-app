@@ -1,0 +1,443 @@
+{
+	"info": {
+		"_postman_id": "816154b2-e8c4-46bf-a934-f1f8f99632a4",
+		"name": "wa-order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createOrder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"NOT_PAID\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 1,\n\t\"orderSessions\":[\n\t\t{\n\t\t\t\"sessionId\":1\n\t\t},\n\t\t{\n\t\t\t\"sessionId\":2\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOrderById",
+			"request": {
+				"method": null,
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/order/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"order",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllOrders",
+			"request": {
+				"method": null,
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllOrdersOfUser",
+			"request": {
+				"method": null,
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/orders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateOrder",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"NOT_PAID\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 2,\n\t\"orderSessions\":[\n\t\t{\n\t\t\t\"orderId\": 1,\n\t\t\t\"sessionId\":3\n\t\t},\n\t\t{\n\t\t\t\"orderId\": 1,\n\t\t\t\"sessionId\":4\n\t\t},\n\t\t{\n\t\t\t\"orderId\": 1,\n\t\t\t\"sessionId\":5\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "payOrder",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9006/order/pay/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"order",
+						"pay",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeOrder",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9006/order/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"order",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createDemand",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"UPDATE_DEMAND\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 1,\n\t\"orderDemandSessions\":[\n\t\t{\n\t\t\t\"sessionId\":1\n\t\t}\n\t],\n\t\"demandStatus\" : \"OPENED_DEMAND\",\n\t\"order\" : {\n\t    \"id\": 2,\n\t    \"orderDate\": \"2018-01-01T00:00:00.000+0000\",\n\t    \"status\": \"NOT_PAID\",\n\t    \"isPaid\": false,\n\t    \"userAccountId\": 1,\n\t    \"orderSessions\": [\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 1\n\t        },\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 2\n\t        }\n\t    ]\n\t},\n\t\"demandMessage\" : \"Bonjour je voudrais supprimer une des sessions de ma commande\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getDemandById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllDemands",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/demands/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demands",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllByUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/demands/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demands",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllByStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/demands/status/OPENED_DEMAND",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demands",
+						"status",
+						"OPENED_DEMAND"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateDemand",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":\"4\",\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"UPDATE_DEMAND\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 1,\n\t\"orderDemandSessions\":[\n\t\t{\n\t\t\t\"demandId\":4,\n\t\t\t\"sessionId\":1\n\t\t}\n\t],\n\t\"demandStatus\" : \"OPENED_DEMAND\",\n\t\"order\" : {\n\t    \"id\": 2,\n\t    \"orderDate\": \"2018-01-01T00:00:00.000+0000\",\n\t    \"status\": \"NOT_PAID\",\n\t    \"isPaid\": false,\n\t    \"userAccountId\": 1,\n\t    \"orderSessions\": [\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 1\n\t        },\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 2\n\t        }\n\t    ]\n\t},\n\t\"demandMessage\" : \"Hello world\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validateUpdateCommand",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":\"4\",\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"UPDATE_DEMAND\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 1,\n\t\"orderDemandSessions\":[\n\t\t{\n\t\t\t\"demandId\":4,\n\t\t\t\"sessionId\":1\n\t\t}\n\t],\n\t\"demandStatus\" : \"OPENED_DEMAND\",\n\t\"order\" : {\n\t    \"id\": 2,\n\t    \"orderDate\": \"2018-01-01T00:00:00.000+0000\",\n\t    \"status\": \"NOT_PAID\",\n\t    \"isPaid\": false,\n\t    \"userAccountId\": 1,\n\t    \"orderSessions\": [\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 1\n\t        },\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 2\n\t        }\n\t    ]\n\t},\n\t\"demandMessage\" : \"Hello world\",\n\t\"answerMessage\" : \"Ok commande modifiée\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand/validate/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand",
+						"validate",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validateDeleteDemand",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":\"4\",\n\t\"orderDate\" : \"2018-01-01T00:00:00-00:00\",\n\t\"status\":\"DELETE_DEMAND\",\n\t\"isPaid\": \"false\",\n\t\"userAccountId\": 1,\n\t\"orderDemandSessions\":[\n\t\t{\n\t\t\t\"demandId\":4,\n\t\t\t\"sessionId\":1\n\t\t}\n\t],\n\t\"demandStatus\" : \"OPENED_DEMAND\",\n\t\"order\" : {\n\t    \"id\": 2,\n\t    \"orderDate\": \"2018-01-01T00:00:00.000+0000\",\n\t    \"status\": \"NOT_PAID\",\n\t    \"isPaid\": false,\n\t    \"userAccountId\": 1,\n\t    \"orderSessions\": [\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 1\n\t        },\n\t        {\n\t            \"orderId\": 2,\n\t            \"sessionId\": 2\n\t        }\n\t    ]\n\t},\n\t\"demandMessage\" : \"Hello world\",\n\t\"answerMessage\" : \"Ok commande modifiée\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand/validate/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand",
+						"validate",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeDemand",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9006/demand/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9006",
+					"path": [
+						"demand",
+						"4"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

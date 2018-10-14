@@ -9,8 +9,8 @@ public class OrderErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String s, Response response) {
-        if(response.status() == 404)throw new UserAccountNotFoundException("L'utilisateur recherché n'existe pas");
-        if(response.status() == 422)throw new UserAccountNotFoundException("L'utilisateur fourni n'est pas valide");
+        if(response.status() == 404)throw new UserAccountNotFoundException("L'objet n'existe pas");
+        if(response.status() == 422)throw new UserAccountNotFoundException("L'objet n'est pas valide");
 
         return defaultErrorDecoder.decode(s, response);
 
