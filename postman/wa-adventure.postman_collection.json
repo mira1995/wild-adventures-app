@@ -152,6 +152,112 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "addSession",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"startDate\": 1539291635, \"endDate\": 1539291635, \"price\": 10.00, \"adventureId\": 1}"
+				},
+				"url": {
+					"raw": "http://localhost:9003/session",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sessionList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9003/sessions/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"sessions",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateSession",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 1, \"startDate\": 1539291635, \"endDate\": 1539291635, \"price\": 15.00, \"adventureId\": 1}"
+				},
+				"url": {
+					"raw": "http://localhost:9003/session",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteSession",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9003/session/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"session",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

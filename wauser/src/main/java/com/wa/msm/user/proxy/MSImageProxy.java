@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@FeignClient(name = "wa-image")
+@FeignClient(name = "zuul-server")
 @RibbonClient(name = "wa-image")
 public interface MSImageProxy {
 
-    @GetMapping(value = "/image/user/{imageId}")
+    @GetMapping(value = "/wa-image/image/user/{imageId}")
     Optional<UserAccountImageBean> getUserAccountImageById(@PathVariable("imageId") Long imageId);
 
-    @GetMapping(value = "/image/user/exist/{imageId}")
+    @GetMapping(value = "/wa-image/image/user/exist/{imageId}")
     Boolean userAccountImageExist(@PathVariable("imageId") Long imageId);
 
-    /*@PostMapping(value = "/image/user")
+    /*@PostMapping(value = "/wa-image/image/user")
     UserAccountImageBean createUserAccountImage(@RequestBody UserAccountImageBean userAccountImage);
 
-    @DeleteMapping(value = "/image/user/{imageId}")
+    @DeleteMapping(value = "/wa-image/image/user/{imageId}")
     String deleteUserAccountImageById(@PathVariable("imageId") Long imageId);
 
-    @PatchMapping(value = "/image/user")
+    @PatchMapping(value = "/wa-image/image/user")
     UserAccountImageBean updateUserAccountImage(@RequestBody UserAccountImageBean userAccountImage);*/
 }

@@ -6,27 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "commentList",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://localhost:9001/comments/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9001",
-					"path": [
-						"comments",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "addComment",
 			"request": {
 				"method": "POST",
@@ -49,6 +28,27 @@
 					"port": "9001",
 					"path": [
 						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "commentList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9001/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"comments",
+						"1"
 					]
 				}
 			},

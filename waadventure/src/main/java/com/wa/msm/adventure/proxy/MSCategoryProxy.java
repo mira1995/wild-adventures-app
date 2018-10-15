@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "wa-category")
+@FeignClient(name = "zuul-server")
 @RibbonClient(name = "wa-category")
 public interface MSCategoryProxy {
-    @GetMapping(value = "/category/{id}")
+    @GetMapping(value = "/wa-category/category/{id}")
     Optional<CategoryBean> getCategory(@PathVariable("id") Long id);
 }

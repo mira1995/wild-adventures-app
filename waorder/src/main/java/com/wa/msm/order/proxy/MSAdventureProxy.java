@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "wa-adventure")
+@FeignClient(name = "zuul-server")
 @RibbonClient(name = "wa-adventure")
 public interface MSAdventureProxy {
 
-    @PostMapping(value = "/sessions")
+    @PostMapping(value = "/wa-adventure/sessions")
     List<SessionBean> getAllById (@RequestBody List<Long> sessionsIdList);
 }
