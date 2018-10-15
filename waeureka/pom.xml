@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.wa.mse</groupId>
-	<artifactId>waconfig</artifactId>
+	<artifactId>waeureka</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>config-server</name>
-	<description>MS Edge External Configuration for Wild Adventures</description>
+	<name>eureka-server</name>
+	<description>MS Edge Eureka Server for Wild Adventures</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -28,7 +28,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 		</dependency>
 
 		<dependency>
