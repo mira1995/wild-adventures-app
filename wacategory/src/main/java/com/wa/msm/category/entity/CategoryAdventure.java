@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity @IdClass(CategoryAdventureKey.class)
+@Table(name = "category_adventure", schema = "wacategory")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class CategoryAdventure implements Serializable {
     @JsonBackReference

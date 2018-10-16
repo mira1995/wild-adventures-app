@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "session", schema = "waadventure")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class Session {
     @Id

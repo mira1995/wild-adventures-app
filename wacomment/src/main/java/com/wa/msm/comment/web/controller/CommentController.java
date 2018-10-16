@@ -2,6 +2,7 @@ package com.wa.msm.comment.web.controller;
 
 import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.proxy.MSAdventureProxy;
+import com.wa.msm.comment.proxy.MSUserAccountProxy;
 import com.wa.msm.comment.repository.CommentRepository;
 import com.wa.msm.comment.web.exception.CommentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class CommentController {
@@ -22,16 +21,20 @@ public class CommentController {
     @Autowired
     MSAdventureProxy msAdventureProxy;
 
+    @Autowired
+    MSUserAccountProxy msUserAccountProxy;
+
     @GetMapping(value = "/comments/{adventureId}")
     public List<Comment> commentList(@PathVariable Long adventureId) {
-        // TODO : Renvoyer un boolean pour les performances ?
         // Vérifier que l'aventure existe
         msAdventureProxy.getAdventure(adventureId);
 
-        // TODO : parent_id si pas null ne pas mettre
         List<Comment> comments = new ArrayList<>(0);
         commentRepository.findByAdventureId(adventureId).iterator().forEachRemaining(comments::add);
-        if (comments.isEmpty()) throw new CommentNotFoundException("Il n'existe aucun commentaires pour cette aventure à l'id " + adventureId + ".");
+        if (comments.isEmpty())
+            throw new CommentNotFoundException("Il n'existe aucun commentaires pour cette aventure à l'id " + adventureId + ".");
+        // Supprimer si parentId pas null
+        else comments.removeIf(comment -> comment.getParentId() != null);
         return comments;
     }
 
@@ -40,7 +43,8 @@ public class CommentController {
         // Vérifier que l'aventure existe
         msAdventureProxy.getAdventure(comment.getAdventureId());
 
-        // TODO : Vérifier que l'utilisateur existe
+        // Vérifier que l'utilisateur existe
+        msUserAccountProxy.getUserById(comment.getUserId());
 
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
@@ -50,11 +54,14 @@ public class CommentController {
         if (comment.getId() == null || !commentRepository.findById(comment.getId()).isPresent())
             throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
         else {
-            // Vérifier que l'aventure existe
+            // Vérifier que l'aventure ainsi que l'utilisateur existent
             msAdventureProxy.getAdventure(comment.getAdventureId());
-            comment.getComments().forEach(item -> msAdventureProxy.getAdventure(item.getAdventureId()));
+            msUserAccountProxy.getUserById(comment.getUserId());
+            comment.getComments().forEach(item -> {
+                msAdventureProxy.getAdventure(item.getAdventureId());
+                msUserAccountProxy.getUserById(item.getUserId());
+            });
 
-            // TODO : Vérifier que l'utilisateur existe
         }
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }

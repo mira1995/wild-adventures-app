@@ -1,6 +1,5 @@
 package com.wa.msm.user.entity;
 
-import com.wa.msm.user.bean.UserAccountImageBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "category", schema = "wacategory")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
