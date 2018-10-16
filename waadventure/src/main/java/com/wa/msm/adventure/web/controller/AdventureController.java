@@ -7,6 +7,8 @@ import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -54,8 +56,7 @@ public class AdventureController {
     }
 
     @PostMapping(value = "/adventure/{categoryId}")
-    public Adventure addAdventure(@RequestBody Adventure adventure, @PathVariable Long categoryId) {
-        // TODO : ResponseEntity
+    public ResponseEntity<Adventure> addAdventure(@RequestBody Adventure adventure, @PathVariable Long categoryId) {
         Adventure newAdventure = new Adventure();
         // Vérifier si la catégorie existe
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
@@ -67,18 +68,18 @@ public class AdventureController {
             category.get().setCategoryAdventures(categoryAdventures);
             msCategoryProxy.updateCategory(category.get());*/
         }
-        return newAdventure;
+        return new ResponseEntity<>(newAdventure, HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/adventure")
-    public Adventure updateAdventure(@RequestBody Adventure adventure) {
+    public ResponseEntity<Adventure> updateAdventure(@RequestBody Adventure adventure) {
         if (adventure == null || !adventureRepository.findById(adventure.getId()).isPresent())
             throw new AdventureNotFoundException("L'aventure envoyée n'existe pas.");
-        return adventureRepository.save(adventure);
+        return new ResponseEntity<>(adventureRepository.save(adventure), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/adventure/{id}")
-    public String deleteAdventure(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAdventure(@PathVariable Long id) {
         Optional<Adventure> adventureToDelete = adventureRepository.findById(id);
         if (!adventureToDelete.isPresent()) throw new AdventureNotFoundException("L'aventure correspondante à l'id " + id + " n'existe pas.");
         else {
@@ -86,6 +87,6 @@ public class AdventureController {
             // msCommentProxy.deleteCommentByAdventureId(adventureToDelete.get().getId());
             adventureRepository.deleteById(adventureToDelete.get().getId());
         }
-        return "L'aventure pour id " + id + " a bien été supprimé.";
+        return new ResponseEntity<>("L'aventure pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 }

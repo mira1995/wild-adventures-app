@@ -5,6 +5,8 @@ import com.wa.msm.comment.proxy.MSAdventureProxy;
 import com.wa.msm.comment.repository.CommentRepository;
 import com.wa.msm.comment.web.exception.CommentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,18 +36,17 @@ public class CommentController {
     }
 
     @PostMapping(value = "/comment")
-    public Comment addComment(@RequestBody Comment comment) {
-        // TODO : ResponseEntity
+    public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
         // Vérifier que l'aventure existe
         msAdventureProxy.getAdventure(comment.getAdventureId());
 
         // TODO : Vérifier que l'utilisateur existe
 
-        return commentRepository.save(comment);
+        return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/comment")
-    public Comment updateComment(@RequestBody Comment comment) {
+    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
         if (comment.getId() == null || !commentRepository.findById(comment.getId()).isPresent())
             throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
         else {
@@ -55,20 +56,20 @@ public class CommentController {
 
             // TODO : Vérifier que l'utilisateur existe
         }
-        return commentRepository.save(comment);
+        return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/comment/{id}")
-    public String deleteComment(@PathVariable Long id) {
+    public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         Optional<Comment> commentToDelete = commentRepository.findById(id);
         if (!commentToDelete.isPresent()) throw new CommentNotFoundException("Le commentaire correspondant à l'id " + id + " n'existe pas.");
         else commentRepository.deleteById(commentToDelete.get().getId());
-        return "Le commentaire pour id " + id + " a bien été supprimé.";
+        return new ResponseEntity<>("Le commentaire pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 
     @DeleteMapping(value = "/comment/adventure/{adventureId}")
-    public String deleteCommentByAdventureId(@PathVariable Long adventureId) {
+    public ResponseEntity<String> deleteCommentByAdventureId(@PathVariable Long adventureId) {
         commentRepository.deleteAllByAdventureId(adventureId);
-        return "Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.";
+        return new ResponseEntity<>("Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.", HttpStatus.GONE);
     }
 }

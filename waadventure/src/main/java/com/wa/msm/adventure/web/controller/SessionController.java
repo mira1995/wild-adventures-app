@@ -7,6 +7,8 @@ import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -41,26 +43,25 @@ public class SessionController {
     }
 
     @PostMapping(value = "/session")
-    public Session addSession(@RequestBody Session session) {
-        // TODO : ResponseEntity
+    public ResponseEntity<Session> addSession(@RequestBody Session session) {
         adventureNotFound(session.getAdventureId());
-        return sessionRepository.save(session);
+        return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/session")
-    public Session updateSession(@RequestBody Session session) {
+    public ResponseEntity<Session> updateSession(@RequestBody Session session) {
         adventureNotFound(session.getAdventureId());
         if (session.getId() == null || !sessionRepository.findById(session.getId()).isPresent())
             throw new SessionNotFoundException("La session envoyée n'existe pas.");
-        return sessionRepository.save(session);
+        return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/session/{id}")
-    public String deleteSession(@PathVariable Long id) {
+    public ResponseEntity<String> deleteSession(@PathVariable Long id) {
         Optional<Session> sessionToDelete = sessionRepository.findById(id);
         if (!sessionToDelete.isPresent()) throw new SessionNotFoundException("La session correspondante à l'id " + id + " n'existe pas.");
         else sessionRepository.deleteById(sessionToDelete.get().getId());
-        return "La session pour id " + id + " a bien été supprimé.";
+        return new ResponseEntity<>("La session pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 
     // Vérifier si l'aventure existe
