@@ -6,6 +6,8 @@ import com.wa.msm.category.repository.CategoryAdventureRepository;
 import com.wa.msm.category.repository.CategoryRepository;
 import com.wa.msm.category.web.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,13 +42,12 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/category")
-    public Category addCategory(@RequestBody Category category) {
-        // TODO : ResponseEntity
-        return categoryRepository.save(category);
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+        return new ResponseEntity<>(categoryRepository.save(category), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/category")
-    public Category updateCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
         if (category.getId() == null || !categoryRepository.findById(category.getId()).isPresent())
             throw new CategoryNotFoundException("La catégorie envoyée n'existe pas.");
         else {
@@ -54,14 +55,14 @@ public class CategoryController {
             if (!category.getCategoryAdventures().isEmpty())
                 category.getCategoryAdventures().forEach(categoryAdventure -> msAdventureProxy.getAdventure(categoryAdventure.getAdventureId()));
         }
-        return categoryRepository.save(category);
+        return new ResponseEntity<>(categoryRepository.save(category), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/category/{id}")
-    public String deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         Optional<Category> categoryToDelete = categoryRepository.findById(id);
         if (!categoryToDelete.isPresent()) throw new CategoryNotFoundException("La catégorie correspondante à l'id " + id + " n'existe pas.");
         else categoryRepository.deleteById(categoryToDelete.get().getId());
-        return "La catégorie pour id " + id + " a bien été supprimé.";
+        return new ResponseEntity<>("La catégorie pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 }
