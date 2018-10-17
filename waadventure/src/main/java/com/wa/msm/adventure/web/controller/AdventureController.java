@@ -1,19 +1,25 @@
 package com.wa.msm.adventure.web.controller;
 
+import com.sun.deploy.util.StringUtils;
 import com.wa.msm.adventure.bean.CategoryBean;
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
 import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
+import com.wa.msm.adventure.web.exception.AdventureNotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class AdventureController {
@@ -61,6 +67,7 @@ public class AdventureController {
         // Vérifier si la catégorie existe
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
         if (category.isPresent()) {
+            validateAdventure(adventure);
             newAdventure = adventureRepository.save(adventure);
             // Pour le client
             /*List<CategoryAdventureBean> categoryAdventures = category.get().getCategoryAdventures();
@@ -75,6 +82,7 @@ public class AdventureController {
     public ResponseEntity<Adventure> updateAdventure(@RequestBody Adventure adventure) {
         if (adventure == null || !adventureRepository.findById(adventure.getId()).isPresent())
             throw new AdventureNotFoundException("L'aventure envoyée n'existe pas.");
+        validateAdventure(adventure);
         return new ResponseEntity<>(adventureRepository.save(adventure), HttpStatus.CREATED);
     }
 
@@ -88,5 +96,18 @@ public class AdventureController {
             adventureRepository.deleteById(adventureToDelete.get().getId());
         }
         return new ResponseEntity<>("L'aventure pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
+    }
+
+    private void validateAdventure(Adventure adventure) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Adventure>> constraintViolations = validator.validate(adventure);
+
+        if(constraintViolations.size() > 0) {
+            List<String> violationMessages = new ArrayList<>();
+            constraintViolations.iterator().forEachRemaining(constraintViolation ->
+                    violationMessages.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage()));
+
+            throw new AdventureNotValidException("L'aventure n'est pas valide. " + StringUtils.join(violationMessages, " ; "));
+        }
     }
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +19,12 @@ public class Comment {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(max = 1000)
     @Column(name = "content")
     private String content;
 
+    @NotNull
     @Column(name = "reported")
     private Boolean reported;
 
@@ -30,9 +35,11 @@ public class Comment {
     @Column(name = "parent_id", insertable = false, updatable = false)
     private Long parentId;
 
+    @NotNull
     @Column(name = "adventure_id")
     private Long adventureId;
 
+    @NotNull
     @Column(name = "user_id")
     private Long userId;
 }

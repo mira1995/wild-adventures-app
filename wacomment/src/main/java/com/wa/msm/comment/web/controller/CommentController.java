@@ -1,15 +1,20 @@
 package com.wa.msm.comment.web.controller;
 
+import com.sun.deploy.util.StringUtils;
 import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.proxy.MSAdventureProxy;
 import com.wa.msm.comment.proxy.MSUserAccountProxy;
 import com.wa.msm.comment.repository.CommentRepository;
 import com.wa.msm.comment.web.exception.CommentNotFoundException;
+import com.wa.msm.comment.web.exception.CommentNotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.*;
 
 @RestController
@@ -40,12 +45,11 @@ public class CommentController {
 
     @PostMapping(value = "/comment")
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
-        // Vérifier que l'aventure existe
+        // Vérifier que l'aventure et l'utilisateur existent
         msAdventureProxy.getAdventure(comment.getAdventureId());
-
-        // Vérifier que l'utilisateur existe
         msUserAccountProxy.getUserById(comment.getUserId());
 
+        validateComment(comment);
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
@@ -61,8 +65,8 @@ public class CommentController {
                 msAdventureProxy.getAdventure(item.getAdventureId());
                 msUserAccountProxy.getUserById(item.getUserId());
             });
-
         }
+        validateComment(comment);
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
@@ -78,5 +82,18 @@ public class CommentController {
     public ResponseEntity<String> deleteCommentByAdventureId(@PathVariable Long adventureId) {
         commentRepository.deleteAllByAdventureId(adventureId);
         return new ResponseEntity<>("Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.", HttpStatus.GONE);
+    }
+
+    private void validateComment(Comment comment) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Comment>> constraintViolations = validator.validate(comment);
+
+        if(constraintViolations.size() > 0) {
+            List<String> violationMessages = new ArrayList<>();
+            constraintViolations.iterator().forEachRemaining(constraintViolation ->
+                    violationMessages.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage()));
+
+            throw new CommentNotValidException("Le commentaire n'est pas valide. " + StringUtils.join(violationMessages, " ; "));
+        }
     }
 }
