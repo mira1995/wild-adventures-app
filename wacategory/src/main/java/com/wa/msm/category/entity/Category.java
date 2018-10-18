@@ -6,18 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "category", schema = "wacategory")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(min = 2, max = 250)
     @Column(name = "title")
     private String title;
 
+    @NotNull
+    @Size(max = 1000)
     @Column(name = "description")
     private String description;
 
