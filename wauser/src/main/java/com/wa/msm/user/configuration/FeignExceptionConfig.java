@@ -1,6 +1,6 @@
 package com.wa.msm.user.configuration;
 
-import com.wa.msm.user.web.exception.ImageErrorDecoder;
+import com.wa.msm.user.web.exception.UserAccountErrorDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class FeignExceptionConfig {
 
     @Bean
-    public ImageErrorDecoder mImageErrorDecoder(){
-        return new ImageErrorDecoder();
+    public UserAccountErrorDecoder mImageErrorDecoder(){
+        return new UserAccountErrorDecoder();
     }
 }
