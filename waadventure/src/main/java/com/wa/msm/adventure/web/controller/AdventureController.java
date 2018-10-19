@@ -8,6 +8,8 @@ import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.AdventureNotValidException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ import java.util.Set;
 @RestController
 public class AdventureController {
 
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
+
     @Autowired
     AdventureRepository adventureRepository;
 
@@ -38,6 +43,9 @@ public class AdventureController {
         List<Adventure> adventures = new ArrayList<>(0);
         adventureRepository.findAll().iterator().forEachRemaining(adventures::add);
         if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+
+        log.info("Récupération de la liste des aventures");
+
         return adventures;
     }
 
@@ -51,6 +59,7 @@ public class AdventureController {
                 categoryBean.getCategoryAdventures().forEach(categoryAdventureBean ->
                         adventureRepository.findById(categoryAdventureBean.getAdventureId()).ifPresent(adventures::add)));
         if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+        log.info("Récupération de l'aventure lié à la catégorie d'id "+categoryId);
         return adventures;
     }
 
@@ -75,6 +84,7 @@ public class AdventureController {
             category.get().setCategoryAdventures(categoryAdventures);
             msCategoryProxy.updateCategory(category.get());*/
         }
+        log.info("Création d'une aventure");
         return new ResponseEntity<>(newAdventure, HttpStatus.CREATED);
     }
 
