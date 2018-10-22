@@ -7,6 +7,6 @@ export class HttpService {
   constructor(private http: HttpClient) {}
 
   public getCategories(): Observable<any> {
-    return this.http.get("/wa-category/categories");
+    return this.http.get("http://localhost:9000/wa-category/categories");
   }
 }

@@ -225,7 +225,7 @@ var HttpService = /** @class */ (function () {
         this.http = http;
     }
     HttpService.prototype.getCategories = function () {
-        return this.http.get("/wa-category/categories");
+        return this.http.get("http://localhost:9000/wa-category/categories");
     };
     HttpService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -245,7 +245,7 @@ var HttpService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/nicolasboueme/Documents/java/wild-adventures-app/wagateway/src/main/angular/ui/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/nicolasboueme/Documents/java/wild-adventures-app/client-ui/src/main/angular/ui/src/main.ts */"./src/main.ts");
 
 
 /***/ })
