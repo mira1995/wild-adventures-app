@@ -14,5 +14,8 @@
     "member-access": [true, "no-public"],
     "ordered-imports": false,
     "object-literal-sort-keys": false
+  },
+  "jsRules": {
+    "object-literal-sort-keys": false
   }
 }
