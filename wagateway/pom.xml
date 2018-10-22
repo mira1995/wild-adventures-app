@@ -73,15 +73,16 @@
 						<configuration>
 							<target>
 								<exec executable="cmd" osfamily="windows"
-									  dir="${project.basedir}/src/main/angular/ui">
+									  dir="${project.basedir}/src/main/react/ui">
 									<arg value="/c"/>
-									<arg value="ng"/>
+									<arg value="npm"/>
+									<arg value="run-script"/>
 									<arg value="build"/>
 								</exec>
 								<exec executable="/bin/sh" osfamily="mac"
-									  dir="${project.basedir}/src/main/angular/ui">
+									  dir="${project.basedir}/src/main/react/ui">
 									<arg value="-c"/>
-									<arg value="ng build"/>
+									<arg value="npm run-script build"/>
 								</exec>
 							</target>
 						</configuration>
