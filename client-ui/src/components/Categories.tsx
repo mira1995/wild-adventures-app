@@ -27,7 +27,7 @@ class Categories extends React.Component<CategoriesProps, CategoriesState> {
     componentDidMount() {
         this.setState({isLoading: true});
 
-        fetch('http://localhost:9000/wa-category/categories')
+        fetch('http://localhost:9000/categories')
           .then(response => response.json())
           .then(data => this.setState({categories: data, isLoading: false}));
     }
