@@ -17,6 +17,7 @@ CREATE TABLE wauser.useraccount (
                 birth_date DATE NOT NULL,
                 profile_image_id INTEGER,
                 active BOOLEAN NOT NULL,
+                role VARCHAR(5) NOT NULL,
                 CONSTRAINT useraccount_pk PRIMARY KEY (id)
 );
 

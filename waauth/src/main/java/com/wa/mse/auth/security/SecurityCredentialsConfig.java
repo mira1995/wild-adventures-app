@@ -20,7 +20,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private JWTConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -28,12 +28,11 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().authenticationEntryPoint((request, response, error) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .exceptionHandling().authenticationEntryPoint((request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                .addFilter(new JWTUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-                // any other requests must be authenticated
+                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).permitAll()
                 .anyRequest().authenticated();
     }
 
@@ -43,8 +42,8 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
+    public JWTConfig jwtConfig() {
+        return new JWTConfig();
     }
 
     @Bean

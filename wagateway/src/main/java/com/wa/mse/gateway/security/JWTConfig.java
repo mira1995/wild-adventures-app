@@ -1,12 +1,12 @@
-package com.wa.mse.auth.security;
+package com.wa.mse.gateway.security;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 
 @Data
-public class JwtConfig {
+class JWTConfig {
     @Value("${security.jwt.uri:/auth/**}")
-    private String Uri;
+    private String URI;
 
     @Value("${security.jwt.header:Authorization}")
     private String header;
@@ -17,6 +17,6 @@ public class JwtConfig {
     @Value("${security.jwt.expiration:#{24*60*60}}")
     private int expiration;
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
+    @Value("${security.jwt.secret:JWTSecretKey}")
     private String secret;
 }

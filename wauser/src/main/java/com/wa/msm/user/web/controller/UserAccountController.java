@@ -33,6 +33,14 @@ public class UserAccountController {
         return userAccount;
     }
 
+    @GetMapping(value = "/user/email/{email}")
+    public Optional<UserAccount> getUserByEmail(@PathVariable String email) {
+        Optional<UserAccount> userAccount = userAccountRepository.findUserAccountByEmail(email);
+        if (!userAccount.isPresent()) throw new UserAccountNotFoundException("L'utilisateur lié à l'identifiant " + email+ " n'existe pas.");
+        checkIfImageExist(userAccount.get());
+        return userAccount;
+    }
+
     @PostMapping(value="/user")
     public UserAccount createUserAccount(@RequestBody UserAccount userAccount){
         //Si l'image du compte n'est pas vide la sauvegarder

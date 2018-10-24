@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private JWTConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,17 +23,17 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().authenticationEntryPoint((request, response, error) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .exceptionHandling().authenticationEntryPoint((request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JWTAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-                .antMatchers("/categories" + "/categories/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).permitAll()
+                .antMatchers("/categories/admin/**").hasRole("ADMIN")
+                .anyRequest().permitAll();
     }
 
     @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
+    public JWTConfig jwtConfig() {
+        return new JWTConfig();
     }
 }
