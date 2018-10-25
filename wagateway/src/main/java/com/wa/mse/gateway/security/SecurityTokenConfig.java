@@ -45,7 +45,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addExposedHeader("Authorization");
+        source.registerCorsConfiguration("/**", corsConfiguration.applyPermitDefaultValues());
         return source;
     }
 }
