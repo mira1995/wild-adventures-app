@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 
 interface Category {
     id: number;
@@ -27,9 +28,8 @@ class Categories extends React.Component<CategoriesProps, CategoriesState> {
     componentDidMount() {
         this.setState({isLoading: true});
 
-        fetch('http://localhost:9000/categories')
-            .then(response => response.json())
-            .then(data => this.setState({categories: data, isLoading: false}));
+        axios.get('http://localhost:9000/categories').then(response =>
+            this.setState({categories: response.data, isLoading: false}));
     }
 
     render() {
