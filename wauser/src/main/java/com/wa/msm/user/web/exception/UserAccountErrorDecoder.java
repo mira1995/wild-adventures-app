@@ -3,7 +3,7 @@ package com.wa.msm.user.web.exception;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 
-public class ImageErrorDecoder implements ErrorDecoder {
+public class UserAccountErrorDecoder implements ErrorDecoder {
     private final ErrorDecoder defaultErrorDecoder = new Default();
 
     @Override
