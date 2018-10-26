@@ -60,6 +60,7 @@ public class ImageControllerTest {
 
     @Test
     public void test1_create(){
+
         try{
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image").accept(MediaType.APPLICATION_JSON).content(jsonImage.write(image).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();

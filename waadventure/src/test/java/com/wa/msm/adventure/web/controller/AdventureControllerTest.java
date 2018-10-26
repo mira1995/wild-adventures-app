@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wa.msm.adventure.bean.CategoryAdventureBean;
 import com.wa.msm.adventure.bean.CategoryBean;
 import com.wa.msm.adventure.entity.Adventure;
-import com.wa.msm.adventure.entity.Session;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,7 +66,7 @@ public class AdventureControllerTest {
         adventure = new Adventure();
         adventure.setStatus("NOT_PAID");
         adventure.setLocation("Paris");
-        adventure.setTitle("Avnture Test");
+        adventure.setTitle("Aventure Test");
         adventure.setDescription("Aventure de test");
 
         category = new CategoryBean();
@@ -122,7 +121,7 @@ public class AdventureControllerTest {
 
     @Test
     @Transactional
-    public void test3_adventureListByCategory(){
+    public void test3_adventureListByCategoryTest(){
 
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
@@ -144,7 +143,7 @@ public class AdventureControllerTest {
 
     @Test
     @Transactional
-    public void test4_adventureList(){
+    public void test4_adventureListTest(){
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
@@ -164,7 +163,7 @@ public class AdventureControllerTest {
     }
 
     @Test
-    public void test5_updateAdventure(){
+    public void test5_updateAdventureTest(){
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
