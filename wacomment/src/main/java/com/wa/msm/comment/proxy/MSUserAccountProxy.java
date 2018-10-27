@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "zuul-server")
+@FeignClient(name = "wa-user")
 @RibbonClient(name = "wa-user")
 public interface MSUserAccountProxy {
     @GetMapping(value = "/wa-user/user/{userId}")

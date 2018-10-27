@@ -5,8 +5,6 @@ import './App.css';
 
 class App extends React.Component {
     componentDidMount() {
-        this.setState({isLoading: true});
-
         axios.defaults.baseURL = 'http://localhost:9000';
         axios.defaults.headers.post['Content-Type'] = 'application/json';
 

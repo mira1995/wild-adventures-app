@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "zuul-server")
+@FeignClient(name = "wa-adventure")
 @RibbonClient(name = "wa-adventure")
 public interface MSAdventureProxy {
 
