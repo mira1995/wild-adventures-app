@@ -75,4 +75,8 @@ public class UserAccount {
     @Column(name = "active")
     private Boolean active;
 
+    @NotNull
+    @Column(name = "role")
+    private String role;
+
 }

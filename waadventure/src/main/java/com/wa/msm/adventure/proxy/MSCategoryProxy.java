@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "zuul-server")
+@FeignClient(name = "wa-category")
 @RibbonClient(name = "wa-category")
 public interface MSCategoryProxy {
     @GetMapping(value = "/wa-category/category/{id}")
