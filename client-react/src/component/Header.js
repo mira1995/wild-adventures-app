@@ -2,6 +2,8 @@ import React from 'react'
 import './Header.css'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+import NavLink from './subcomponent/NavLink'
+
 const Header = () => (
     <nav className="navbar  navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
@@ -12,19 +14,12 @@ const Header = () => (
             </button>
             <div className="collapse navbar-collapse" id="navbarText">
                 <ul className="navbar-nav mr-auto">
-                    <li className="nav-item active">
-                        <Link className="nav-link" to="/">Accueil <span className="sr-only">(current)</span></Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/category">Catégories</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="#">Mon Compte</Link>
-                    </li>
+                    <NavLink to="/" text="Accueil" isCurrent />
+                    <NavLink to="/categories" text="Catégories" />
+                    <NavLink to="#" text="Mon compte" />
                 </ul>
             </div>
         </div>
     </nav>
 );
-
 export default Header;
