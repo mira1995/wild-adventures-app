@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -49,6 +49,7 @@ public class ImageControllerTest {
         image = new Image();
         image.setAlt("test");
         image.setDescription("test description");
+
         image.setType(imageTypeRepository.getOne("ADV"));
         image.setUri("/toto/titi.jpeg");
 
