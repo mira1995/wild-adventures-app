@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@FeignClient(name = "zuul-server")
+@FeignClient(name = "wa-image")
 @RibbonClient(name = "wa-image")
 public interface MSImageProxy {
 
