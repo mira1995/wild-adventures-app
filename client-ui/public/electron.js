@@ -1,34 +1,41 @@
-const { app, BrowserWindow, shell, ipcMain, Menu, TouchBar } = require('electron');
-const { TouchBarButton, TouchBarLabel, TouchBarSpacer } = TouchBar;
+const {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  Menu,
+  TouchBar,
+} = require('electron')
+const { TouchBarButton, TouchBarLabel, TouchBarSpacer } = TouchBar
 
-const path = require('path');
+const path = require('path')
 // const isDev = require('electron-is-dev');
 
-let mainWindow;
+let mainWindow
 
 createWindow = () => {
-    mainWindow = new BrowserWindow({
-        backgroundColor: '#F7F7F7',
-        minWidth: 880,
-        show: false,
-        titleBarStyle: 'hidden',
-        webPreferences: {
-            nodeIntegration: false,
-            preload: __dirname + '/preload.js',
-        },
-        height: 860,
-        width: 1280,
-    });
+  mainWindow = new BrowserWindow({
+    backgroundColor: '#F7F7F7',
+    minWidth: 880,
+    show: false,
+    titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: false,
+      preload: __dirname + '/preload.js',
+    },
+    height: 860,
+    width: 1280,
+  })
 
-    /*mainWindow.loadURL(
+  /*mainWindow.loadURL(
         isDev
             ? 'http://localhost:3000'
             : `file://${path.join(__dirname, '../build/index.html')}`,
     );*/
 
-    mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+  mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
 
-    /*if (isDev) {
+  /*if (isDev) {
         const {
             default: installExtension,
             REACT_DEVELOPER_TOOLS,
@@ -52,94 +59,92 @@ createWindow = () => {
             });
     }*/
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
 
-        ipcMain.on('open-external-window', (event, arg) => {
-            shell.openExternal(arg);
-        });
-    });
-};
+    ipcMain.on('open-external-window', (event, arg) => {
+      shell.openExternal(arg)
+    })
+  })
+}
 
 generateMenu = () => {
-    const template = [
+  const template = [
+    {
+      label: 'File',
+      submenu: [{ role: 'about' }, { role: 'quit' }],
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'pasteandmatchstyle' },
+        { role: 'delete' },
+        { role: 'selectall' },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forcereload' },
+        { role: 'toggledevtools' },
+        { type: 'separator' },
+        { role: 'resetzoom' },
+        { role: 'zoomin' },
+        { role: 'zoomout' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' },
+      ],
+    },
+    {
+      role: 'window',
+      submenu: [{ role: 'minimize' }, { role: 'close' }],
+    },
+    {
+      role: 'help',
+      submenu: [
         {
-            label: 'File',
-            submenu: [{ role: 'about' }, { role: 'quit' }],
+          click() {
+            require('electron').shell.openExternal('https://getstream.io/winds')
+          },
+          label: 'Learn More',
         },
         {
-            label: 'Edit',
-            submenu: [
-                { role: 'undo' },
-                { role: 'redo' },
-                { type: 'separator' },
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' },
-                { role: 'pasteandmatchstyle' },
-                { role: 'delete' },
-                { role: 'selectall' },
-            ],
+          click() {
+            require('electron').shell.openExternal(
+              'https://github.com/GetStream/Winds/issues'
+            )
+          },
+          label: 'File Issue on GitHub',
         },
-        {
-            label: 'View',
-            submenu: [
-                { role: 'reload' },
-                { role: 'forcereload' },
-                { role: 'toggledevtools' },
-                { type: 'separator' },
-                { role: 'resetzoom' },
-                { role: 'zoomin' },
-                { role: 'zoomout' },
-                { type: 'separator' },
-                { role: 'togglefullscreen' },
-            ],
-        },
-        {
-            role: 'window',
-            submenu: [{ role: 'minimize' }, { role: 'close' }],
-        },
-        {
-            role: 'help',
-            submenu: [
-                {
-                    click() {
-                        require('electron').shell.openExternal(
-                            'https://getstream.io/winds',
-                        );
-                    },
-                    label: 'Learn More',
-                },
-                {
-                    click() {
-                        require('electron').shell.openExternal(
-                            'https://github.com/GetStream/Winds/issues',
-                        );
-                    },
-                    label: 'File Issue on GitHub',
-                },
-            ],
-        },
-    ];
+      ],
+    },
+  ]
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-};
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+}
 
 app.on('ready', () => {
-    createWindow();
-    generateMenu();
-});
+  createWindow()
+  generateMenu()
+})
 
 app.on('window-all-closed', () => {
-    app.quit();
-});
+  app.quit()
+})
 
 app.on('activate', () => {
-    if (mainWindow === null) {
-        createWindow();
-    }
-});
+  if (mainWindow === null) {
+    createWindow()
+  }
+})
 
 ipcMain.on('load-page', (event, arg) => {
-    mainWindow.loadURL(arg);
-});
+  mainWindow.loadURL(arg)
+})
