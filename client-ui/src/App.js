@@ -8,43 +8,45 @@ import Adventures from './components/Adventures'
 import Account from './components/Account'
 import NoMatch from './components/NoMatch'
 import Login from './components/Login'
-import { TOGGLE_AUTH } from './store/actions/types'
+import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
+import { BEARER_TOKEN, URI } from './helpers/constants'
 
 class App extends Component {
-  toggleAuthentication() {
-    const action = {
-      type: TOGGLE_AUTH,
-      value: sessionStorage.getItem('bearerToken'),
+  constructor(props) {
+    super(props)
+    this.state = {
+      path: this.props.location.pathname,
+      token: sessionStorage.getItem(BEARER_TOKEN),
     }
+  }
+
+  componentWillMount() {
+    const { path, token } = this.state
+    console.log(path, 'path')
+    this.toggleAction(TOGGLE_AUTH, token)
+    this.toggleAction(TOGGLE_MENU, path)
+
+    if (token && path === URI.LOGIN) this.toggleAction(TOGGLE_MENU, URI.HOME)
+    if (!token && path === URI.ACCOUNT)
+      this.toggleAction(TOGGLE_MENU, URI.LOGIN)
+  }
+
+  toggleAction(type, value) {
+    const action = { type, value }
     this.props.dispatch(action)
   }
 
-  componentDidMount() {
-    this.toggleAuthentication()
-  }
-
   render() {
-    const auth = this.props.token
-    const path = this.props.location.pathname
-
     return (
       <div>
-        <Header path={path} />
+        <Header />
 
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/adventures" component={Adventures} />
-          {auth ? (
-            <Redirect from="/login" to="/" />
-          ) : (
-            <Route path="/login" component={Login} />
-          )}
-          {auth ? (
-            <Route path="/account" component={Account} />
-          ) : (
-            <Redirect from="/account" to="/login" />
-          )}
-          <Route path="/logout" render={() => <Redirect to="/" />} />
+          <Route exact path={URI.HOME} component={Home} />
+          <Route path={URI.ADVENTURES} component={Adventures} />
+          <Route path={URI.LOGIN} component={Login} />
+          <Route path={URI.ACCOUNT} component={Account} />
+          <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />
           <Route component={NoMatch} />
         </Switch>
       </div>
@@ -54,7 +56,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    token: state.token,
+    token: state.authentication.token, // Needed to refresh App component when token update in Login and Header components
   }
 }
 

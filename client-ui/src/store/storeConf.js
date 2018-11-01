@@ -1,4 +1,10 @@
-import { createStore } from 'redux'
+import { combineReducers, createStore } from 'redux'
 import toggleAuthentication from './reducers/authReducer'
+import toggleMenu from './reducers/menuReducer'
 
-export default createStore(toggleAuthentication)
+const rootReducer = combineReducers({
+  authentication: toggleAuthentication,
+  menu: toggleMenu,
+})
+
+export default createStore(rootReducer)

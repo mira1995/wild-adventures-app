@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd'
 import './Login.css'
 import { http } from '../configurations/axiosConf'
-import { TOGGLE_AUTH } from '../store/actions/types'
+import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
+import { BEARER_TOKEN, URI, API } from '../helpers/constants'
 
 class Login extends Component {
   handleSubmit = event => {
@@ -13,31 +14,29 @@ class Login extends Component {
       if (!error) {
         console.log('Received values of form: ', values)
         http
-          .post('/auth', {
+          .post(API.AUTH, {
             username: values.email,
             password: values.password,
           })
           .then(response => {
             const bearerToken = response.headers.authorization
             console.log(bearerToken)
-            sessionStorage.setItem('bearerToken', bearerToken)
-            this.toggleAuthentication()
+            sessionStorage.setItem(BEARER_TOKEN, bearerToken)
+            this.toggleAction(TOGGLE_AUTH, sessionStorage.getItem(BEARER_TOKEN))
+            this.toggleAction(TOGGLE_MENU, URI.HOME)
           })
           .catch(error => console.log('error', error))
       }
     })
   }
 
-  toggleAuthentication() {
-    const action = {
-      type: TOGGLE_AUTH,
-      value: sessionStorage.getItem('bearerToken'),
-    }
+  toggleAction(type, value) {
+    const action = { type, value }
     this.props.dispatch(action)
   }
 
   render() {
-    if (this.props.token) return <Redirect to="/" />
+    if (this.props.token) return <Redirect to={URI.HOME} />
 
     const FormItem = Form.Item
     const { getFieldDecorator } = this.props.form
@@ -81,7 +80,7 @@ class Login extends Component {
                   valuePropName: 'checked',
                   initialValue: false,
                 })(<Checkbox>Remember me</Checkbox>)}
-                <Link to="/forgot" className="login-form-forgot">
+                <Link to={URI.FORGOT_PASSWORD} className="login-form-forgot">
                   Forgot password
                 </Link>
                 <Button
@@ -91,7 +90,7 @@ class Login extends Component {
                 >
                   Log in
                 </Button>
-                Or <Link to="/register">register now!</Link>
+                Or <Link to={URI.REGISTER}>register now!</Link>
               </FormItem>
             </Form>
           </Col>
@@ -105,7 +104,7 @@ const WrappedLoginForm = Form.create()(Login)
 
 const mapStateToProps = state => {
   return {
-    token: state.token,
+    token: state.authentication.token,
   }
 }
 
