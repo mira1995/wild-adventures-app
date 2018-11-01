@@ -3,19 +3,18 @@ package com.wa.msm.image;
 import com.wa.msm.image.entity.Image;
 import com.wa.msm.image.entity.ImageType;
 import com.wa.msm.image.repository.ImageRepository;
-import com.wa.msm.image.util.enumeration.ImageTypeEnum;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class WaImageApplicationTests {
 
@@ -46,13 +45,13 @@ public class WaImageApplicationTests {
 
 		Optional<Image> imageDb = imageRepository.findById(image.getId());
 
-		Assert.assertTrue(imageDb.isPresent());
-		Assert.assertEquals(image.getId(), imageDb.get().getId());
-		Assert.assertEquals(image.getAlt(), imageDb.get().getAlt());
-		Assert.assertEquals(image.getDescription(), imageDb.get().getDescription());
-		Assert.assertEquals(image.getUri(), imageDb.get().getUri());
-		Assert.assertEquals(image.getType().getCode(), imageDb.get().getType().getCode());
-		Assert.assertEquals(image.getType().getName(), imageDb.get().getType().getName());
+		Assertions.assertTrue(imageDb.isPresent());
+		Assertions.assertEquals(image.getId(), imageDb.get().getId());
+		Assertions.assertEquals(image.getAlt(), imageDb.get().getAlt());
+		Assertions.assertEquals(image.getDescription(), imageDb.get().getDescription());
+		Assertions.assertEquals(image.getUri(), imageDb.get().getUri());
+		Assertions.assertEquals(image.getType().getCode(), imageDb.get().getType().getCode());
+		Assertions.assertEquals(image.getType().getName(), imageDb.get().getType().getName());
 
 	}
 

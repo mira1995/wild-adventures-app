@@ -8,6 +8,7 @@ import com.wa.msm.image.repository.ImageRepository;
 import com.wa.msm.image.util.enumeration.ImageTypeEnum;
 import com.wa.msm.image.web.exception.ImageValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -20,9 +21,9 @@ public abstract class AbstractImageDependencyController<T, ID> {
         return imageRepository;
     }
 
-    abstract T create(T entity);
+    abstract ResponseEntity<T> create(T entity);
 
-    abstract String delete(ID imageId);
+    abstract ResponseEntity<String> delete(ID imageId);
 
     abstract  Boolean imageExist(ID imageId);
 

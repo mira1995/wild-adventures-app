@@ -8,6 +8,8 @@ import com.wa.msm.image.repository.CategoryImageRepository;
 import com.wa.msm.image.web.exception.CategoryNotFoundException;
 import com.wa.msm.image.web.exception.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,19 +27,19 @@ public class CategoryImageController extends AbstractImageDependencyController<C
 
     @Override
     @PostMapping(value = "/image/category")
-    CategoryImage create(@RequestBody CategoryImage entity) {
+    ResponseEntity<CategoryImage> create(@RequestBody CategoryImage entity) {
         validateImageDependency(entity);
         validateCategory(entity.getCategoryId());
-        return categoryImageRepository.save(entity);
+        return new ResponseEntity<>(categoryImageRepository.save(entity), HttpStatus.CREATED);
     }
 
     @Override
     @DeleteMapping(value = "/image/category")
-    String delete(@RequestBody CategoryImageKey imageId) {
+    ResponseEntity<String> delete(@RequestBody CategoryImageKey imageId) {
         Optional<CategoryImage> categoryImage = categoryImageRepository.findById(imageId);
         if(!categoryImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
         else categoryImageRepository.deleteById(imageId);
-        return "L'image d'id : "+imageId+" a bien été supprimée";
+        return new ResponseEntity<>("L'image d'id : "+imageId+" a bien été supprimée", HttpStatus.GONE);
     }
 
     @Override

@@ -81,7 +81,7 @@ public class OrderController {
     }
 
     @PatchMapping(value = "/order")
-    public Order updateOrder(@RequestBody Order order){
+    public ResponseEntity<Order> updateOrder(@RequestBody Order order){
         if(order == null) throw new OrderValidationException("La commande fournie est nulle");
         if(order.getId()==null || !orderRepository.findById(order.getId()).isPresent()) throw new OrderValidationException("La commande fournie n' a pas encore été enregistrée");
         validateSessions(order.getOrderSessions());
@@ -89,7 +89,7 @@ public class OrderController {
 
             /*order.getOrderSessions().forEach(orderSession -> );*/
 
-        return orderRepository.save(order);
+        return new ResponseEntity<>(orderRepository.save(order),HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/order/pay/{orderId}")
