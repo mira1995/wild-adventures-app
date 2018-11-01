@@ -3,19 +3,16 @@ package com.wa.msm.order;
 import com.wa.msm.order.entity.Order;
 import com.wa.msm.order.repository.OrderRepository;
 import com.wa.msm.order.util.enumeration.OrderStatusEnum;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Calendar;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class WaOrderApplicationTests {
 
@@ -42,11 +39,11 @@ public class WaOrderApplicationTests {
 		entityManager.flush();
 
 		Optional<Order> orderDb = orderRepository.findById(order.getId());
-		Assert.assertTrue(orderDb.isPresent());
-		Assert.assertEquals(order.getId(), orderDb.get().getId());
-		Assert.assertEquals(order.getIsPaid(), orderDb.get().getIsPaid());
-		Assert.assertEquals(order.getOrderDate(), orderDb.get().getOrderDate());
-		Assert.assertEquals(order.getStatus(), orderDb.get().getStatus());
+		Assertions.assertTrue(orderDb.isPresent());
+		Assertions.assertEquals(order.getId(), orderDb.get().getId());
+		Assertions.assertEquals(order.getIsPaid(), orderDb.get().getIsPaid());
+		Assertions.assertEquals(order.getOrderDate(), orderDb.get().getOrderDate());
+		Assertions.assertEquals(order.getStatus(), orderDb.get().getStatus());
 
 	}
 
