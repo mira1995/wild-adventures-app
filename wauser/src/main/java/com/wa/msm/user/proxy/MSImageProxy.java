@@ -11,18 +11,9 @@ import java.util.Optional;
 @RibbonClient(name = "wa-image")
 public interface MSImageProxy {
 
-    @GetMapping(value = "/wa-image/image/user/{imageId}")
-    Optional<UserAccountImageBean> getUserAccountImageById(@PathVariable("imageId") Long imageId);
+    @GetMapping(value = "/user/{imageId}")
+    Optional<UserAccountImageBean> findById(@PathVariable("imageId") Long imageId);
 
-    @GetMapping(value = "/wa-image/image/user/exist/{imageId}")
-    Boolean userAccountImageExist(@PathVariable("imageId") Long imageId);
-
-    /*@PostMapping(value = "/wa-image/image/user")
-    UserAccountImageBean createUserAccountImage(@RequestBody UserAccountImageBean userAccountImage);
-
-    @DeleteMapping(value = "/wa-image/image/user/{imageId}")
-    String deleteUserAccountImageById(@PathVariable("imageId") Long imageId);
-
-    @PatchMapping(value = "/wa-image/image/user")
-    UserAccountImageBean updateUserAccountImage(@RequestBody UserAccountImageBean userAccountImage);*/
+    @GetMapping(value = "/user/exist/{imageId}")
+    Boolean imageExist(@PathVariable("imageId") Long imageId);
 }

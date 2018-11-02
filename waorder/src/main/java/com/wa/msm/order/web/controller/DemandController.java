@@ -1,7 +1,6 @@
 package com.wa.msm.order.web.controller;
 
 import com.wa.msm.order.bean.SessionBean;
-import com.wa.msm.order.entity.Order;
 import com.wa.msm.order.entity.OrderDemand;
 import com.wa.msm.order.entity.OrderDemandSession;
 import com.wa.msm.order.entity.OrderSession;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/demands")
 public class DemandController {
 
     @Autowired
@@ -44,21 +44,21 @@ public class DemandController {
     @Autowired
     private MSAdventureProxy msAdventureProxy;
 
-    @GetMapping("/demand/{demandId}")
+    @GetMapping("/admin/{demandId}")
     public Optional<OrderDemand> getOrderDemand(@PathVariable Long demandId){
         Optional<OrderDemand> orderDemand = orderDemandRepository.findById(demandId);
         if(!orderDemand.isPresent()) throw new OrderDemandNotFoundException("La demande n'a pas été trouvée");
         return orderDemand;
     }
 
-    @GetMapping("/demands")
+    @GetMapping("/admin")
     public List<OrderDemand> getAllDemands(){
         List<OrderDemand> orderDemands = orderDemandRepository.findAll();
         if(orderDemands == null || orderDemands.isEmpty()) throw new OrderDemandNotFoundException("Il n'existe actuellement aucune demande");
         return orderDemands;
     }
 
-    @GetMapping("/demands/user/{userId}")
+    @GetMapping("/user/{userId}")
     public List<OrderDemand> getAllDemandsByUser(@PathVariable Long userId){
         if(!msUserAccountProxy.getUserById(userId).isPresent()) throw new UserAccountNotFoundException("L'utilisateur d'id "+userId+"n'existe pas");
         List<OrderDemand> orderDemands = orderDemandRepository.findByUserAccountId(userId);
@@ -66,14 +66,14 @@ public class DemandController {
         return orderDemands;
     }
 
-    @GetMapping("/demands/status/{status}")
+    @GetMapping("/admin/status/{status}")
     public List<OrderDemand> getAllDemandsByStatus(@PathVariable OrderDemandEnum status){
         List<OrderDemand> orderDemands = orderDemandRepository.findByDemandStatus(status);
         if(orderDemands == null || orderDemands.isEmpty()) throw new OrderDemandNotFoundException("Il n'existe actuellement aucune demande correspondant à ce statut");
         return orderDemands;
     }
 
-    @PostMapping("/demand")
+    @PostMapping
     public ResponseEntity<OrderDemand> createDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId()!= null) throw new OrderDemandValidationException("La demande a déjà été enregistrée");
@@ -85,10 +85,10 @@ public class DemandController {
             orderDemandSessionRepository.save(orderDemandSession);
         });
 
-        return new ResponseEntity<OrderDemand>(orderDemand, HttpStatus.CREATED);
+        return new ResponseEntity<>(orderDemand, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/demand")
+    @PatchMapping
     public ResponseEntity<OrderDemand> updateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
@@ -96,7 +96,7 @@ public class DemandController {
         return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/demand/validate/update")
+    @PatchMapping("/admin/validate/update")
     public ResponseEntity<OrderDemand> validateUpdateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
@@ -107,7 +107,7 @@ public class DemandController {
         return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/demand/validate/delete")
+    @PatchMapping("/admin/validate/delete")
     public ResponseEntity<OrderDemand> validateDeleteDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
@@ -118,7 +118,7 @@ public class DemandController {
         return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/demand/{demandId}")
+    @DeleteMapping("/{demandId}")
     public ResponseEntity<String> deleteOrderDemand(@PathVariable Long demandId){
         Optional<OrderDemand> orderDemand = orderDemandRepository.findById(demandId);
         if(!orderDemand.isPresent()) throw new OrderDemandNotFoundException("La demande n'a pu être trouvé");

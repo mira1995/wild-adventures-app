@@ -36,28 +36,28 @@ public class OrderController {
     @Autowired
     private MSAdventureProxy msAdventureProxy;
 
-    @GetMapping(value = "/orders")
+    @GetMapping(value = "/admin")
     public List<Order> getAllOrders(){
         List<Order> orders = orderRepository.findAll();
         if(orders == null || orders.isEmpty()) throw  new OrderNotFoundException("Aucune commande enregistrée");
         return orders;
     }
 
-    @GetMapping(value = "/orders/{userId}")
+    @GetMapping(value = "/user/{userId}")
     public List<Order> getAllOrdersByUser(@PathVariable Long userId){
         List<Order> orders = orderRepository.findByUserAccountId(userId);
         if(orders == null || orders.isEmpty()) throw  new OrderNotFoundException("Aucune commande enregistrée pour cet utilisateur");
         return orders;
     }
 
-    @GetMapping(value = "/order/{orderId}")
+    @GetMapping(value = "/{orderId}")
     public Optional<Order> getOrder(@PathVariable Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
         if(!order.isPresent()) throw new OrderNotFoundException("La commande d'id : "+ orderId + "n'existe pas");
         return order;
     }
 
-    @PostMapping(value = "/order")
+    @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order){
         if(order == null) throw new OrderValidationException("La commande fournie est nulle");
         if(order.getId()!=null) throw new OrderValidationException("La commande fournie est déjà  à l'état persistant");
@@ -82,7 +82,7 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/order")
+    @PatchMapping(value = "/admin")
     public ResponseEntity<Order> updateOrder(@RequestBody Order order){
         if(order == null) throw new OrderValidationException("La commande fournie est nulle");
         if(order.getId()==null || !orderRepository.findById(order.getId()).isPresent()) throw new OrderValidationException("La commande fournie n' a pas encore été enregistrée");
@@ -94,7 +94,7 @@ public class OrderController {
         return new ResponseEntity<>(orderRepository.save(order),HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/order/pay/{orderId}")
+    @PatchMapping(value = "/pay/{orderId}")
     public ResponseEntity<Order> payOrder(@PathVariable Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
         if (!order.isPresent()) throw new OrderNotFoundException("La commande d'id : "+ orderId + "n'existe pas");
@@ -106,7 +106,7 @@ public class OrderController {
     }
 
 
-    @DeleteMapping(value = "/order/{orderId}")
+    @DeleteMapping(value = "/admin/{orderId}")
     public ResponseEntity<String> deleteOrder(@PathVariable Long orderId){
         Optional<Order> orderToDelete = orderRepository.findById(orderId);
         if(!orderToDelete.isPresent()) throw new OrderNotFoundException("La commande fournie n'existe pas");

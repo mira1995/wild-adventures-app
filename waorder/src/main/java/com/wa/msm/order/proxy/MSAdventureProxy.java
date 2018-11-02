@@ -12,6 +12,6 @@ import java.util.List;
 @RibbonClient(name = "wa-adventure")
 public interface MSAdventureProxy {
 
-    @PostMapping(value = "/wa-adventure/sessions")
-    List<SessionBean> getAllById (@RequestBody List<Long> sessionsIdList);
+    @PostMapping(value = "/sessions")
+    List<SessionBean> getAllById(@RequestBody List<Long> sessionsIdList);
 }

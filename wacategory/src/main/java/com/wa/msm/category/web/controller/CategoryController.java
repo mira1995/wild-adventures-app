@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/categories")
 public class CategoryController {
 
     @Autowired

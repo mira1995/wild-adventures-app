@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/adventure")
 public class AdventureImageController extends AbstractImageDependencyController<AdventureImage, AdventureImageKey> {
 
     @Autowired
@@ -27,7 +28,7 @@ public class AdventureImageController extends AbstractImageDependencyController<
     private MSAdventureProxy msAdventureProxy;
 
     /*@Override
-    @PostMapping(value = "/image/adventure/find")
+    @PostMapping(value = "/find")
     public Optional<AdventureImage> findById(@RequestBody AdventureImageKey imageId) {
         Optional<AdventureImage> adventureImage = adventureImageRepository.findById(new AdventureImageKey());
         if(!adventureImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
@@ -35,7 +36,7 @@ public class AdventureImageController extends AbstractImageDependencyController<
     }*/
 
     @Override
-    @PostMapping(value = "/image/adventure")
+    @PostMapping(value = "/admin")
     public ResponseEntity<AdventureImage> create(@RequestBody AdventureImage entity) {
         validateImageDependency(entity);
         validateAdventure(entity.getAdventureId());
@@ -43,7 +44,7 @@ public class AdventureImageController extends AbstractImageDependencyController<
     }
 
     /*@Override
-    @PatchMapping(value = "/image/adventure")
+    @PatchMapping(value = "/admin")
     public AdventureImage update(AdventureImage entity) {
         Optional<AdventureImage> adventureImage = adventureImageRepository.findById(new AdventureImageKey(entity.getImageId(), entity.getAdventureId()));
         if(!adventureImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ entity.getImageId() +" n'existe pas.");
@@ -52,7 +53,7 @@ public class AdventureImageController extends AbstractImageDependencyController<
     }*/
 
     @Override
-    @DeleteMapping(value = "/image/adventure")
+    @DeleteMapping(value = "/admin")
     public ResponseEntity<String> delete(@RequestBody AdventureImageKey imageId) {
         Optional<AdventureImage> adventureImage = adventureImageRepository.findById(imageId);
         if(!adventureImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
@@ -61,13 +62,13 @@ public class AdventureImageController extends AbstractImageDependencyController<
     }
 
     @Override
-    @PostMapping(value = "/image/adventure/exist")
+    @PostMapping(value = "/exist")
     public Boolean imageExist(@RequestBody AdventureImageKey imageId) {
         Optional<AdventureImage> adventureImage = adventureImageRepository.findById(imageId);
         return adventureImage.isPresent();
     }
 
-    @GetMapping(value = "/image/adventure/{adventureId}")
+    @GetMapping(value = "/{adventureId}")
     public List<Image> findImagesByAdventure(@PathVariable Long adventureId){
         List<Long> imagesId = new ArrayList<>();
         List<Image> images= null;
