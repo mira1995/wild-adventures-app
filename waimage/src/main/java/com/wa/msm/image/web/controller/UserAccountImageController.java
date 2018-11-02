@@ -11,20 +11,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/user")
 public class UserAccountImageController extends AbstractImageController<UserAccountImage, Long> {
 
     @Autowired
     private UserAccountImageRepository userAccountImageRepository;
 
     @Override
-    @PostMapping(value = "/image/user")
+    @PostMapping
     public ResponseEntity<UserAccountImage> create(@RequestBody UserAccountImage userAccountImage){
         validateImage(userAccountImage);
         return new ResponseEntity<>(userAccountImageRepository.save(userAccountImage), HttpStatus.CREATED);
     }
 
     @Override
-    @PatchMapping(value = "/image/user")
+    @PatchMapping
     public ResponseEntity<UserAccountImage> update(@RequestBody UserAccountImage userAccountImage){
         if(userAccountImage == null || userAccountImage.getId() == null) {throw new ImageNotFoundException("l'image fournie n'existe pas");
         }else{
@@ -36,7 +37,7 @@ public class UserAccountImageController extends AbstractImageController<UserAcco
     }
 
     @Override
-    @DeleteMapping(value = "/image/user/{imageId}")
+    @DeleteMapping(value = "/{imageId}")
     public ResponseEntity<String> delete(@PathVariable Long imageId){
         Optional<UserAccountImage> dbUserAccountImage = userAccountImageRepository.findById(imageId);
         if(!dbUserAccountImage.isPresent()) throw new ImageNotFoundException("L'image fournie n'existe pas en Base");
@@ -45,7 +46,7 @@ public class UserAccountImageController extends AbstractImageController<UserAcco
     }
 
     @Override
-    @GetMapping(value = "/image/user/{imageId}")
+    @GetMapping(value = "/{imageId}")
     public Optional<UserAccountImage> findById(@PathVariable Long imageId){
         Optional<UserAccountImage> userAccount = userAccountImageRepository.findById(imageId);
         if(!userAccount.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
@@ -53,7 +54,7 @@ public class UserAccountImageController extends AbstractImageController<UserAcco
     }
 
     @Override
-    @GetMapping(value = "/image/user/exist/{imageId}")
+    @GetMapping(value = "/exist/{imageId}")
     public Boolean imageExist(@PathVariable Long imageId){
         Optional<UserAccountImage> userAccount = userAccountImageRepository.findById(imageId);
         return userAccount.isPresent();

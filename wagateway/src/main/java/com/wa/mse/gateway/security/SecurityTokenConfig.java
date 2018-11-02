@@ -33,7 +33,17 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JWTAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, jwtConfig.getURI()).anonymous()
+                .antMatchers("/comments/admin/**").hasRole("ADMIN")
                 .antMatchers("/categories/admin/**").hasRole("ADMIN")
+                .antMatchers("/adventures/admin/**").hasRole("ADMIN")
+                .antMatchers("/adventures/sessions/admin/**").hasRole("ADMIN")
+                .antMatchers("/users/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/adventure/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/category/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/user/admin/**").hasRole("ADMIN")
+                .antMatchers("/orders/admin/**").hasRole("ADMIN")
+                .antMatchers("/orders/demands/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
     }
 

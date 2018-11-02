@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@RequestMapping(value = "/sessions")
 public class SessionController {
 
     @Autowired
@@ -30,7 +31,7 @@ public class SessionController {
     @Autowired
     AdventureRepository adventureRepository;
 
-    @GetMapping(value = "/sessions/{adventureId}")
+    @GetMapping(value = "/{adventureId}")
     public List<Session> sessionList(@PathVariable Long adventureId) {
         adventureNotFound(adventureId);
         List<Session> sessions = new ArrayList<>(0);
@@ -39,8 +40,8 @@ public class SessionController {
         return sessions;
     }
 
-    @PostMapping(value = "/sessions")
-    public List<Session> getAllById (@RequestBody List<Long> sessionsIdList){
+    @PostMapping
+    public List<Session> getAllById(@RequestBody List<Long> sessionsIdList){
         if(sessionsIdList == null || sessionsIdList.isEmpty())throw new SessionNotFoundException("Aucun id de session transmis");
         List<Session> sessions = new ArrayList<>(0);
         sessionRepository.findAllByIdIn(sessionsIdList).forEach(sessions::add);
@@ -48,14 +49,14 @@ public class SessionController {
         return sessions;
     }
 
-    @PostMapping(value = "/session")
+    @PostMapping(value = "/admin")
     public ResponseEntity<Session> addSession(@RequestBody Session session) {
         adventureNotFound(session.getAdventureId());
         validateSession(session);
         return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/session")
+    @PatchMapping(value = "/admin")
     public ResponseEntity<Session> updateSession(@RequestBody Session session) {
         adventureNotFound(session.getAdventureId());
         if (session.getId() == null || !sessionRepository.findById(session.getId()).isPresent())
@@ -64,7 +65,7 @@ public class SessionController {
         return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/session/{id}")
+    @DeleteMapping(value = "/admin/{id}")
     public ResponseEntity<String> deleteSession(@PathVariable Long id) {
         Optional<Session> sessionToDelete = sessionRepository.findById(id);
         if (!sessionToDelete.isPresent()) throw new SessionNotFoundException("La session correspondante à l'id " + id + " n'existe pas.");

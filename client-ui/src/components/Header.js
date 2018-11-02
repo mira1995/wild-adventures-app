@@ -39,6 +39,12 @@ class Header extends Component {
             Wild Adventures
           </Link>
         </MenuItem>
+        <MenuItem key={MENU.CATEGORIES}>
+          <Link to={URI.CATEGORIES}>
+            <Icon type="heat-map" />
+            Categories
+          </Link>
+        </MenuItem>
         <MenuItem key={MENU.ADVENTURES}>
           <Link to={URI.ADVENTURES}>
             <Icon type="heat-map" />

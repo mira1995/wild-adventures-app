@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { URI } from '../helpers/constants'
+import { URI } from '../../helpers/constants'
 
 class Account extends Component {
   render() {

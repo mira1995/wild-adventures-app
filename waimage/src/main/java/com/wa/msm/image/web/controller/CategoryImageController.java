@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/category")
 public class CategoryImageController extends AbstractImageDependencyController<CategoryImage, CategoryImageKey> {
 
     @Autowired
@@ -26,7 +27,7 @@ public class CategoryImageController extends AbstractImageDependencyController<C
     private MSCategoryProxy msCategoryProxy;
 
     @Override
-    @PostMapping(value = "/image/category")
+    @PostMapping(value = "/admin")
     ResponseEntity<CategoryImage> create(@RequestBody CategoryImage entity) {
         validateImageDependency(entity);
         validateCategory(entity.getCategoryId());
@@ -34,7 +35,7 @@ public class CategoryImageController extends AbstractImageDependencyController<C
     }
 
     @Override
-    @DeleteMapping(value = "/image/category")
+    @DeleteMapping(value = "/admin")
     ResponseEntity<String> delete(@RequestBody CategoryImageKey imageId) {
         Optional<CategoryImage> categoryImage = categoryImageRepository.findById(imageId);
         if(!categoryImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
@@ -43,17 +44,17 @@ public class CategoryImageController extends AbstractImageDependencyController<C
     }
 
     @Override
-    @PostMapping(value = "/image/category/exist")
+    @PostMapping(value = "/exist")
     Boolean imageExist(@RequestBody CategoryImageKey imageId) {
         Optional<CategoryImage> categoryImage = categoryImageRepository.findById(imageId);
         return categoryImage.isPresent();
     }
 
-    @GetMapping(value = "/image/category/{categoryId}")
+    @GetMapping(value = "/{categoryId}")
     public List<Image> findImagesByCategory(@PathVariable Long categoryId){
         List<Long> imagesId = new ArrayList<>();
         List<Image> images= null;
-        //TODO Vérifier que l'aventure existe
+        validateCategory(categoryId);
         List <CategoryImage> categoryImages = categoryImageRepository.findCategoryImagesByCategoryId(categoryId);
         if(categoryImages.size()>0){
             categoryImages.forEach(itemAdventureImage -> imagesId.add(itemAdventureImage.getImageId()));

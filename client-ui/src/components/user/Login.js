@@ -3,9 +3,9 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd'
 import './Login.css'
-import { http } from '../configurations/axiosConf'
-import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
-import { BEARER_TOKEN, URI, API } from '../helpers/constants'
+import { http } from '../../configurations/axiosConf'
+import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
+import { BEARER_TOKEN, URI, API } from '../../helpers/constants'
 
 class Login extends Component {
   handleSubmit = event => {

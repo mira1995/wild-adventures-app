@@ -11,14 +11,14 @@ import java.util.Optional;
 @RestController
 public class ImageController extends AbstractImageController<Image, Long> {
     @Override
-    @PostMapping(value = "/image")
+    @PostMapping(value = "/admin")
     public ResponseEntity<Image> create(@RequestBody Image image){
         validateImage(image);
         return new ResponseEntity<>(getImageRepository().save(image), HttpStatus.CREATED);
     }
 
     @Override
-    @PatchMapping(value = "/image")
+    @PatchMapping(value = "/admin")
     public ResponseEntity<Image> update(@RequestBody Image image){
         if(image == null || image.getId() == null) {throw new ImageNotFoundException("L'image fournie est nulle");
         }else{
@@ -30,7 +30,7 @@ public class ImageController extends AbstractImageController<Image, Long> {
     }
 
     @Override
-    @DeleteMapping(value = "/image/{imageId}")
+    @DeleteMapping(value = "/admin/{imageId}")
     public ResponseEntity<String> delete(@PathVariable Long imageId){
         Optional<Image> dbImage = getImageRepository().findById(imageId);
         if(!dbImage.isPresent()) throw new ImageNotFoundException("L'image fournie n'existe pas en Base");
@@ -41,7 +41,7 @@ public class ImageController extends AbstractImageController<Image, Long> {
     }
 
     @Override
-    @GetMapping(value = "/image/{imageId}")
+    @GetMapping(value = "/{imageId}")
     public Optional<Image> findById(@PathVariable Long imageId){
         Optional<Image> image = getImageRepository().findById(imageId);
         if(!image.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
@@ -49,7 +49,7 @@ public class ImageController extends AbstractImageController<Image, Long> {
     }
 
     @Override
-    @GetMapping(value = "/image/exist/{imageId}")
+    @GetMapping(value = "/exist/{imageId}")
     public Boolean imageExist(@PathVariable Long imageId){
         Optional<Image> userAccount = getImageRepository().findById(imageId);
         return userAccount.isPresent();

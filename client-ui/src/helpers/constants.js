@@ -1,6 +1,7 @@
 export const BEARER_TOKEN = 'bearerToken'
 export const MENU = {
   HOME: 'home',
+  CATEGORIES: 'categories',
   ADVENTURES: 'adventures',
   ACCOUNT: 'account',
   REGISTER: 'register',
@@ -9,6 +10,7 @@ export const MENU = {
 }
 export const URI = {
   HOME: '/',
+  CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
   ACCOUNT: '/account',
   REGISTER: '/register',
@@ -19,4 +21,6 @@ export const URI = {
 export const API = {
   BASE_URL: 'http://localhost:9000',
   AUTH: '/auth',
+  CATEGORIES: '/categories',
+  ADVENTURES: '/adventures',
 }

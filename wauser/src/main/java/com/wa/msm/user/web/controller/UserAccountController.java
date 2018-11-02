@@ -9,6 +9,8 @@ import com.wa.msm.user.web.exception.UserAccountImageNotFoundException;
 import com.wa.msm.user.web.exception.UserAccountNotFoundException;
 import com.wa.msm.user.web.exception.UserAccountNotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
@@ -25,7 +27,7 @@ public class UserAccountController {
     @Autowired
     private MSImageProxy msImageProxy;
 
-    @GetMapping(value = "/user/{userId}")
+    @GetMapping(value = "/{userId}")
     public Optional<UserAccount> getUserById(@PathVariable Long userId){
         Optional<UserAccount> userAccount = userAccountRepository.findById(userId);
         if(!userAccount.isPresent()) throw new UserAccountNotFoundException("L'utilisateur d'id "+ userId +" n'existe pas.");
@@ -33,7 +35,7 @@ public class UserAccountController {
         return userAccount;
     }
 
-    @GetMapping(value = "/user/email/{email}")
+    @GetMapping(value = "/email/{email}")
     public Optional<UserAccount> getUserByEmail(@PathVariable String email) {
         Optional<UserAccount> userAccount = userAccountRepository.findUserAccountByEmail(email);
         if (!userAccount.isPresent()) throw new UserAccountNotFoundException("L'utilisateur lié à l'identifiant " + email+ " n'existe pas.");
@@ -41,8 +43,8 @@ public class UserAccountController {
         return userAccount;
     }
 
-    @PostMapping(value="/user")
-    public UserAccount createUserAccount(@RequestBody UserAccount userAccount){
+    @PostMapping
+    public ResponseEntity<UserAccount> createUserAccount(@RequestBody UserAccount userAccount){
         //Si l'image du compte n'est pas vide la sauvegarder
 /*        if(userAccount.getProfileImageId() != null && userAccount.getProfileImage() == null) throw new UserAccountNotValidException("Pour lier une image à un utilisateur les informations de l'image doivent être fournie");*/
         //Si l'image n'existe pas la sauvegarder
@@ -67,7 +69,7 @@ public class UserAccountController {
         if(countUserWithEmail >0) throw new UserAccountNotValidException("L'email : "+userAccount.getEmail()+" est déjà utilisé par un autre utilisateur");
 
         if(userAccount.getProfileImageId() != null){
-            Optional<UserAccountImageBean> userAccountImageBean = msImageProxy.getUserAccountImageById(userAccount.getProfileImageId());
+            Optional<UserAccountImageBean> userAccountImageBean = msImageProxy.findById(userAccount.getProfileImageId());
             if(!userAccountImageBean.isPresent()) throw new UserAccountImageNotFoundException("L'image correspondant à l'utilisateur n'a pas été trouvée");
             /*else userAccount.get().setProfileImage(userAccountImageBean.get());*/
         }
@@ -76,13 +78,11 @@ public class UserAccountController {
         checkIfImageExist(userAccount);
         validateUserAccount(userAccount);
 
-        //TODO ResponseEntity
-
-        return userAccountRepository.save(userAccount);
+        return new ResponseEntity<>(userAccountRepository.save(userAccount), HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/user")
-    public UserAccount updateUserAccount(@RequestBody UserAccount userAccount) {
+    @PatchMapping
+    public ResponseEntity<UserAccount> updateUserAccount(@RequestBody UserAccount userAccount) {
 
         if(userAccount.getId() != null){
 
@@ -111,21 +111,18 @@ public class UserAccountController {
             //Valide tous les autres champs du compte
             checkIfImageExist(userAccount);
             validateUserAccount(userAccount);
-        }else throw new UserAccountNotFoundException("L'utilisateur fourni n'a pas encore été ajouté");
+        } else throw new UserAccountNotFoundException("L'utilisateur fourni n'a pas encore été ajouté");
 
-
-
-        return userAccountRepository.save(userAccount);
+        return new ResponseEntity<>(userAccountRepository.save(userAccount), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/user/{userId}")
-    public String deleteUserAccount(@PathVariable Long userId){
-        //TODO Gérer la suppression de l'image de profil si cette dernière existe
+    @DeleteMapping(value = "/{userId}")
+    public ResponseEntity<String> deleteUserAccount(@PathVariable Long userId) {
         Optional<UserAccount> userAccount = userAccountRepository.findById(userId);
         if(!userAccount.isPresent()) throw new UserAccountNotFoundException("L'utilisateur d'id "+ userId +" n'existe pas.");
         /*if(userAccount.get().getProfileImageId()!=null) msImageProxy.deleteUserAccountImageById(userAccount.get().getProfileImageId());*/
         userAccountRepository.deleteById(userId);
-        return  "Le compte utilisateur  d'id " + userId + " a bien été supprimé.";
+        return new ResponseEntity<>("Le compte utilisateur  d'id " + userId + " a bien été supprimé.", HttpStatus.GONE);
     }
 
     private void validateUserAccount(UserAccount userAccount){
@@ -144,11 +141,10 @@ public class UserAccountController {
 
     private void checkIfImageExist(UserAccount userAccount){
         if(userAccount.getProfileImageId() != null) {
-            Optional<UserAccountImageBean> userAccountImageBean = msImageProxy.getUserAccountImageById(userAccount.getProfileImageId());
+            Optional<UserAccountImageBean> userAccountImageBean = msImageProxy.findById(userAccount.getProfileImageId());
             if (!userAccountImageBean.isPresent())
                 throw new UserAccountImageNotFoundException("L'image correspondant à l'utilisateur n'a pas été trouvée");
             /*else userAccount.get().setProfileImage(userAccountImageBean.get());*/
         }
     }
-
 }

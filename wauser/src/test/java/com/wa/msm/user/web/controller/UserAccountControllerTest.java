@@ -73,7 +73,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Test
     public void test1_createUserAccountTest(){
         Mockito.when(
-                msImageProxy.getUserAccountImageById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
+                msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/user").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
@@ -93,7 +93,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Test
     public void test2_getUserByIdTest(){
         Mockito.when(
-                msImageProxy.getUserAccountImageById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
+                msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/1").accept(MediaType.APPLICATION_JSON);
 
@@ -111,7 +111,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Test
     public void test3_updateUserAccount(){
         Mockito.when(
-                msImageProxy.getUserAccountImageById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
+                msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         userAccount.setId(1L);
         Calendar cal = Calendar.getInstance();
@@ -134,7 +134,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Test
     public void test4_deleteUserAccount(){
         Mockito.when(
-                msImageProxy.getUserAccountImageById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
+                msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
             RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/user/1").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;

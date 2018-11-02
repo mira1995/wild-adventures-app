@@ -4,10 +4,12 @@ import { connect } from 'react-redux'
 import './App.css'
 import Header from './components/Header'
 import Home from './components/Home'
-import Adventures from './components/Adventures'
-import Account from './components/Account'
-import Register from './components/Register'
-import Login from './components/Login'
+import Categories from './components/categories/Categories'
+import CategoryDetails from './components/categories/CategoryDetails'
+import Adventures from './components/adventures/Adventures'
+import Account from './components/user/Account'
+import Register from './components/user/Register'
+import Login from './components/user/Login'
 import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
@@ -44,6 +46,8 @@ class App extends Component {
 
         <Switch>
           <Route exact path={URI.HOME} component={Home} />
+          <Route path={URI.CATEGORIES} component={Categories} />
+          <Route path={`/category/:categoryId`} component={CategoryDetails} />
           <Route path={URI.ADVENTURES} component={Adventures} />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />

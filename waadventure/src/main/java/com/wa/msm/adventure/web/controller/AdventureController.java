@@ -28,7 +28,7 @@ import java.util.Set;
 @RestController
 public class AdventureController implements HealthIndicator {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Autowired
@@ -51,7 +51,7 @@ public class AdventureController implements HealthIndicator {
         return Health.up().build();
     }
 
-    @GetMapping(value = "/adventures")
+    @GetMapping
     public List<Adventure> adventureList() {
         List<Adventure> adventures = new ArrayList<>(0);
         adventureRepository.findAll().iterator().forEachRemaining(adventures::add);
@@ -62,7 +62,7 @@ public class AdventureController implements HealthIndicator {
         return adventures;
     }
 
-    @GetMapping(value = "/adventures/{categoryId}")
+    @GetMapping(value = "/category/{categoryId}")
     public List<Adventure> adventureList(@PathVariable Long categoryId) {
         List<Adventure> adventures = new ArrayList<>(0);
 
@@ -76,14 +76,14 @@ public class AdventureController implements HealthIndicator {
         return adventures;
     }
 
-    @GetMapping(value = "/adventure/{id}")
+    @GetMapping(value = "/{id}")
     public Optional<Adventure> getAdventure(@PathVariable Long id) {
         Optional<Adventure> adventure = adventureRepository.findById(id);
         if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + id + ".");
         return adventure;
     }
 
-    @PostMapping(value = "/adventure/{categoryId}")
+    @PostMapping(value = "/admin/{categoryId}")
     public ResponseEntity<Adventure> addAdventure(@RequestBody Adventure adventure, @PathVariable Long categoryId) {
         Adventure newAdventure = new Adventure();
         // Vérifier si la catégorie existe
@@ -101,7 +101,7 @@ public class AdventureController implements HealthIndicator {
         return new ResponseEntity<>(newAdventure, HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/adventure")
+    @PatchMapping(value = "/admin")
     public ResponseEntity<Adventure> updateAdventure(@RequestBody Adventure adventure) {
         if (adventure == null || !adventureRepository.findById(adventure.getId()).isPresent())
             throw new AdventureNotFoundException("L'aventure envoyée n'existe pas.");
@@ -109,7 +109,7 @@ public class AdventureController implements HealthIndicator {
         return new ResponseEntity<>(adventureRepository.save(adventure), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/adventure/{id}")
+    @DeleteMapping(value = "/admin/{id}")
     public ResponseEntity<String> deleteAdventure(@PathVariable Long id) {
         Optional<Adventure> adventureToDelete = adventureRepository.findById(id);
         if (!adventureToDelete.isPresent()) throw new AdventureNotFoundException("L'aventure correspondante à l'id " + id + " n'existe pas.");

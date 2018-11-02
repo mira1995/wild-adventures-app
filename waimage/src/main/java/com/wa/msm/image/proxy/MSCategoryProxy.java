@@ -11,6 +11,6 @@ import java.util.Optional;
 @FeignClient(name = "wa-category")
 @RibbonClient(name = "wa-category")
 public interface MSCategoryProxy {
-    @GetMapping(value = "/wa-category/category/{id}")
+    @GetMapping(value = "/{id}")
     Optional<CategoryBean> getCategory(@PathVariable("id") Long id);
 }

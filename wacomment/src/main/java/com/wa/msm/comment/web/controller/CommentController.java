@@ -29,7 +29,7 @@ public class CommentController {
     @Autowired
     MSUserAccountProxy msUserAccountProxy;
 
-    @GetMapping(value = "/comments/{adventureId}")
+    @GetMapping(value = "/{adventureId}")
     public List<Comment> commentList(@PathVariable Long adventureId) {
         // Vérifier que l'aventure existe
         msAdventureProxy.getAdventure(adventureId);
@@ -43,7 +43,7 @@ public class CommentController {
         return comments;
     }
 
-    @PostMapping(value = "/comment")
+    @PostMapping
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
         // Vérifier que l'aventure et l'utilisateur existent
         msAdventureProxy.getAdventure(comment.getAdventureId());
@@ -53,7 +53,7 @@ public class CommentController {
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/comment")
+    @PatchMapping
     public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
         if (comment.getId() == null || !commentRepository.findById(comment.getId()).isPresent())
             throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
@@ -70,7 +70,7 @@ public class CommentController {
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/comment/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         Optional<Comment> commentToDelete = commentRepository.findById(id);
         if (!commentToDelete.isPresent()) throw new CommentNotFoundException("Le commentaire correspondant à l'id " + id + " n'existe pas.");
@@ -78,7 +78,7 @@ public class CommentController {
         return new ResponseEntity<>("Le commentaire pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 
-    @DeleteMapping(value = "/comment/adventure/{adventureId}")
+    @DeleteMapping(value = "/adventure/{adventureId}")
     public ResponseEntity<String> deleteCommentByAdventureId(@PathVariable Long adventureId) {
         commentRepository.deleteAllByAdventureId(adventureId);
         return new ResponseEntity<>("Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.", HttpStatus.GONE);
