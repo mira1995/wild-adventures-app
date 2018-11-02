@@ -4,6 +4,8 @@ import com.wa.msm.image.entity.UserAccountImage;
 import com.wa.msm.image.web.exception.ImageNotFoundException;
 import com.wa.msm.image.repository.UserAccountImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -16,30 +18,30 @@ public class UserAccountImageController extends AbstractImageController<UserAcco
 
     @Override
     @PostMapping(value = "/image/user")
-    public UserAccountImage create(@RequestBody UserAccountImage userAccountImage){
+    public ResponseEntity<UserAccountImage> create(@RequestBody UserAccountImage userAccountImage){
         validateImage(userAccountImage);
-        return userAccountImageRepository.save(userAccountImage);
+        return new ResponseEntity<>(userAccountImageRepository.save(userAccountImage), HttpStatus.CREATED);
     }
 
     @Override
     @PatchMapping(value = "/image/user")
-    public UserAccountImage update(@RequestBody UserAccountImage userAccountImage){
+    public ResponseEntity<UserAccountImage> update(@RequestBody UserAccountImage userAccountImage){
         if(userAccountImage == null || userAccountImage.getId() == null) {throw new ImageNotFoundException("l'image fournie n'existe pas");
         }else{
             Optional<UserAccountImage> dbUserAccountImage = userAccountImageRepository.findById(userAccountImage.getId());
             if(!dbUserAccountImage.isPresent()) throw new ImageNotFoundException("L'image fournie n'existe pas en Base");
         }
         validateImage(userAccountImage);
-        return userAccountImageRepository.save(userAccountImage);
+        return new ResponseEntity<>(userAccountImageRepository.save(userAccountImage), HttpStatus.CREATED);
     }
 
     @Override
     @DeleteMapping(value = "/image/user/{imageId}")
-    public String delete(@PathVariable Long imageId){
+    public ResponseEntity<String> delete(@PathVariable Long imageId){
         Optional<UserAccountImage> dbUserAccountImage = userAccountImageRepository.findById(imageId);
         if(!dbUserAccountImage.isPresent()) throw new ImageNotFoundException("L'image fournie n'existe pas en Base");
         else userAccountImageRepository.deleteById(imageId);
-        return "L'image d'id : "+imageId+" a bien été supprimée";
+        return new ResponseEntity<>("L'image d'id : "+imageId+" a bien été supprimée", HttpStatus.GONE);
     }
 
     @Override

@@ -1,21 +1,23 @@
 CREATE SCHEMA waorder;
 
-CREATE SEQUENCE waorder.order_id_seq;
+CREATE SEQUENCE waorder.orders_id_seq;
 
-CREATE TABLE waorder.order (
-                id INTEGER NOT NULL DEFAULT nextval('waorder.order_id_seq'),
+CREATE TABLE waorder.orders (
+                id INTEGER NOT NULL DEFAULT nextval('waorder.orders_id_seq'),
                 order_date TIMESTAMP NOT NULL,
                 status VARCHAR NOT NULL,
                 is_paid BOOLEAN NOT NULL,
                 useraccount_id INTEGER NOT NULL,
-                CONSTRAINT order_pk PRIMARY KEY (id)
+                CONSTRAINT orders_pk PRIMARY KEY (id)
 );
 
 
-ALTER SEQUENCE waorder.order_id_seq OWNED BY waorder.order.id;
+ALTER SEQUENCE waorder.orders_id_seq OWNED BY waorder.orders.id;
+
+CREATE SEQUENCE waorder.order_id_seq;
 
 CREATE TABLE waorder.order_demand (
-                id INTEGER NOT NULL,
+                id INTEGER NOT NULL DEFAULT nextval('waorder.order_id_seq'),
                 order_date TIMESTAMP NOT NULL,
                 status VARCHAR NOT NULL,
                 is_paid BOOLEAN NOT NULL,
@@ -27,6 +29,8 @@ CREATE TABLE waorder.order_demand (
                 CONSTRAINT order_demand_pk PRIMARY KEY (id)
 );
 
+
+ALTER SEQUENCE waorder.order_id_seq OWNED BY waorder.order_demand.id;
 
 CREATE TABLE waorder.order_demand_session (
                 demand_id INTEGER NOT NULL,
@@ -44,14 +48,14 @@ CREATE TABLE waorder.order_session (
 
 ALTER TABLE waorder.order_session ADD CONSTRAINT order_order_session_fk
 FOREIGN KEY (order_id)
-REFERENCES waorder.order (id)
+REFERENCES waorder.orders (id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
 ALTER TABLE waorder.order_demand ADD CONSTRAINT order_order_demand_fk
 FOREIGN KEY (order_id)
-REFERENCES waorder.order (id)
+REFERENCES waorder.orders (id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;

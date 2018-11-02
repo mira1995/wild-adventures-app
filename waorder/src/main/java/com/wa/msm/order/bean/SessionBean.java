@@ -9,6 +9,8 @@ import java.util.Date;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class SessionBean {
 
+    private Long id;
+
     private AdventureBean adventure;
 
     private Long adventureId;
