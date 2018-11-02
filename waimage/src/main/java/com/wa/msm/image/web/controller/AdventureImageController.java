@@ -9,6 +9,8 @@ import com.wa.msm.image.web.exception.AdventureNotFoundException;
 import com.wa.msm.image.web.exception.CategoryNotFoundException;
 import com.wa.msm.image.web.exception.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,10 +36,10 @@ public class AdventureImageController extends AbstractImageDependencyController<
 
     @Override
     @PostMapping(value = "/image/adventure")
-    public AdventureImage create(@RequestBody AdventureImage entity) {
+    public ResponseEntity<AdventureImage> create(@RequestBody AdventureImage entity) {
         validateImageDependency(entity);
         validateAdventure(entity.getAdventureId());
-        return adventureImageRepository.save(entity);
+        return new ResponseEntity<>(adventureImageRepository.save(entity), HttpStatus.CREATED);
     }
 
     /*@Override
@@ -51,17 +53,17 @@ public class AdventureImageController extends AbstractImageDependencyController<
 
     @Override
     @DeleteMapping(value = "/image/adventure")
-    public String delete(@RequestBody AdventureImageKey imageId) {
+    public ResponseEntity<String> delete(@RequestBody AdventureImageKey imageId) {
         Optional<AdventureImage> adventureImage = adventureImageRepository.findById(imageId);
         if(!adventureImage.isPresent()) throw new ImageNotFoundException("L'image d'id "+ imageId +" n'existe pas.");
         else adventureImageRepository.deleteById(imageId);
-        return "L'image d'id : "+imageId+" a bien été supprimée";
+        return new ResponseEntity<>("L'image d'id : "+imageId+" a bien été supprimée", HttpStatus.GONE);
     }
 
     @Override
     @PostMapping(value = "/image/adventure/exist")
     public Boolean imageExist(@RequestBody AdventureImageKey imageId) {
-        Optional<AdventureImage> adventureImage = adventureImageRepository.findById(new AdventureImageKey());
+        Optional<AdventureImage> adventureImage = adventureImageRepository.findById(imageId);
         return adventureImage.isPresent();
     }
 

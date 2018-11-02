@@ -14,6 +14,7 @@ import com.wa.msm.order.web.exception.SessionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -65,23 +66,24 @@ public class OrderController {
         //Vérification que l'utilisateur fournie existe
         if(!msUserAccountProxy.getUserById(order.getUserAccountId()).isPresent()) throw new OrderValidationException(("L'utilisateur lié à la commande n'existe pas"));
 
-        final Order orderSaved = orderRepository.save(order);
+        order = orderRepository.save(order);
 
+        final Long orderId = order.getId();
         if(!order.getOrderSessions().isEmpty()){
             validateSessions(order.getOrderSessions());
 
             //Si les sessions existent on sauvegarde les liens entre la commande et les sessions
             order.getOrderSessions().iterator().forEachRemaining(orderSession -> {
-                orderSession.setOrderId(orderSaved.getId());
+                orderSession.setOrderId(orderId);
                 orderSessionRepository.save(orderSession);
             });
         }
 
-        return new ResponseEntity<Order>(orderSaved, HttpStatus.CREATED);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/order")
-    public Order updateOrder(@RequestBody Order order){
+    public ResponseEntity<Order> updateOrder(@RequestBody Order order){
         if(order == null) throw new OrderValidationException("La commande fournie est nulle");
         if(order.getId()==null || !orderRepository.findById(order.getId()).isPresent()) throw new OrderValidationException("La commande fournie n' a pas encore été enregistrée");
         validateSessions(order.getOrderSessions());
@@ -89,27 +91,27 @@ public class OrderController {
 
             /*order.getOrderSessions().forEach(orderSession -> );*/
 
-        return orderRepository.save(order);
+        return new ResponseEntity<>(orderRepository.save(order),HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/order/pay/{orderId}")
-    public Order payOrder(@PathVariable Long orderId){
+    public ResponseEntity<Order> payOrder(@PathVariable Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
         if (!order.isPresent()) throw new OrderNotFoundException("La commande d'id : "+ orderId + "n'existe pas");
         if(order.get().getIsPaid()) throw new OrderValidationException("La commande fournie est déjà payée");
         validateSessions(order.get().getOrderSessions());
         order.get().setIsPaid(true);
         order.get().setStatus(OrderStatusEnum.FINALIZED);
-        return orderRepository.save(order.get());
+        return new ResponseEntity<>(orderRepository.save(order.get()), HttpStatus.CREATED);
     }
 
 
     @DeleteMapping(value = "/order/{orderId}")
-    public String deleteOrder(@PathVariable Long orderId){
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId){
         Optional<Order> orderToDelete = orderRepository.findById(orderId);
         if(!orderToDelete.isPresent()) throw new OrderNotFoundException("La commande fournie n'existe pas");
         else orderRepository.deleteById(orderId);
-        return "La commande d'id " + orderId + " a bien été supprimé";
+        return new ResponseEntity<>("La commande d'id " + orderId + " a bien été supprimé", HttpStatus.GONE);
     }
 
     private void validateSessions(List<OrderSession> orderSessions){

@@ -89,41 +89,41 @@ public class DemandController {
     }
 
     @PatchMapping("/demand")
-    public OrderDemand updateDemand(@RequestBody OrderDemand orderDemand){
+    public ResponseEntity<OrderDemand> updateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
         validateSessions(orderDemand.getOrderDemandSessions());
-        return orderDemandRepository.save(orderDemand);
+        return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
     @PatchMapping("/demand/validate/update")
-    public OrderDemand validateUpdateDemand(@RequestBody OrderDemand orderDemand){
+    public ResponseEntity<OrderDemand> validateUpdateDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
         validateSessions(orderDemand.getOrderDemandSessions());
         if(!orderDemand.getStatus().equals(OrderStatusEnum.UPDATE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         populateOrderWithDemandUpdate(orderDemand);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
-        return orderDemandRepository.save(orderDemand);
+        return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
     @PatchMapping("/demand/validate/delete")
-    public OrderDemand validateDeleteDemand(@RequestBody OrderDemand orderDemand){
+    public ResponseEntity<OrderDemand> validateDeleteDemand(@RequestBody OrderDemand orderDemand){
         validateOrderDemand(orderDemand);
         if(orderDemand.getId() == null || !orderDemandRepository.findById(orderDemand.getId()).isPresent()) throw new OrderDemandNotFoundException("La demande fournie n'existe pas");
         validateSessions(orderDemand.getOrderDemandSessions());
         if(!orderDemand.getStatus().equals(OrderStatusEnum.DELETE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         orderDemand.getOrder().setStatus(OrderStatusEnum.CANCELED);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
-        return orderDemandRepository.save(orderDemand);
+        return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/demand/{demandId}")
-    public String deleteOrderDemand(@PathVariable Long demandId){
+    public ResponseEntity<String> deleteOrderDemand(@PathVariable Long demandId){
         Optional<OrderDemand> orderDemand = orderDemandRepository.findById(demandId);
         if(!orderDemand.isPresent()) throw new OrderDemandNotFoundException("La demande n'a pu être trouvé");
         orderDemandRepository.deleteById(demandId);
-        return "La demande d'id : "+ demandId + " a bien été supprimée";
+        return new ResponseEntity<>("La demande d'id : "+ demandId + " a bien été supprimée", HttpStatus.GONE);
     }
 
     private void validateOrderDemand(OrderDemand orderDemand){
