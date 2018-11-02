@@ -6,8 +6,9 @@ import Header from './components/Header'
 import Home from './components/Home'
 import Adventures from './components/Adventures'
 import Account from './components/Account'
-import NoMatch from './components/NoMatch'
+import Register from './components/Register'
 import Login from './components/Login'
+import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
 
@@ -44,9 +45,10 @@ class App extends Component {
         <Switch>
           <Route exact path={URI.HOME} component={Home} />
           <Route path={URI.ADVENTURES} component={Adventures} />
-          <Route path={URI.LOGIN} component={Login} />
           <Route path={URI.ACCOUNT} component={Account} />
+          <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />
+          <Route path={URI.LOGIN} component={Login} />
           <Route component={NoMatch} />
         </Switch>
       </div>

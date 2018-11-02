@@ -30,6 +30,10 @@ class Login extends Component {
     })
   }
 
+  handleMenu = () => {
+    this.toggleAction(TOGGLE_MENU, URI.REGISTER)
+  }
+
   toggleAction(type, value) {
     const action = { type, value }
     this.props.dispatch(action)
@@ -90,7 +94,10 @@ class Login extends Component {
                 >
                   Log in
                 </Button>
-                Or <Link to={URI.REGISTER}>register now!</Link>
+                Or{' '}
+                <Link to={URI.REGISTER} onClick={this.handleMenu}>
+                  register now!
+                </Link>
               </FormItem>
             </Form>
           </Col>
