@@ -14,17 +14,11 @@ class CategoryDetails extends Component {
 
   componentWillMount() {
     http
-      .get(`${API.CATEGORIES}/${this.props.match.params.id}`)
-      .then(response => {
-        const category = response.data
-        this.setState({ category })
-      })
+      .get(`${API.CATEGORIES}/${this.props.match.params.categoryId}`)
+      .then(response => this.setState({ category: response.data }))
     http
-      .get(`${API.ADVENTURES}/${this.props.match.params.id}`)
-      .then(response => {
-        const adventures = response.data
-        this.setState({ adventures })
-      })
+      .get(`${API.ADVENTURES}/category/${this.props.match.params.categoryId}`)
+      .then(response => this.setState({ adventures: response.data }))
   }
 
   render() {

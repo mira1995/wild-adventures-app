@@ -46,8 +46,11 @@ class App extends Component {
 
         <Switch>
           <Route exact path={URI.HOME} component={Home} />
-          <Route path={URI.CATEGORIES} component={Categories} />
-          <Route path={`/category/:categoryId`} component={CategoryDetails} />
+          <Route exact path={URI.CATEGORIES} component={Categories} />
+          <Route
+            path={`${URI.CATEGORIES}/:categoryId`}
+            component={CategoryDetails}
+          />
           <Route path={URI.ADVENTURES} component={Adventures} />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
