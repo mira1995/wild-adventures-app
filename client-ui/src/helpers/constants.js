@@ -23,4 +23,5 @@ export const API = {
   AUTH: '/auth',
   CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
+  COMMENTS: '/comments',
 }
