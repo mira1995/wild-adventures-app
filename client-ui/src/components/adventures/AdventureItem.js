@@ -1,12 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card, Col } from 'antd'
+import { URI } from './../../helpers/constants'
 
 const { Meta } = Card
 
 const AdventureItem = ({ index, imagePath, adventure }) => (
   <Col sm={12} lg={8}>
-    <Link to={`/category/${index}`}>
+    <Link to={`${URI.ADVENTURES}/${index}`}>
       <Card hoverable cover={<img alt="example" src={imagePath} />}>
         <Meta title={adventure.title} description={adventure.description} />
         <div>
