@@ -5,4 +5,5 @@ import com.wa.msm.category.entity.CategoryAdventureKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryAdventureRepository extends JpaRepository<CategoryAdventure, CategoryAdventureKey> {
+    Iterable<CategoryAdventure> findAllByAdventureId(Long adventureId);
 }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "04f94ffd-f470-4d67-bf3c-b9bb811dc454",
+		"_postman_id": "892c0a19-f32d-42e3-b2d3-e120fc67055d",
 		"name": "wa-category",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -8,6 +8,16 @@
 		{
 			"name": "addCategory",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -17,17 +27,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"title\": \"Mon super titre\", \"description\": \"Je suis une description, yeaah !!\"}"
+					"raw": "{\"title\": \"La super catégorie\", \"description\": \"Ceci est une catégorie trop top\"}"
 				},
 				"url": {
-					"raw": "http://localhost:9002/category",
+					"raw": "http://localhost:9000/categories/admin",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9000",
 					"path": [
-						"category"
+						"categories",
+						"admin"
 					]
 				}
 			},
@@ -57,6 +68,31 @@
 			"response": []
 		},
 		{
+			"name": "categoryListByAdventure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9002/categories/adventure/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"categories",
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "getCategory",
 			"request": {
 				"method": "GET",
@@ -66,14 +102,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9002/category/1",
+					"raw": "http://localhost:9000/categories/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9000",
 					"path": [
-						"category",
+						"categories",
 						"1"
 					]
 				}
@@ -83,6 +119,16 @@
 		{
 			"name": "updateCategory",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PATCH",
 				"header": [
 					{
@@ -95,14 +141,15 @@
 					"raw": "{\"id\": 1, \"title\": \"Mon super titre\", \"description\": \"Je suis une description QUI CASSE TOUT !!\", \"categoryAdventures\": [{\"categoryId\": 1, \"adventureId\": 1}]}"
 				},
 				"url": {
-					"raw": "http://localhost:9002/category",
+					"raw": "http://localhost:9000/categories/admin",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9000",
 					"path": [
-						"category"
+						"categories",
+						"admin"
 					]
 				}
 			},
@@ -111,6 +158,16 @@
 		{
 			"name": "deleteCategory",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"body": {
@@ -118,14 +175,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9002/category/1",
+					"raw": "http://localhost:9000/categories/admin/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9002",
+					"port": "9000",
 					"path": [
-						"category",
+						"categories",
+						"admin",
 						"1"
 					]
 				}
