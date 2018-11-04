@@ -1,10 +1,34 @@
 {
 	"info": {
-		"_postman_id": "0c5024e8-2413-40c3-8d1b-c18021a83ce0",
+		"_postman_id": "6020adf4-d9a9-4472-8115-3e47c38786ec",
 		"name": "wa-comment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "commentList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9001/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"comments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "addComment",
 			"request": {
@@ -17,38 +41,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
-					"raw": "http://localhost:9001/comment",
+					"raw": "http://localhost:9000/comments",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9001",
+					"port": "9000",
 					"path": [
-						"comment"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "commentList",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://localhost:9001/comments/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9001",
-					"path": [
-						"comments",
-						"1"
+						"comments"
 					]
 				}
 			},
@@ -66,7 +69,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\": 1, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"id\": 2, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
 					"raw": "http://localhost:9001/comment",
@@ -87,9 +90,12 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "http://localhost:9001/comment/1",
+					"raw": "http://localhost:9001/comment/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -97,29 +103,7 @@
 					"port": "9001",
 					"path": [
 						"comment",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "deleteCommentByAdventureId",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://localhost:9001/comment/adventure/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9001",
-					"path": [
-						"comment",
-						"adventure",
-						"1"
+						"7"
 					]
 				}
 			},

@@ -19,7 +19,7 @@ import javax.validation.Validator;
 import java.util.*;
 
 @RestController
-public class UserAccountController {
+public class ggUserAccountController {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
