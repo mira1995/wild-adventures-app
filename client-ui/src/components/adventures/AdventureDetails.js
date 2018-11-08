@@ -4,6 +4,7 @@ import { API, URI } from '../../helpers/constants'
 import { Link } from 'react-router-dom'
 import { Row } from 'antd'
 import CommentItem from '../comments/CommentItem'
+import CommentForm from './../comments/CommentForm'
 
 class AdventureDetails extends Component {
   constructor(props) {
@@ -60,6 +61,9 @@ class AdventureDetails extends Component {
                 comments={comment.comments}
               />
             ))}
+          </Row>
+          <Row>
+            <CommentForm adventureId={this.props.match.params.adventureId} />
           </Row>
         </div>
       </div>
