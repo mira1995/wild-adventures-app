@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
 import { http } from '../../configurations/axiosConf'
-import { API, URI } from '../../helpers/constants'
+import { API } from '../../helpers/constants'
 
 class CommentForm extends Component {
   constructor(props) {
@@ -10,6 +10,7 @@ class CommentForm extends Component {
       adventureId: this.props.adventureId,
     }
   }
+
   persistComment = event => {
     event.preventDefault()
     this.props.form.validateFields((error, values) => {
@@ -24,8 +25,7 @@ class CommentForm extends Component {
             userId: 1,
           })
           .then(response => {
-            const { router } = this.props
-            router.push(`${URI.ADVENTURES}/${this.state.adventureId}`)
+            this.props.action(this.state.adventureId)
           })
           .catch(error => console.log('error', error))
       }

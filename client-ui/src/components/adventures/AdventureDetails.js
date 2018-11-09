@@ -5,18 +5,30 @@ import { Link } from 'react-router-dom'
 import { Row } from 'antd'
 import CommentItem from '../comments/CommentItem'
 import CommentForm from './../comments/CommentForm'
+import { BEARER_TOKEN } from './../../helpers/constants'
+import { withRouter } from 'react-router-dom'
 
 class AdventureDetails extends Component {
   constructor(props) {
     super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {
       adventure: [],
       categories: [],
       comments: [],
+      isAnonymous: this.checkIfAnonymous(),
     }
   }
 
   componentWillMount = () => {
+    this.getDatas()
+  }
+
+  componountDidUpdate = () => {
+    this.getDatas()
+  }
+
+  getDatas() {
     http
       .get(`${API.ADVENTURES}/${this.props.match.params.adventureId}`)
       .then(response => {
@@ -34,7 +46,16 @@ class AdventureDetails extends Component {
       })
   }
 
+  checkIfAnonymous() {
+    return sessionStorage.getItem(BEARER_TOKEN) === null
+  }
+
+  handleSubmit(adventureId) {
+    window.location.reload()
+  }
+
   render() {
+    console.log(this.state.isAnonymous)
     return (
       <div>
         <h1>{this.state.adventure.title}</h1>
@@ -62,13 +83,18 @@ class AdventureDetails extends Component {
               />
             ))}
           </Row>
-          <Row>
-            <CommentForm adventureId={this.props.match.params.adventureId} />
-          </Row>
+          {!this.state.isAnonymous && (
+            <Row>
+              <CommentForm
+                adventureId={this.props.match.params.adventureId}
+                action={this.handleSubmit}
+              />
+            </Row>
+          )}
         </div>
       </div>
     )
   }
 }
 
-export default AdventureDetails
+export default withRouter(AdventureDetails)
