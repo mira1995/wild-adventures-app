@@ -2,13 +2,28 @@ import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
+import jwt from 'jsonwebtoken'
+import { connect } from 'react-redux'
 
 class CommentForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       adventureId: this.props.adventureId,
+      userAccount: null,
     }
+  }
+
+  componentWillMount() {
+    const token = this.props.token.substring(7)
+    const decoded = jwt.decode(token)
+    http
+      .get(`${API.USERS}/email/${decoded.sub}`)
+      .then(response => {
+        const { password, ...userAccount } = response.data
+        this.setState({ userAccount })
+      })
+      .catch(error => console.log('error', error))
   }
 
   persistComment = event => {
@@ -20,12 +35,12 @@ class CommentForm extends Component {
           .post(API.COMMENTS, {
             content: values.content,
             reported: false,
-            comments: null,
+            comments: [],
             adventureId: this.state.adventureId,
-            userId: 1,
+            userId: this.state.userAccount.id,
           })
           .then(response => {
-            this.props.action(this.state.adventureId)
+            this.props.action(response.data)
           })
           .catch(error => console.log('error', error))
       }
@@ -63,4 +78,10 @@ class CommentForm extends Component {
 
 const WrappedCommentForm = Form.create()(CommentForm)
 
-export default WrappedCommentForm
+const mapStateToProps = state => {
+  return {
+    token: state.authentication.token,
+  }
+}
+
+export default connect(mapStateToProps)(WrappedCommentForm)

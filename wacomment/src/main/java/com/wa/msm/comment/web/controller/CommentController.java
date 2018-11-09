@@ -73,6 +73,7 @@ public class CommentController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         Optional<Comment> commentToDelete = commentRepository.findById(id);
+        //FIX ME Ajouter règle de gestion utilisateur doit avoir écrit commentaire ou est Admin.
         if (!commentToDelete.isPresent()) throw new CommentNotFoundException("Le commentaire correspondant à l'id " + id + " n'existe pas.");
         else commentRepository.deleteById(commentToDelete.get().getId());
         return new ResponseEntity<>("Le commentaire pour id " + id + " a bien été supprimé.", HttpStatus.GONE);

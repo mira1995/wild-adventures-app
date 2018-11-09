@@ -24,10 +24,6 @@ class AdventureDetails extends Component {
     this.getDatas()
   }
 
-  componountDidUpdate = () => {
-    this.getDatas()
-  }
-
   getDatas() {
     http
       .get(`${API.ADVENTURES}/${this.props.match.params.adventureId}`)
@@ -50,8 +46,12 @@ class AdventureDetails extends Component {
     return sessionStorage.getItem(BEARER_TOKEN) === null
   }
 
-  handleSubmit(adventureId) {
-    window.location.reload()
+  handleSubmit = comment => {
+    /* window.location.reload() */
+    //Bind this
+    let { comments } = this.state
+    comments.push(comment)
+    this.setState({ comments })
   }
 
   render() {

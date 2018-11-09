@@ -34,9 +34,7 @@ class CommentItem extends Component {
               />
             ))}
           </div>
-          <div>
-
-          </div>
+          <div />
         </Card>
       </Col>
     )
