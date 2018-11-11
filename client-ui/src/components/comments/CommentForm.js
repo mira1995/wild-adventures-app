@@ -31,18 +31,32 @@ class CommentForm extends Component {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Received values of form: ', values)
-        http
-          .post(API.COMMENTS, {
-            content: values.content,
-            reported: false,
-            comments: [],
-            adventureId: this.state.adventureId,
-            userId: this.state.userAccount.id,
-          })
-          .then(response => {
-            this.props.action(response.data)
-          })
-          .catch(error => console.log('error', error))
+        let commentToAdd = {
+          content: values.content,
+          reported: false,
+          comments: [],
+          adventureId: this.props.adventureId,
+          userId: this.state.userAccount.id,
+        }
+        console.log(commentToAdd)
+        if (this.props.parent !== null) {
+          let { parent } = this.props
+          parent.comments.push(commentToAdd)
+          console.log(parent)
+          http
+            .patch(API.COMMENTS, { parent })
+            .then(response => {
+              this.props.action(response.data)
+            })
+            .catch(error => console.log('error', error))
+        } else {
+          http
+            .post(API.COMMENTS, { commentToAdd })
+            .then(response => {
+              this.props.action(response.data)
+            })
+            .catch(error => console.log('error', error))
+        }
       }
     })
   }
@@ -74,6 +88,11 @@ class CommentForm extends Component {
       </Form>
     )
   }
+}
+
+CommentForm.defaultProps = {
+  parent: null,
+  adventureId: 0,
 }
 
 const WrappedCommentForm = Form.create()(CommentForm)

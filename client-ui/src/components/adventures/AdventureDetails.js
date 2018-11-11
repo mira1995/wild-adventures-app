@@ -17,6 +17,7 @@ class AdventureDetails extends Component {
       categories: [],
       comments: [],
       isAnonymous: this.checkIfAnonymous(),
+      activeComment: null,
     }
   }
 
@@ -50,18 +51,31 @@ class AdventureDetails extends Component {
     /* window.location.reload() */
     //Bind this
     let { comments } = this.state
-    comments.push(comment)
+    const { indexOfComment } = comments.findIndex(
+      item => comment.id === item.id
+    )
+    if (indexOfComment !== null) {
+      comments[indexOfComment] = comment
+    } else {
+      comments.push(comment)
+    }
     this.setState({ comments })
   }
 
+  handleAnswerClick = activeComment => {
+    //Bind this
+    this.setState({ activeComment })
+  }
+
   render() {
-    console.log(this.state.isAnonymous)
+    const { adventure } = this.state
+    console.log(adventure)
     return (
       <div>
-        <h1>{this.state.adventure.title}</h1>
+        <h1>{adventure.title}</h1>
         <div>
-          <p>{this.state.adventure.description}</p>
-          <p>Localisation : {this.state.adventure.location}</p>
+          <p>{adventure.description}</p>
+          <p>Localisation : {adventure.location}</p>
           <h2>Liste des catégories de l'aventure : </h2>
           <ul>
             {this.state.categories.map(category => (
@@ -73,24 +87,37 @@ class AdventureDetails extends Component {
         </div>
         <div>
           <h2>Commentaires</h2>
+          {!this.state.isAnonymous &&
+            this.state.activeComment === null && (
+              <Row>
+                <CommentForm
+                  adventureId={adventure.id}
+                  action={this.handleSubmit}
+                />
+              </Row>
+            )}
           <Row>
             {this.state.comments.map(comment => (
               <CommentItem
                 key={comment.id}
+                commentId={comment.id}
                 content={comment.content}
                 userId={comment.userId}
                 comments={comment.comments}
-              />
+                answerAction={this.handleAnswerClick}
+                isActive={this.state.activeComment === comment.id}
+              >
+                {!this.state.isAnonymous &&
+                  this.state.activeComment === comment.id && (
+                    <CommentForm
+                      adventureId={adventure.id}
+                      action={this.handleSubmit}
+                      parent={comment}
+                    />
+                  )}
+              </CommentItem>
             ))}
           </Row>
-          {!this.state.isAnonymous && (
-            <Row>
-              <CommentForm
-                adventureId={this.props.match.params.adventureId}
-                action={this.handleSubmit}
-              />
-            </Row>
-          )}
         </div>
       </div>
     )
