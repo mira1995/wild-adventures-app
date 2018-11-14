@@ -13,6 +13,8 @@ class Login extends Component {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         const { remember, ...userAccount } = values
+        // TODO: Envoyer le mot de passe crypté
+        // Créer un cookie si remember
         http
           .post(API.AUTH, userAccount)
           .then(response => {

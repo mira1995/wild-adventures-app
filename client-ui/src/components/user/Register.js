@@ -29,8 +29,9 @@ class Register extends Component {
         const { confirm, agreement, ...userAccount } = formatedValues
         userAccount.password = bcrypt.hashSync(userAccount.password)
         http
-          .post(API.USERS, { ...userAccount, active: true, role: 'USER' })
+          .post(API.USERS, { ...userAccount })
           .then(() => {
+            // TODO: Envoyer le mot de passe crypté
             const user = {
               username: formatedValues.email,
               password: formatedValues.password,
@@ -109,6 +110,7 @@ class Register extends Component {
       },
     }
 
+    // TODO: check in real time email et pseudo unique
     return (
       <Row type="flex" justify="center" align="middle">
         <Col>

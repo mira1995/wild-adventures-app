@@ -38,15 +38,19 @@ class Account extends Component {
           values.password,
           userAccount.password
         )
-        const updatedUser = {
+
+        // TODO: Mise à jour des attributs séparemment
+        // Password requis pour maj password, email et pseudo seulement
+        // Si maj password, email et pseudo, regénération du token de manière transparente
+        const updatableUser = {
           ...userAccount,
           ...values,
           password: bcrypt.hashSync(values.password),
         }
-        console.log(updatedUser)
+        console.log(updatableUser)
         if (!gandalf) {
           http
-            .patch(API.USERS, updatedUser)
+            .patch(API.USERS, updatableUser)
             .then(response => {
               console.log(response.data)
             })
@@ -91,6 +95,7 @@ class Account extends Component {
       },
     }
 
+    // TODO: check in real time email et pseudo unique
     const { userAccount } = this.state
     if (!userAccount) return null
     else

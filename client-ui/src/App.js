@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
 import './App.css'
 import Header from './components/Header'
 import Home from './components/Home'
@@ -24,14 +26,37 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const { path, token } = this.state
+    const token = this.tokenIsFine(this.state.token)
+    const { path } = this.state
     console.log(path, 'path')
+
     this.toggleAction(TOGGLE_AUTH, token)
     this.toggleAction(TOGGLE_MENU, path)
 
     if (token && path === URI.LOGIN) this.toggleAction(TOGGLE_MENU, URI.HOME)
     if (!token && path === URI.ACCOUNT)
       this.toggleAction(TOGGLE_MENU, URI.LOGIN)
+  }
+
+  // Delete token in sessionStorage if exp is exceeded
+  tokenIsFine(token) {
+    if (token) {
+      const decoded = jwt.decode(token.substring(7))
+      const format = 'DD MMMM YYYY hh:mm:ss'
+      const now = moment()
+      const iat = moment.unix(decoded.iat)
+      const exp = moment.unix(decoded.exp)
+      console.log(decoded, 'decoded')
+      console.log(iat.format(format), 'iat')
+      console.log(exp.format(format), 'exp')
+      console.log(exp.diff(now), 'diff')
+      if (exp.diff(now) <= 0) {
+        token = null
+        sessionStorage.clear()
+      }
+    }
+
+    return token
   }
 
   toggleAction(type, value) {
