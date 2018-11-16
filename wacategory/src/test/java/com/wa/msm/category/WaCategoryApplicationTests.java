@@ -2,18 +2,17 @@ package com.wa.msm.category;
 
 import com.wa.msm.category.entity.Category;
 import com.wa.msm.category.repository.CategoryRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class WaCategoryApplicationTests {
 
@@ -38,10 +37,10 @@ public class WaCategoryApplicationTests {
 
 		Optional<Category> categoryDb = categoryRepository.findById(category.getId());
 
-		Assert.assertTrue(categoryDb.isPresent());
-		Assert.assertEquals(category.getId(), categoryDb.get().getId());
-		Assert.assertEquals(category.getTitle(), categoryDb.get().getTitle());
-		Assert.assertEquals(category.getDescription(), categoryDb.get().getDescription());
+		Assertions.assertTrue(categoryDb.isPresent());
+		Assertions.assertEquals(category.getId(), categoryDb.get().getId());
+		Assertions.assertEquals(category.getTitle(), categoryDb.get().getTitle());
+		Assertions.assertEquals(category.getDescription(), categoryDb.get().getDescription());
 
 	}
 
