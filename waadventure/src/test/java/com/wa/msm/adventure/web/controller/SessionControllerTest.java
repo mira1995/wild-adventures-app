@@ -6,11 +6,12 @@ import com.wa.msm.adventure.entity.Session;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
 import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -28,9 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SessionControllerTest {
     private MockMvc mockMvc;
 
@@ -60,7 +60,7 @@ public class SessionControllerTest {
     public static boolean dbInit = false;
 
 
-    @Before
+    @BeforeEach
     @Transactional
     public void setUp(){
 
@@ -97,7 +97,7 @@ public class SessionControllerTest {
         sessionRepository.save(session);
     }
 
-    @After
+    @AfterEach
     @Transactional
     public void afterTest(){
         sessionRepository.delete(session);
@@ -110,14 +110,14 @@ public class SessionControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sessions/admin").accept(MediaType.APPLICATION_JSON).content(jsonSession.write(session).getJson()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-            Assert.assertEquals(jsonSession.write(session).getJson().substring(11), response.getContentAsString().substring(8));
+            Assertions.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+            Assertions.assertEquals(jsonSession.write(session).getJson().substring(11), response.getContentAsString().substring(8));
             StringBuilder idString = new StringBuilder();
             idString.append(response.getContentAsString().charAt(6));
             session.setId(Long.parseLong(idString.toString()));
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -129,12 +129,12 @@ public class SessionControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/sessions/admin").accept(MediaType.APPLICATION_JSON).content(jsonSession.write(session).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(jsonSession.write(session).getJson(), response.getContentAsString());
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(jsonSession.write(session).getJson(), response.getContentAsString());
 
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -148,11 +148,11 @@ public class SessionControllerTest {
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             List<Session> sessions = new ArrayList<>();
             sessions.add(session);
-            Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(jsonSessionList.write(sessions).getJson(),result.getResponse().getContentAsString());
+            Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+            Assertions.assertEquals(jsonSessionList.write(sessions).getJson(),result.getResponse().getContentAsString());
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -169,11 +169,11 @@ public class SessionControllerTest {
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             List<Session> sessions = new ArrayList<>();
             sessions.add(session);
-            Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(jsonSessionList.write(sessions).getJson(), result.getResponse().getContentAsString());
+            Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+            Assertions.assertEquals(jsonSessionList.write(sessions).getJson(), result.getResponse().getContentAsString());
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -184,10 +184,10 @@ public class SessionControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/sessions/admin/"+session.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 }
