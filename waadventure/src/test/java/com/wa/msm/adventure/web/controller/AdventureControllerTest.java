@@ -5,10 +5,8 @@ import com.wa.msm.adventure.bean.CategoryAdventureBean;
 import com.wa.msm.adventure.bean.CategoryBean;
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import com.wa.msm.adventure.repository.AdventureRepository;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
@@ -46,15 +44,19 @@ public class AdventureControllerTest {
     @InjectMocks
     private AdventureController adventureController;
 
+    @Autowired
+    private AdventureRepository adventureRepository;
+
     private JacksonTester<Adventure> jsonAdventure;
 
     private JacksonTester<List<Adventure>> jsonAdventureList;
 
-    private Adventure adventure;
+    private Adventure adventurePersisted;
 
     private CategoryBean category;
 
     @Before
+    @Transactional
     public void setUp(){
 
 
@@ -63,11 +65,13 @@ public class AdventureControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adventureController)
                 .build();
 
-        adventure = new Adventure();
-        adventure.setStatus("NOT_PAID");
-        adventure.setLocation("Paris");
-        adventure.setTitle("Aventure Test");
-        adventure.setDescription("Aventure de test");
+        adventurePersisted = new Adventure();
+        adventurePersisted.setStatus("NOT_PAID");
+        adventurePersisted.setLocation("Paris");
+        adventurePersisted.setTitle("Aventure Test");
+        adventurePersisted.setDescription("Aventure de test");
+
+        adventureRepository.save(adventurePersisted);
 
         category = new CategoryBean();
         category.setId(1L);
@@ -76,12 +80,25 @@ public class AdventureControllerTest {
 
         List<CategoryAdventureBean> categoryAdventureBeans = new ArrayList<>();
         CategoryAdventureBean categoryAdventureBean = new CategoryAdventureBean();
-        categoryAdventureBean.setAdventureId(1L);
+        categoryAdventureBean.setAdventureId(adventurePersisted.getId());
         categoryAdventureBean.setCategoryId(category.getId());
         categoryAdventureBeans.add(categoryAdventureBean);
         category.setCategoryAdventures(categoryAdventureBeans);
-
     }
+
+    void persistJDD(){
+        adventureRepository.save(adventurePersisted);
+    }
+
+
+
+    @After
+    @Transactional
+    public void afterTest(){
+        adventureRepository.delete(adventurePersisted);
+    }
+
+
 
     @Test
     public void test1_addAdventureTest(){
@@ -89,12 +106,11 @@ public class AdventureControllerTest {
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/adventure/1").accept(MediaType.APPLICATION_JSON).content(jsonAdventure.write(adventure).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/"+category.getId()).accept(MediaType.APPLICATION_JSON).content(jsonAdventure.write(adventurePersisted).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            adventure.setId(1L);
-            Assert.assertEquals(response.getContentAsString(), jsonAdventure.write(adventure).getJson());
+            Assert.assertEquals(jsonAdventure.write(adventurePersisted).getJson().substring(8), response.getContentAsString().substring(8));
 
         }catch (Exception e){
             e.printStackTrace();
@@ -105,14 +121,12 @@ public class AdventureControllerTest {
     @Test
     @Transactional
     public void test2_getAdventureTest(){
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/adventure/1").accept(MediaType.APPLICATION_JSON);
-
+        persistJDD();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+adventurePersisted.getId()).accept(MediaType.APPLICATION_JSON);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            adventure.setId(1L);
             Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(result.getResponse().getContentAsString(), jsonAdventure.write(adventure).getJson());
+            Assert.assertEquals(result.getResponse().getContentAsString(), jsonAdventure.write(adventurePersisted).getJson());
         }catch(Exception e){
             e.printStackTrace();
             Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
@@ -122,15 +136,14 @@ public class AdventureControllerTest {
     @Test
     @Transactional
     public void test3_adventureListByCategoryTest(){
-
+        persistJDD();
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/adventures/1").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/category/"+category.getId()).accept(MediaType.APPLICATION_JSON);
 
         List<Adventure> adventures = new ArrayList<>();
-        adventure.setId(1L);
-        adventures.add(adventure);
+        adventures.add(adventurePersisted);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
@@ -144,14 +157,14 @@ public class AdventureControllerTest {
     @Test
     @Transactional
     public void test4_adventureListTest(){
+        persistJDD();
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/adventures").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON);
 
         List<Adventure> adventures = new ArrayList<>();
-        adventure.setId(1L);
-        adventures.add(adventure);
+        adventures.add(adventurePersisted);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
@@ -164,18 +177,17 @@ public class AdventureControllerTest {
 
     @Test
     public void test5_updateAdventureTest(){
+        persistJDD();
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
-
-        adventure.setId(1L);
-        adventure.setDescription("Hello world");
+        adventurePersisted.setDescription("Hello world");
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/adventure").accept(MediaType.APPLICATION_JSON).content(jsonAdventure.write(adventure).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/admin").accept(MediaType.APPLICATION_JSON).content(jsonAdventure.write(adventurePersisted).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(response.getContentAsString(), jsonAdventure.write(adventure).getJson());
+            Assert.assertEquals(response.getContentAsString(), jsonAdventure.write(adventurePersisted).getJson());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -186,8 +198,9 @@ public class AdventureControllerTest {
 
     @Test
     public void test6_deleteAdventureTest(){
+        persistJDD();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/adventure/1").accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/"+adventurePersisted.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
