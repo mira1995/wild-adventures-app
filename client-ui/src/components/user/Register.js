@@ -18,6 +18,10 @@ import { URI, API, BEARER_TOKEN } from '../../helpers/constants'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
 
 class Register extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { confirmDirty: false }
+  }
   handleSubmit = event => {
     event.preventDefault()
     this.props.form.validateFields((error, values) => {
@@ -60,7 +64,7 @@ class Register extends Component {
 
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form
-    if (value) {
+    if (value && this.state.confirmDirty) {
       form.validateFields(['confirm'], { force: true })
     }
     callback()
@@ -73,6 +77,11 @@ class Register extends Component {
     } else {
       callback()
     }
+  }
+
+  handleConfirmBlur = e => {
+    const value = e.target.value
+    this.setState({ confirmDirty: this.state.confirmDirty || !!value })
   }
 
   toggleAction(type, value) {

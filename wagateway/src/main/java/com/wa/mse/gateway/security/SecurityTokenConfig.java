@@ -32,7 +32,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JWTAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).anonymous()
+                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).permitAll()
                 .antMatchers("/comments/admin/**").hasRole("ADMIN")
                 .antMatchers("/categories/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/admin/**").hasRole("ADMIN")

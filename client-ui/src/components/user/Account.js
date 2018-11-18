@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Form, Icon, Input, Button, Row, Col, Tooltip, DatePicker } from 'antd'
-import moment from 'moment'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
 import { http } from '../../configurations/axiosConf'
 import { URI, API, BEARER_TOKEN } from '../../helpers/constants'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
+import WrappedEmailForm from './forms/EmailForm'
+import WrappedPseudoForm from './forms/PseudoForm'
+import WrappedPasswordForm from './forms/PasswordForm'
+import WrappedAddressForm from './forms/AddressForm'
+import WrappedDeactivateForm from './forms/DeactivateForm'
 
 class Account extends Component {
   constructor(props) {
@@ -16,8 +18,9 @@ class Account extends Component {
   }
 
   componentWillMount() {
-    const token = this.props.token.substring(7)
-    const decoded = jwt.decode(token)
+    const { token } = this.props
+    if (!token) return <Redirect to={URI.LOGIN} />
+    const decoded = jwt.decode(token.substring(7))
 
     http
       .get(`/users/email/${decoded.sub}`)
@@ -29,35 +32,58 @@ class Account extends Component {
       .catch(error => console.log(error))
   }
 
-  handleSubmit = event => {
-    event.preventDefault()
+  // Use fx arrow to bind this
+  handleUser = partialUser => {
     const { userAccount } = this.state
-    this.props.form.validateFields((error, values) => {
-      if (!error) {
-        const gandalf = !bcrypt.compareSync(
-          values.password,
-          userAccount.password
-        )
+    const {
+      confirmPseudoWithPassword,
+      confirmNew,
+      confirmEmailWithPassword,
+      ...updatableUser
+    } = { ...userAccount, ...partialUser }
 
-        // TODO: Mise à jour des attributs séparemment
-        // Password requis pour maj password, email et pseudo seulement
-        // Si maj password, email et pseudo, regénération du token de manière transparente
-        const updatableUser = {
-          ...userAccount,
-          ...values,
-          password: bcrypt.hashSync(values.password),
+    // If pseudo, password or email update : refresh token but user don't care
+    this.updateUser(
+      updatableUser,
+      {
+        username: updatableUser.email,
+        password:
+          confirmPseudoWithPassword || confirmNew || confirmEmailWithPassword,
+      },
+      partialUser.pseudo || partialUser.password || partialUser.email
+        ? true
+        : false
+    )
+  }
+
+  updateUser(updatableUser, credentials, refreshToken) {
+    http
+      .patch(API.USERS, updatableUser)
+      .then(response => {
+        console.log(response.data)
+        const { active } = response.data
+        if (!active) {
+          sessionStorage.clear()
+          this.toggleAction(TOGGLE_AUTH, null)
+          this.toggleAction(TOGGLE_MENU, URI.LOGIN)
+        } else {
+          this.setState({ userAccount: updatableUser })
+          if (refreshToken) this.refreshToken(credentials)
         }
-        console.log(updatableUser)
-        if (!gandalf) {
-          http
-            .patch(API.USERS, updatableUser)
-            .then(response => {
-              console.log(response.data)
-            })
-            .catch(error => console.log('error', error))
-        } else console.log('Wrong credentials.')
-      }
-    })
+      })
+      .catch(error => console.log('error', error))
+  }
+
+  refreshToken(credentials) {
+    http
+      .post(API.AUTH, credentials)
+      .then(response => {
+        const bearerToken = response.headers.authorization
+        console.log(bearerToken)
+        sessionStorage.setItem(BEARER_TOKEN, bearerToken)
+        this.toggleAction(TOGGLE_AUTH, sessionStorage.getItem(BEARER_TOKEN))
+      })
+      .catch(error => console.log('error', error))
   }
 
   toggleAction(type, value) {
@@ -68,171 +94,20 @@ class Account extends Component {
   render() {
     if (!this.props.token) return <Redirect to={URI.LOGIN} />
 
-    const FormItem = Form.Item
-    const { getFieldDecorator } = this.props.form
-
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    }
-
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
-      },
-    }
-
-    // TODO: check in real time email et pseudo unique
     const { userAccount } = this.state
     if (!userAccount) return null
     else
       return (
-        <Row type="flex" justify="center" align="middle">
-          <Col>
-            <Form onSubmit={this.handleSubmit}>
-              <FormItem {...formItemLayout} label="E-mail">
-                {getFieldDecorator('email', {
-                  initialValue: userAccount.email,
-                  rules: [
-                    {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
-                    { required: true, message: 'Please input your email!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Password">
-                {getFieldDecorator('password', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your password!',
-                    },
-                  ],
-                })(<Input type="password" />)}
-              </FormItem>
-              <FormItem
-                {...formItemLayout}
-                label={
-                  <span>
-                    Pseudo&nbsp;
-                    <Tooltip title="What do you want others to call you?">
-                      <Icon type="question-circle-o" />
-                    </Tooltip>
-                  </span>
-                }
-              >
-                {getFieldDecorator('pseudo', {
-                  initialValue: userAccount.pseudo,
-                  rules: [
-                    {
-                      message: 'Please input your nickname!',
-                      whitespace: true,
-                    },
-                  ],
-                })(<Input disabled={true} />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Firstname">
-                {getFieldDecorator('firstname', {
-                  initialValue: userAccount.firstname,
-                  rules: [
-                    { required: true, message: 'Please input your firstname!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Lastname">
-                {getFieldDecorator('lastname', {
-                  initialValue: userAccount.lastname,
-                  rules: [
-                    { required: true, message: 'Please input your lastname!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Address">
-                {getFieldDecorator('address', {
-                  initialValue: userAccount.address,
-                  rules: [
-                    { required: true, message: 'Please input your address!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Postal code">
-                {getFieldDecorator('postalCode', {
-                  initialValue: userAccount.postalCode,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your postal code!',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="City">
-                {getFieldDecorator('city', {
-                  initialValue: userAccount.city,
-                  rules: [
-                    { required: true, message: 'Please input your city!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Country">
-                {getFieldDecorator('country', {
-                  initialValue: userAccount.country,
-                  rules: [
-                    { required: true, message: 'Please input your country!' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Phone number">
-                {getFieldDecorator('phoneNumber', {
-                  initialValue: userAccount.phoneNumber,
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your phone number!',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label="Birth date">
-                {getFieldDecorator('birthDate', {
-                  initialValue: moment(userAccount.birthDate),
-                  rules: [
-                    {
-                      type: 'object',
-                      required: true,
-                      message: 'Please input your birth date!',
-                    },
-                  ],
-                })(<DatePicker format="DD MMMM YYYY" />)}
-              </FormItem>
-              <FormItem {...tailFormItemLayout}>
-                <Button type="primary" htmlType="submit">
-                  Register
-                </Button>
-              </FormItem>
-            </Form>
-          </Col>
-        </Row>
+        <>
+          <WrappedEmailForm user={userAccount} action={this.handleUser} />
+          <WrappedPseudoForm user={userAccount} action={this.handleUser} />
+          <WrappedPasswordForm user={userAccount} action={this.handleUser} />
+          <WrappedAddressForm user={userAccount} action={this.handleUser} />
+          <WrappedDeactivateForm user={userAccount} action={this.handleUser} />
+        </>
       )
   }
 }
-
-const WrappedAccountForm = Form.create()(Account)
 
 const mapStateToProps = state => {
   return {
@@ -240,4 +115,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(WrappedAccountForm)
+export default connect(mapStateToProps)(Account)
