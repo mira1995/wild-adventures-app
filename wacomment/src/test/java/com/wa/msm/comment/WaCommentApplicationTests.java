@@ -2,18 +2,17 @@ package com.wa.msm.comment;
 
 import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.repository.CommentRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class WaCommentApplicationTests {
 
@@ -41,12 +40,12 @@ public class WaCommentApplicationTests {
 
 		Optional<Comment> commentDb = commentRepository.findById(comment.getId());
 
-		Assert.assertTrue(commentDb.isPresent());
-		Assert.assertEquals(comment.getId(), commentDb.get().getId());
-		Assert.assertEquals(comment.getContent(), commentDb.get().getContent());
-		Assert.assertEquals(comment.getReported(), commentDb.get().getReported());
-		Assert.assertEquals(comment.getUserId(), commentDb.get().getUserId());
-		Assert.assertEquals(comment.getAdventureId(), commentDb.get().getAdventureId());
+		Assertions.assertTrue(commentDb.isPresent());
+		Assertions.assertEquals(comment.getId(), commentDb.get().getId());
+		Assertions.assertEquals(comment.getContent(), commentDb.get().getContent());
+		Assertions.assertEquals(comment.getReported(), commentDb.get().getReported());
+		Assertions.assertEquals(comment.getUserId(), commentDb.get().getUserId());
+		Assertions.assertEquals(comment.getAdventureId(), commentDb.get().getAdventureId());
 	}
 
 }

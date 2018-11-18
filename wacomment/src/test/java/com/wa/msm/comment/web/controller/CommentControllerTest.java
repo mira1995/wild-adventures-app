@@ -7,9 +7,11 @@ import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.proxy.MSAdventureProxy;
 import com.wa.msm.comment.proxy.MSUserAccountProxy;
 import com.wa.msm.comment.repository.CommentRepository;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -31,9 +33,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CommentControllerTest {
     private MockMvc mockMvc;
 
@@ -59,7 +60,7 @@ public class CommentControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         JacksonTester.initFields(this, new ObjectMapper());
         // MockMvc standalone approach
@@ -102,7 +103,7 @@ public class CommentControllerTest {
         commentRepository.save(comment);
     }
 
-    @After
+    @AfterEach
     public void afterTest(){
         commentRepository.delete(comment);
     }
@@ -120,14 +121,14 @@ public class CommentControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(jsonComment.write(comment).getJson().substring(11),response.getContentAsString().substring(8));
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(jsonComment.write(comment).getJson().substring(11),response.getContentAsString().substring(8));
             StringBuilder idString = new StringBuilder();
             idString.append(response.getContentAsString().charAt(6));
             comment.setId(Long.parseLong(idString.toString()));
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -140,11 +141,11 @@ public class CommentControllerTest {
         comments.add(comment);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(jsonCommentList.write(comments).getJson(),result.getResponse().getContentAsString());
+            Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+            Assertions.assertEquals(jsonCommentList.write(comments).getJson(),result.getResponse().getContentAsString());
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -161,12 +162,12 @@ public class CommentControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals( jsonComment.write(comment).getJson(),response.getContentAsString());
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals( jsonComment.write(comment).getJson(),response.getContentAsString());
 
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -177,25 +178,24 @@ public class CommentControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/"+comment.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
     @Test
     public void test5_deleteByAdventureId(){
-            persistJdd();
-
+        persistJdd();
         try{
             RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/adventure/"+adventure.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 }
