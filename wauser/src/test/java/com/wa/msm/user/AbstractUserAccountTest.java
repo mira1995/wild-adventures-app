@@ -2,12 +2,9 @@ package com.wa.msm.user;
 
 import com.wa.msm.user.entity.UserAccount;
 import com.wa.msm.user.repository.UserAccountRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.Calendar;
 
@@ -21,7 +18,7 @@ public abstract class AbstractUserAccountTest {
     @Autowired
     protected UserAccountRepository userAccountRepository;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         userAccount = new UserAccount();
         userAccount.setProfileImageId(1L);
@@ -43,7 +40,7 @@ public abstract class AbstractUserAccountTest {
 
     }
 
-    @After
+    @AfterEach
     public void afterTest(){
         userAccountRepository.delete(userAccount);
     }

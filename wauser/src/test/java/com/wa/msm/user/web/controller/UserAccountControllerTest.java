@@ -7,9 +7,10 @@ import com.wa.msm.user.bean.UserAccountImageBean;
 import com.wa.msm.user.entity.UserAccount;
 import com.wa.msm.user.proxy.MSImageProxy;
 import com.wa.msm.user.repository.UserAccountRepository;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -30,9 +31,8 @@ import java.util.Calendar;
 import java.util.Optional;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserAccountControllerTest extends AbstractUserAccountTest {
 
     private MockMvc mockMvc;
@@ -51,7 +51,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Autowired
     private UserAccountRepository userAccountRepository;
 
-    @Before
+    @BeforeEach
     public void setUpTest(){
         ImageTypeBean imageTypeBean = new ImageTypeBean();
         imageTypeBean.setCode("USR");
@@ -80,14 +80,14 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(jsonUserAccount.write(userAccount).getJson().substring(11), response.getContentAsString().substring(8));
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(jsonUserAccount.write(userAccount).getJson().substring(11), response.getContentAsString().substring(8));
             StringBuilder idString = new StringBuilder();
             idString.append(response.getContentAsString().charAt(6));
             userAccount.setId(Long.parseLong(idString.toString()));
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
@@ -102,11 +102,11 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            Assert.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
-            Assert.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
+            Assertions.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
+            Assertions.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -123,12 +123,12 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(response.getContentAsString(), jsonUserAccount.write(userAccount).getJson());
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(response.getContentAsString(), jsonUserAccount.write(userAccount).getJson());
 
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
@@ -143,11 +143,11 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
 
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
@@ -159,11 +159,11 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
         try{
             RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/email").accept(MediaType.APPLICATION_JSON).content(userAccount.getEmail()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            Assert.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
-            Assert.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
+            Assertions.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
+            Assertions.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 
