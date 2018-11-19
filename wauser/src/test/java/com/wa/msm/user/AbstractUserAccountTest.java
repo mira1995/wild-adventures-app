@@ -16,8 +16,8 @@ public abstract class AbstractUserAccountTest {
 
     protected static UserAccount userAccount;
 
-    @BeforeClass
-    public static void setUp(){
+    @Before
+    public void setUp(){
         userAccount = new UserAccount();
         userAccount.setProfileImageId(1L);
         userAccount.setActive(true);
@@ -34,6 +34,7 @@ public abstract class AbstractUserAccountTest {
         userAccount.setPassword("tititata");
         userAccount.setPseudo("test");
         userAccount.setPostalCode(75000);
+        userAccount.setRole("USR");
 
     }
 }

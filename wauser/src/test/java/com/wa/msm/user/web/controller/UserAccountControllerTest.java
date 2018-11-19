@@ -7,10 +7,7 @@ import com.wa.msm.user.bean.UserAccountImageBean;
 import com.wa.msm.user.entity.UserAccount;
 import com.wa.msm.user.proxy.MSImageProxy;
 import com.wa.msm.user.repository.UserAccountRepository;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
@@ -51,6 +48,9 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
 
     UserAccountImageBean profileImage;
 
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
     @Before
     public void setUpTest(){
         ImageTypeBean imageTypeBean = new ImageTypeBean();
@@ -70,19 +70,29 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
                 .build();
     }
 
+    private void persistJdd(){
+        userAccountRepository.save(userAccount);
+    }
+
+    @After
+    public void afterTest(){
+        userAccountRepository.delete(userAccount);
+    }
+
     @Test
     public void test1_createUserAccountTest(){
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/user").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.OK.value(),response.getStatus());
-            userAccount.setId(1L);
-            Assert.assertEquals(response.getContentAsString(), jsonUserAccount.write(userAccount).getJson());
-
+            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assert.assertEquals(jsonUserAccount.write(userAccount).getJson().substring(11), response.getContentAsString().substring(8));
+            StringBuilder idString = new StringBuilder();
+            idString.append(response.getContentAsString().charAt(6));
+            userAccount.setId(Long.parseLong(idString.toString()));
         }catch (Exception e){
             e.printStackTrace();
             Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
@@ -92,14 +102,14 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
 
     @Test
     public void test2_getUserByIdTest(){
+        persistJdd();
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/1").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            userAccount.setId(1L);
             Assert.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
             Assert.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
         }catch(Exception e){
@@ -110,18 +120,18 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
 
     @Test
     public void test3_updateUserAccount(){
+        persistJdd();
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
-
-        userAccount.setId(1L);
+        ;
         Calendar cal = Calendar.getInstance();
         cal.set(2001, Calendar.JANUARY, 1);
         userAccount.setBirthDate(cal);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/user").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.OK.value(),response.getStatus());
+            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
             Assert.assertEquals(response.getContentAsString(), jsonUserAccount.write(userAccount).getJson());
 
         }catch (Exception e){
@@ -133,19 +143,21 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
 
     @Test
     public void test4_deleteUserAccount(){
+        persistJdd();
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/user/1").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.OK.value(),response.getStatus());
+            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
 
         }catch (Exception e){
             e.printStackTrace();
             Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
+
 }
 
