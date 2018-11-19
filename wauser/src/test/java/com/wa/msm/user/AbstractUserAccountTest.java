@@ -1,6 +1,8 @@
 package com.wa.msm.user;
 
 import com.wa.msm.user.entity.UserAccount;
+import com.wa.msm.user.repository.UserAccountRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public abstract class AbstractUserAccountTest {
     protected TestEntityManager entityManager;*/
 
     protected static UserAccount userAccount;
+
+    @Autowired
+    protected UserAccountRepository userAccountRepository;
 
     @Before
     public void setUp(){
@@ -36,5 +41,14 @@ public abstract class AbstractUserAccountTest {
         userAccount.setPostalCode(75000);
         userAccount.setRole("USR");
 
+    }
+
+    @After
+    public void afterTest(){
+        userAccountRepository.delete(userAccount);
+    }
+
+    protected void persistJdd(){
+        userAccountRepository.save(userAccount);
     }
 }

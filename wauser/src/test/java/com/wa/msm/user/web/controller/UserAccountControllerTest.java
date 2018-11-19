@@ -70,14 +70,6 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
                 .build();
     }
 
-    private void persistJdd(){
-        userAccountRepository.save(userAccount);
-    }
-
-    @After
-    public void afterTest(){
-        userAccountRepository.delete(userAccount);
-    }
 
     @Test
     public void test1_createUserAccountTest(){

@@ -21,11 +21,10 @@ import java.util.Optional;
 @DataJpaTest
 public class WaUserApplicationTests extends AbstractUserAccountTest {
 
-	@Autowired
-	private UserAccountRepository userAccountRepository;
 
 	@Test
 	public void whenFindById_thenReturnUserAccount(){
+		persistJdd();
 		Optional<UserAccount> userAccountDb = userAccountRepository.findById(userAccount.getId());
 		Assert.assertTrue(userAccountDb.isPresent());
 		Assert.assertEquals(userAccount.getId(), userAccountDb.get().getId());
