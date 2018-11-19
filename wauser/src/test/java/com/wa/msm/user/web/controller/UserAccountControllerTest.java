@@ -159,5 +159,21 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
         }
     }
 
+    @Test
+    public void test5_getUserAccountByEmailTest(){
+        persistJdd();
+        Mockito.when(
+                msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
+        try{
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/email").accept(MediaType.APPLICATION_JSON).content(userAccount.getEmail()).contentType(MediaType.APPLICATION_JSON);
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            Assert.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
+            Assert.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));
+        }catch(Exception e){
+            e.printStackTrace();
+            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
 }
 
