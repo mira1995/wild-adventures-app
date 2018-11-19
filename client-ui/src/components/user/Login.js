@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd'
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
 import './Login.css'
 import { http } from '../../configurations/axiosConf'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
@@ -14,14 +16,24 @@ class Login extends Component {
       if (!error) {
         const { remember, ...userAccount } = values
         // TODO: Envoyer le mot de passe crypté
-        // Créer un cookie si remember
         http
           .post(API.AUTH, userAccount)
           .then(response => {
             const bearerToken = response.headers.authorization
             console.log(bearerToken)
-            sessionStorage.setItem(BEARER_TOKEN, bearerToken)
-            this.toggleAction(TOGGLE_AUTH, sessionStorage.getItem(BEARER_TOKEN))
+            if (values.remember) {
+              // If remember, create cookie
+              const { cookies } = this.props
+              const decoded = jwt.decode(bearerToken.substring(7))
+              const exp = moment.unix(decoded.exp)
+
+              cookies.set(BEARER_TOKEN, bearerToken, {
+                path: '/',
+                expires: exp.toDate(),
+              })
+            } else sessionStorage.setItem(BEARER_TOKEN, bearerToken)
+
+            this.toggleAction(TOGGLE_AUTH, bearerToken)
             this.toggleAction(TOGGLE_MENU, URI.HOME)
           })
           .catch(error => {
@@ -89,9 +101,9 @@ class Login extends Component {
                 valuePropName: 'checked',
                 initialValue: false,
               })(<Checkbox>Remember me</Checkbox>)}
-              <Link to={URI.FORGOT_PASSWORD} className="login-form-forgot">
+              {/* <Link to={URI.FORGOT_PASSWORD} className="login-form-forgot">
                 Forgot password
-              </Link>
+              </Link> */}
               <Button
                 type="primary"
                 htmlType="submit"

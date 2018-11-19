@@ -3,17 +3,20 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import Store from './store/storeConf'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { CookiesProvider } from 'react-cookie'
 import './index.css'
 import 'antd/dist/antd.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-  <Provider store={Store}>
+  <CookiesProvider>
     <Router>
-      <App />
+      <Provider store={Store}>
+        <App />
+      </Provider>
     </Router>
-  </Provider>,
+  </CookiesProvider>,
   document.getElementById('root')
 )
 

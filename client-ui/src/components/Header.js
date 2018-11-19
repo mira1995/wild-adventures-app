@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu, Icon } from 'antd'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
-import { URI, MENU } from '../helpers/constants'
+import { BEARER_TOKEN, URI, MENU } from '../helpers/constants'
 
 class Header extends Component {
   handleMenu = event => {
@@ -12,7 +12,8 @@ class Header extends Component {
     else this.toggleAction(TOGGLE_MENU, URI.HOME + event.key)
   }
 
-  handleTokenSession = () => {
+  handleToken = () => {
+    this.props.cookies.remove(BEARER_TOKEN)
     sessionStorage.clear()
     this.toggleAction(TOGGLE_AUTH, null)
   }
@@ -68,7 +69,7 @@ class Header extends Component {
         )}
         {auth ? (
           <MenuItem key={MENU.LOGOUT}>
-            <Link to={URI.LOGOUT} onClick={this.handleTokenSession}>
+            <Link to={URI.LOGOUT} onClick={this.handleToken}>
               <Icon type="logout" />
               Logout
             </Link>
