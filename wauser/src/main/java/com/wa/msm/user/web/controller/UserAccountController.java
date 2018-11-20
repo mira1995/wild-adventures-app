@@ -75,6 +75,9 @@ public class UserAccountController {
             /*else userAccount.get().setProfileImage(userAccountImageBean.get());*/
         }
 
+        userAccount.setActive(true);
+        userAccount.setRole("USER");
+
         //Valide tous les autres champs du compte
         checkIfImageExist(userAccount);
         validateUserAccount(userAccount);

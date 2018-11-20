@@ -79,7 +79,7 @@ public class CommentController {
         return new ResponseEntity<>("Le commentaire pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
     }
 
-    @DeleteMapping(value = "/adventure/{adventureId}")
+    @DeleteMapping(value = "/admin/adventure/{adventureId}")
     public ResponseEntity<String> deleteCommentByAdventureId(@PathVariable Long adventureId) {
         commentRepository.deleteAllByAdventureId(adventureId);
         return new ResponseEntity<>("Les commentaires pour adventureId " + adventureId + " ont bien été supprimés.", HttpStatus.GONE);

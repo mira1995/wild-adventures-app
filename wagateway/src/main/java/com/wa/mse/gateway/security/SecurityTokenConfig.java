@@ -32,12 +32,13 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JWTAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).anonymous()
+                .antMatchers(HttpMethod.POST, jwtConfig.getURI()).permitAll()
                 .antMatchers("/comments/admin/**").hasRole("ADMIN")
                 .antMatchers("/categories/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/sessions/admin/**").hasRole("ADMIN")
                 .antMatchers("/users/admin/**").hasRole("ADMIN")
+                //.antMatchers("/users/**").hasRole("USER")
                 .antMatchers("/images/admin/**").hasRole("ADMIN")
                 .antMatchers("/images/adventure/admin/**").hasRole("ADMIN")
                 .antMatchers("/images/category/admin/**").hasRole("ADMIN")
@@ -45,6 +46,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/orders/admin/**").hasRole("ADMIN")
                 .antMatchers("/orders/demands/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
+        // TODO: Demande du token pour les actions utilisateurs et cie
     }
 
     @Bean
@@ -57,6 +59,10 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addExposedHeader("Authorization");
+        corsConfiguration.addAllowedMethod("GET");
+        corsConfiguration.addAllowedMethod("POST");
+        corsConfiguration.addAllowedMethod("PATCH");
+        corsConfiguration.addAllowedMethod("DELETE");
         source.registerCorsConfiguration("/**", corsConfiguration.applyPermitDefaultValues());
         return source;
     }
