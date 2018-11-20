@@ -16,6 +16,7 @@ import com.wa.msm.order.web.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -46,8 +47,13 @@ public class DemandController {
 
     @GetMapping("/admin/{demandId}")
     public Optional<OrderDemand> getOrderDemand(@PathVariable Long demandId){
-        Optional<OrderDemand> orderDemand = orderDemandRepository.findById(demandId);
-        if(!orderDemand.isPresent()) throw new OrderDemandNotFoundException("La demande n'a pas été trouvée");
+        Optional<OrderDemand> orderDemand = null;
+        try{
+            orderDemand = orderDemandRepository.findById(demandId);
+            if(!orderDemand.isPresent()) throw new OrderDemandNotFoundException("La demande n'a pas été trouvée");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return orderDemand;
     }
 
@@ -66,10 +72,10 @@ public class DemandController {
         return orderDemands;
     }
 
-    @GetMapping("/admin/status/{status}")
-    public List<OrderDemand> getAllDemandsByStatus(@PathVariable OrderDemandEnum status){
+    @PostMapping("/admin/status")
+    public List<OrderDemand> getAllDemandsByStatus(@RequestBody OrderDemandEnum status){
         List<OrderDemand> orderDemands = orderDemandRepository.findByDemandStatus(status);
-        if(orderDemands == null || orderDemands.isEmpty()) throw new OrderDemandNotFoundException("Il n'existe actuellement aucune demande correspondant à ce statut");
+        if(orderDemands == null  || orderDemands.isEmpty()) throw new OrderDemandNotFoundException("Il n'existe actuellement aucune demande correspondant à ce statut");
         return orderDemands;
     }
 
@@ -104,7 +110,8 @@ public class DemandController {
         if(!orderDemand.getStatus().equals(OrderStatusEnum.UPDATE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         populateOrderWithDemandUpdate(orderDemand);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
-        return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
+        orderDemandRepository.save(orderDemand);
+        return new ResponseEntity<>(orderDemand, HttpStatus.CREATED);
     }
 
     @PatchMapping("/admin/validate/delete")
@@ -115,7 +122,8 @@ public class DemandController {
         if(!orderDemand.getStatus().equals(OrderStatusEnum.DELETE_DEMAND)) throw new OrderDemandValidationException("Le statut de la demande est incorrect");
         orderDemand.getOrder().setStatus(OrderStatusEnum.CANCELED);
         orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
-        return new ResponseEntity<>(orderDemandRepository.save(orderDemand), HttpStatus.CREATED);
+        orderDemandRepository.save(orderDemand);
+        return new ResponseEntity<>(orderDemand, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{demandId}")
@@ -148,9 +156,12 @@ public class DemandController {
             orderSessionRepository.deleteAll(orderDemand.getOrder().getOrderSessions());
         }
         List<OrderSession> orderSessions = new ArrayList<>(0);
+        orderDemand.getOrder().getOrderSessions().iterator().forEachRemaining(orderSession -> {
+            orderSessionRepository.delete(orderSession);
+        });
         orderDemand.getOrderDemandSessions().iterator().forEachRemaining(orderDemandSession -> {
-            OrderSession orderSession = new OrderSession(orderDemand.getOrder(),orderDemand.getOrder().getId(), orderDemandSession.getSessionId());
-            orderSessions.add(orderSession);
+                OrderSession orderSession = new OrderSession(orderDemand.getOrder(),orderDemand.getOrder().getId(), orderDemandSession.getSessionId());
+                orderSessions.add(orderSession);
         });
         orderDemand.getOrder().setOrderSessions(orderSessions);
 
