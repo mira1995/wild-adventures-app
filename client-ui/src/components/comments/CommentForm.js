@@ -18,7 +18,7 @@ class CommentForm extends Component {
     const token = this.props.token.substring(7)
     const decoded = jwt.decode(token)
     http
-      .get(`${API.USERS}/email/${decoded.sub}`)
+      .post(`${API.USERS}/email`, decoded.sub)
       .then(response => {
         const { password, ...userAccount } = response.data
         this.setState({ userAccount })
@@ -31,7 +31,7 @@ class CommentForm extends Component {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Received values of form: ', values)
-        let commentToAdd = {
+        const commentToAdd = {
           content: values.content,
           reported: false,
           comments: [],
@@ -44,14 +44,14 @@ class CommentForm extends Component {
           parent.comments.push(commentToAdd)
           console.log(parent)
           http
-            .patch(API.COMMENTS, { parent })
+            .patch(API.COMMENTS, parent)
             .then(response => {
               this.props.action(response.data)
             })
             .catch(error => console.log('error', error))
         } else {
           http
-            .post(API.COMMENTS, { commentToAdd })
+            .post(API.COMMENTS, commentToAdd)
             .then(response => {
               this.props.action(response.data)
             })

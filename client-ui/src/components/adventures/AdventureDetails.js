@@ -51,15 +51,22 @@ class AdventureDetails extends Component {
     /* window.location.reload() */
     //Bind this
     let { comments } = this.state
-    const { indexOfComment } = comments.findIndex(
-      item => comment.id === item.id
-    )
-    if (indexOfComment !== null) {
-      comments[indexOfComment] = comment
+    const { indexOfComment } = this.getIndex(comments, comment.id)
+    if (typeof indexOfComment !== 'undefined') {
+      comments[indexOfComment].comments = comment.comments
     } else {
       comments.push(comment)
     }
     this.setState({ comments })
+    console.log(this.state.comments)
+  }
+
+  getIndex(comments, id) {
+    for (var i = 0; i < comments.length; i++) {
+      if (comments[i].id === id) {
+        return i
+      }
+    }
   }
 
   handleAnswerClick = activeComment => {

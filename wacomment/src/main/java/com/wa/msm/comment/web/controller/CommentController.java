@@ -46,24 +46,24 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
         // Vérifier que l'aventure et l'utilisateur existent
-        msAdventureProxy.getAdventure(comment.getAdventureId());
-        msUserAccountProxy.getUserById(comment.getUserId());
-
+        if(!msAdventureProxy.getAdventure(comment.getAdventureId()).isPresent()) throw new CommentNotValidException("L'aventure de ce commentaire n'existe pas.");
+        if(!msUserAccountProxy.getUserById(comment.getUserId()).isPresent()) throw new CommentNotValidException("L'utilisateur ayant écrit ce comentaire n'existe pas.");
         validateComment(comment);
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.CREATED);
     }
 
     @PatchMapping
     public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
+        System.out.println(comment.toString());
         if (comment.getId() == null || !commentRepository.findById(comment.getId()).isPresent())
             throw new CommentNotFoundException("Le commentaire envoyé n'existe pas.");
         else {
             // Vérifier que l'aventure ainsi que l'utilisateur existent
-            msAdventureProxy.getAdventure(comment.getAdventureId());
-            msUserAccountProxy.getUserById(comment.getUserId());
+            if(!msAdventureProxy.getAdventure(comment.getAdventureId()).isPresent()) throw new CommentNotValidException("L'aventure de ce commentaire n'existe pas.");
+            if(!msUserAccountProxy.getUserById(comment.getUserId()).isPresent()) throw new CommentNotValidException("L'utilisateur ayant écrit ce comentaire n'existe pas.");
             comment.getComments().forEach(item -> {
-                msAdventureProxy.getAdventure(item.getAdventureId());
-                msUserAccountProxy.getUserById(item.getUserId());
+                if(!msAdventureProxy.getAdventure(item.getAdventureId()).isPresent()) throw new CommentNotValidException("L'aventure de ce commentaire n'existe pas.");
+                if(!msUserAccountProxy.getUserById(item.getUserId()).isPresent()) throw new CommentNotValidException("L'utilisateur ayant écrit ce comentaire n'existe pas.");
             });
         }
         validateComment(comment);
