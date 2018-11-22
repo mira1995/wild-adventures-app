@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col, DatePicker } from 'antd'
+import { Form, Input, Button, DatePicker } from 'antd'
 import moment from 'moment'
+import Container from './../../../Container'
 
 class AddressForm extends Component {
   handleSubmit = event => {
@@ -43,95 +44,93 @@ class AddressForm extends Component {
     const { user } = this.props
 
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Firstname">
-              {getFieldDecorator('firstname', {
-                initialValue: user.firstname,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your firstname!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Lastname">
-              {getFieldDecorator('lastname', {
-                initialValue: user.lastname,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your lastname!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Address">
-              {getFieldDecorator('address', {
-                initialValue: user.address,
-                rules: [
-                  { required: true, message: 'Please input your address!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Postal code">
-              {getFieldDecorator('postalCode', {
-                initialValue: user.postalCode,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your postal code!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="City">
-              {getFieldDecorator('city', {
-                initialValue: user.city,
-                rules: [{ required: true, message: 'Please input your city!' }],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Country">
-              {getFieldDecorator('country', {
-                initialValue: user.country,
-                rules: [
-                  { required: true, message: 'Please input your country!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Phone number">
-              {getFieldDecorator('phoneNumber', {
-                initialValue: user.phoneNumber,
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your phone number!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Birth date">
-              {getFieldDecorator('birthDate', {
-                initialValue: moment(user.birthDate),
-                rules: [
-                  {
-                    type: 'object',
-                    required: true,
-                    message: 'Please input your birth date!',
-                  },
-                ],
-              })(<DatePicker format="DD MMMM YYYY" />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Send
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="Firstname">
+            {getFieldDecorator('firstname', {
+              initialValue: user.firstname,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your firstname!',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Lastname">
+            {getFieldDecorator('lastname', {
+              initialValue: user.lastname,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your lastname!',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Address">
+            {getFieldDecorator('address', {
+              initialValue: user.address,
+              rules: [
+                { required: true, message: 'Please input your address!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Postal code">
+            {getFieldDecorator('postalCode', {
+              initialValue: user.postalCode,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your postal code!',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="City">
+            {getFieldDecorator('city', {
+              initialValue: user.city,
+              rules: [{ required: true, message: 'Please input your city!' }],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Country">
+            {getFieldDecorator('country', {
+              initialValue: user.country,
+              rules: [
+                { required: true, message: 'Please input your country!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Phone number">
+            {getFieldDecorator('phoneNumber', {
+              initialValue: user.phoneNumber,
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your phone number!',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Birth date">
+            {getFieldDecorator('birthDate', {
+              initialValue: moment(user.birthDate),
+              rules: [
+                {
+                  type: 'object',
+                  required: true,
+                  message: 'Please input your birth date!',
+                },
+              ],
+            })(<DatePicker format="DD MMMM YYYY" />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Send
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }

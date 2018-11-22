@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd'
+import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
+import Container from './../../../Container'
 
 class PasswordForm extends Component {
   constructor(props) {
@@ -87,53 +88,51 @@ class PasswordForm extends Component {
     }
 
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Current password">
-              {getFieldDecorator('confirmPasswordWithPassword', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your current password!',
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="New password">
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your new password!',
-                  },
-                  {
-                    validator: this.validateToNextPassword,
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Confirm new password">
-              {getFieldDecorator('confirmNew', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please confirm your password!',
-                  },
-                  {
-                    validator: this.compareToFirstPassword,
-                  },
-                ],
-              })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Send
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="Current password">
+            {getFieldDecorator('confirmPasswordWithPassword', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your current password!',
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="New password">
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your new password!',
+                },
+                {
+                  validator: this.validateToNextPassword,
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Confirm new password">
+            {getFieldDecorator('confirmNew', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please confirm your password!',
+                },
+                {
+                  validator: this.compareToFirstPassword,
+                },
+              ],
+            })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Send
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }
