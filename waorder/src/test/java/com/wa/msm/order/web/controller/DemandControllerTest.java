@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +65,8 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
     private JacksonTester<OrderDemand> jsonDemand;
 
     private JacksonTester<List<OrderDemand>> jsonListDemand;
+
+    private JacksonTester<OrderDemandEnum> jsonOrderDemandEnum;
 
     @BeforeEach
     void setUp(){
@@ -99,9 +102,7 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
     @AfterEach
     @Transactional
     public void afterTest(){
-        if(orderDemand.getId() !=null && !isDeleted) orderDemandRepository.delete(orderDemand);
-        if(orderDemand.getId() !=null && order.getId() !=null && !isDeleted) orderRepository.delete(order);
-    }
+        if(!isDeleted)orderDemandRepository.delete(orderDemand); }
 
     @Test
     void test1_createDemandTest(){
@@ -111,12 +112,15 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
                 msUserAccountProxy.getUserById(Mockito.anyLong())).thenReturn(Optional.ofNullable(userAccount));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/demand").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/demands").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
             Assertions.assertEquals(jsonDemand.write(orderDemand).getJson().substring(11,81), response.getContentAsString().substring(8,78));
-
+            StringBuilder idString = new StringBuilder();
+            idString.append(response.getContentAsString().charAt(6));
+            orderDemand.setId(Long.parseLong(idString.toString()));
+            orderDemand.getOrderDemandSessions().iterator().forEachRemaining(orderDemandSession -> orderDemandSession.setDemandId(Long.parseLong(idString.toString())));
         }catch (Exception e){
             e.printStackTrace();
             Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
@@ -134,7 +138,7 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
         persistJddDemand();
         orderDemand.setDemandMessage("Bonjour je voudrais modifier ma commande");
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/demand").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/demands").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -147,7 +151,6 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
     }
 
     @Test
-    @Transactional
     void test3_validateUpdateDemand(){
         Mockito.when(
                 msAdventureProxy.getAllById(Mockito.anyList())).thenReturn(sessionBeanList);
@@ -156,13 +159,124 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
         orderDemand.setStatus(OrderStatusEnum.UPDATE_DEMAND);
         persistJddDemand();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/demand/validate/update").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/demands/admin/validate/update").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
+            orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assertions.assertEquals(response.getContentAsString(), jsonDemand.write(orderDemand).getJson());
+            Assertions.assertEquals(response.getContentAsString().substring(0,50), jsonDemand.write(orderDemand).getJson().substring(0,50));
 
         }catch (Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    void test4_validateDeleteDemand(){
+        Mockito.when(
+                msAdventureProxy.getAllById(Mockito.anyList())).thenReturn(sessionBeanList);
+        Mockito.when(
+                msUserAccountProxy.getUserById(Mockito.anyLong())).thenReturn(Optional.ofNullable(userAccount));
+        orderDemand.setStatus(OrderStatusEnum.DELETE_DEMAND);
+        persistJddDemand();
+        try{
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/demands/admin/validate/delete").accept(MediaType.APPLICATION_JSON).content(jsonDemand.write(orderDemand).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            MockHttpServletResponse response = result.getResponse();
+            orderDemand.setDemandStatus(OrderDemandEnum.VALIDATED_DEMAND);
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(response.getContentAsString().substring(0,50), jsonDemand.write(orderDemand).getJson().substring(0,50));
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    void test5_deleteDemand(){
+        persistJddDemand();
+        try{
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/demands/"+orderDemand.getId()).accept(MediaType.APPLICATION_JSON) ;
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            MockHttpServletResponse response = result.getResponse();
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            isDeleted = true;
+        }catch (Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    @Transactional
+    void test6_getOrderDemand(){
+        persistJddDemand();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/demands/admin/"+orderDemand.getId()).accept(MediaType.APPLICATION_JSON);
+
+        try{
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+            Assertions.assertEquals(result.getResponse().getContentAsString(), jsonDemand.write(orderDemand).getJson());
+        }catch(Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    @Transactional
+    void test7_getAllDemands(){
+        persistJddDemand();
+        List<OrderDemand> orderDemands = new ArrayList<>();
+        orderDemands.add(orderDemand);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/demands/admin").accept(MediaType.APPLICATION_JSON);
+
+        try{
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+            Assertions.assertEquals(result.getResponse().getContentAsString(), jsonListDemand.write(orderDemands).getJson());
+        }catch(Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    @Transactional
+    void test8_getAllDemandsByUser(){
+        Mockito.when(
+                msUserAccountProxy.getUserById(Mockito.anyLong())).thenReturn(Optional.ofNullable(userAccount));
+
+        persistJddDemand();
+        List<OrderDemand> orderDemands = new ArrayList<>();
+        orderDemands.add(orderDemand);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/demands/user/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
+
+        try{
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+            Assertions.assertEquals(result.getResponse().getContentAsString(), jsonListDemand.write(orderDemands).getJson());
+        }catch(Exception e){
+            e.printStackTrace();
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
+        }
+    }
+
+    @Test
+    @Transactional
+    void test9_getAllDemandsByStatus(){
+        persistJddDemand();
+        List<OrderDemand> orderDemands = new ArrayList<>();
+        orderDemands.add(orderDemand);
+
+        try{
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/demands/admin/status").accept(MediaType.APPLICATION_JSON).content(jsonOrderDemandEnum.write(orderDemand.getDemandStatus()).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+            Assertions.assertEquals(result.getResponse().getContentAsString(), jsonListDemand.write(orderDemands).getJson());
+        }catch(Exception e){
             e.printStackTrace();
             Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }

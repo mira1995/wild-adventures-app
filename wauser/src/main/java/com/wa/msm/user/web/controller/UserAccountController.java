@@ -9,6 +9,7 @@ import com.wa.msm.user.web.exception.UserAccountImageNotFoundException;
 import com.wa.msm.user.web.exception.UserAccountNotFoundException;
 import com.wa.msm.user.web.exception.UserAccountNotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,8 @@ public class UserAccountController {
         return userAccount;
     }
 
-    @GetMapping(value = "/email/{email}")
-    public Optional<UserAccount> getUserByEmail(@PathVariable String email) {
+    @PostMapping(value = "/email")
+    public Optional<UserAccount> getUserByEmail(@RequestBody String email) {
         Optional<UserAccount> userAccount = userAccountRepository.findUserAccountByEmail(email);
         if (!userAccount.isPresent()) throw new UserAccountNotFoundException("L'utilisateur lié à l'identifiant " + email+ " n'existe pas.");
         checkIfImageExist(userAccount.get());

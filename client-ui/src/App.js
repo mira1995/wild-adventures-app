@@ -16,6 +16,7 @@ import Login from './components/user/Login'
 import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
+import AdventureDetails from './components/adventures/AdventureDetails'
 
 class App extends Component {
   constructor(props) {
@@ -95,7 +96,11 @@ class App extends Component {
             path={`${URI.CATEGORIES}/:categoryId`}
             component={CategoryDetails}
           />
-          <Route path={URI.ADVENTURES} component={Adventures} />
+          <Route exact path={URI.ADVENTURES} component={Adventures} />
+          <Route
+            path={`${URI.ADVENTURES}/:adventureId`}
+            component={AdventureDetails}
+          />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />

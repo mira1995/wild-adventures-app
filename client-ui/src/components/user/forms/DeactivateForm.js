@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd'
+import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
+import Container from './../../../Container'
 
 class DeactivateForm extends Component {
   handleSubmit = event => {
@@ -52,27 +53,25 @@ class DeactivateForm extends Component {
     }
 
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Password">
-              {getFieldDecorator('selfDestruction', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your password!',
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="danger" htmlType="submit">
-                Deactivate my account
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="Password">
+            {getFieldDecorator('selfDestruction', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="danger" htmlType="submit">
+              Deactivate my account
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }

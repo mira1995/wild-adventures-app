@@ -1,11 +1,10 @@
 package com.wa.msm.user;
 
 import com.wa.msm.user.entity.UserAccount;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import com.wa.msm.user.repository.UserAccountRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.Calendar;
 
@@ -16,8 +15,11 @@ public abstract class AbstractUserAccountTest {
 
     protected static UserAccount userAccount;
 
-    @BeforeClass
-    public static void setUp(){
+    @Autowired
+    protected UserAccountRepository userAccountRepository;
+
+    @BeforeEach
+    public void setUp(){
         userAccount = new UserAccount();
         userAccount.setProfileImageId(1L);
         userAccount.setActive(true);
@@ -34,6 +36,16 @@ public abstract class AbstractUserAccountTest {
         userAccount.setPassword("tititata");
         userAccount.setPseudo("test");
         userAccount.setPostalCode(75000);
+        userAccount.setRole("USR");
 
+    }
+
+    @AfterEach
+    public void afterTest(){
+        userAccountRepository.delete(userAccount);
+    }
+
+    protected void persistJdd(){
+        userAccountRepository.save(userAccount);
     }
 }

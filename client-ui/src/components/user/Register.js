@@ -1,21 +1,12 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import {
-  Form,
-  Icon,
-  Input,
-  Button,
-  Checkbox,
-  Row,
-  Col,
-  Tooltip,
-  DatePicker,
-} from 'antd'
+import { Form, Icon, Input, Button, Checkbox, Tooltip, DatePicker } from 'antd'
 import bcrypt from 'bcryptjs'
 import { http } from '../../configurations/axiosConf'
 import { URI, API, BEARER_TOKEN } from '../../helpers/constants'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
+import Container from '../../Container'
 
 class Register extends Component {
   constructor(props) {
@@ -121,145 +112,143 @@ class Register extends Component {
 
     // TODO: check in real time email et pseudo unique
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="E-mail">
-              {getFieldDecorator('email', {
-                rules: [
-                  {
-                    type: 'email',
-                    message: 'The input is not valid E-mail!',
-                  },
-                  { required: true, message: 'Please input your email!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Password">
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your password!',
-                  },
-                  {
-                    validator: this.validateToNextPassword,
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Confirm Password">
-              {getFieldDecorator('confirm', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please confirm your password!',
-                  },
-                  {
-                    validator: this.compareToFirstPassword,
-                  },
-                ],
-              })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
-                  Pseudo&nbsp;
-                  <Tooltip title="What do you want others to call you?">
-                    <Icon type="question-circle-o" />
-                  </Tooltip>
-                </span>
-              }
-            >
-              {getFieldDecorator('pseudo', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your nickname!',
-                    whitespace: true,
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Firstname">
-              {getFieldDecorator('firstname', {
-                rules: [
-                  { required: true, message: 'Please input your firstname!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Lastname">
-              {getFieldDecorator('lastname', {
-                rules: [
-                  { required: true, message: 'Please input your lastname!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Address">
-              {getFieldDecorator('address', {
-                rules: [
-                  { required: true, message: 'Please input your address!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Postal code">
-              {getFieldDecorator('postalCode', {
-                rules: [
-                  { required: true, message: 'Please input your postal code!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="City">
-              {getFieldDecorator('city', {
-                rules: [{ required: true, message: 'Please input your city!' }],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Country">
-              {getFieldDecorator('country', {
-                rules: [
-                  { required: true, message: 'Please input your country!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Phone number">
-              {getFieldDecorator('phoneNumber', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your phone number!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Birth date">
-              {getFieldDecorator('birthDate', {
-                rules: [
-                  {
-                    type: 'object',
-                    required: true,
-                    message: 'Please input your birth date!',
-                  },
-                ],
-              })(<DatePicker format="DD MMMM YYYY" />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              {getFieldDecorator('agreement', {
-                valuePropName: 'checked',
-              })(
-                <Checkbox>
-                  I have read the <Link to="agreement">agreement</Link>
-                </Checkbox>
-              )}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Register
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="E-mail">
+            {getFieldDecorator('email', {
+              rules: [
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                { required: true, message: 'Please input your email!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Password">
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+                {
+                  validator: this.validateToNextPassword,
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Confirm Password">
+            {getFieldDecorator('confirm', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please confirm your password!',
+                },
+                {
+                  validator: this.compareToFirstPassword,
+                },
+              ],
+            })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={
+              <span>
+                Pseudo&nbsp;
+                <Tooltip title="What do you want others to call you?">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+          >
+            {getFieldDecorator('pseudo', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your nickname!',
+                  whitespace: true,
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Firstname">
+            {getFieldDecorator('firstname', {
+              rules: [
+                { required: true, message: 'Please input your firstname!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Lastname">
+            {getFieldDecorator('lastname', {
+              rules: [
+                { required: true, message: 'Please input your lastname!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Address">
+            {getFieldDecorator('address', {
+              rules: [
+                { required: true, message: 'Please input your address!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Postal code">
+            {getFieldDecorator('postalCode', {
+              rules: [
+                { required: true, message: 'Please input your postal code!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="City">
+            {getFieldDecorator('city', {
+              rules: [{ required: true, message: 'Please input your city!' }],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Country">
+            {getFieldDecorator('country', {
+              rules: [
+                { required: true, message: 'Please input your country!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Phone number">
+            {getFieldDecorator('phoneNumber', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your phone number!',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Birth date">
+            {getFieldDecorator('birthDate', {
+              rules: [
+                {
+                  type: 'object',
+                  required: true,
+                  message: 'Please input your birth date!',
+                },
+              ],
+            })(<DatePicker format="DD MMMM YYYY" />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            {getFieldDecorator('agreement', {
+              valuePropName: 'checked',
+            })(
+              <Checkbox>
+                I have read the <Link to="agreement">agreement</Link>
+              </Checkbox>
+            )}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Register
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }

@@ -2,17 +2,17 @@ package com.wa.msm.adventure;
 
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.repository.AdventureRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class WaAdventureApplicationTests {
 
@@ -41,9 +41,9 @@ public class WaAdventureApplicationTests {
 		Optional<Adventure> adventureDb = adventureRepository.findById(adventure.getId());
 
 		//then
-		Assert.assertTrue(adventureDb.isPresent());
-		Assert.assertEquals(adventure.getTitle(), adventureDb.get().getTitle());
-		Assert.assertEquals(adventure.getId(), adventureDb.get().getId());
+		Assertions.assertTrue(adventureDb.isPresent());
+		Assertions.assertEquals(adventure.getTitle(), adventureDb.get().getTitle());
+		Assertions.assertEquals(adventure.getId(), adventureDb.get().getId());
 
 	}
 }

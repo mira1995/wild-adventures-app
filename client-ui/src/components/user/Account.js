@@ -23,7 +23,7 @@ class Account extends Component {
     const decoded = jwt.decode(token.substring(7))
 
     http
-      .get(`/users/email/${decoded.sub}`)
+      .post(`${API.USERS}/email`, decoded.sub)
       .then(response => {
         const { ...userAccount } = response.data
         console.log(userAccount)

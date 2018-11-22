@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd'
+import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
+import Container from './../../../Container'
 
 class EmailForm extends Component {
   handleSubmit = event => {
@@ -62,43 +63,41 @@ class EmailForm extends Component {
 
     // TODO: check in real time email unique
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Current e-mail">
-              {getFieldDecorator('currentEmail', {
-                initialValue: user.email,
-              })(<Input disabled={true} />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="New e-mail">
-              {getFieldDecorator('email', {
-                rules: [
-                  {
-                    type: 'email',
-                    message: 'The input is not valid E-mail!',
-                  },
-                  { required: true, message: 'Please input your email!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Current password">
-              {getFieldDecorator('confirmEmailWithPassword', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your current password!',
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Send
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="Current e-mail">
+            {getFieldDecorator('currentEmail', {
+              initialValue: user.email,
+            })(<Input disabled={true} />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="New e-mail">
+            {getFieldDecorator('email', {
+              rules: [
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                { required: true, message: 'Please input your email!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Current password">
+            {getFieldDecorator('confirmEmailWithPassword', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your current password!',
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Send
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }

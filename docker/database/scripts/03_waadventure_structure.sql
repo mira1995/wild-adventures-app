@@ -21,7 +21,7 @@ CREATE TABLE waadventure.session (
                 adventure_id INTEGER NOT NULL,
                 start_date TIMESTAMP(0) NOT NULL,
                 end_date TIMESTAMP(0) NOT NULL,
-                price NUMERIC(4,2) NOT NULL,
+                price NUMERIC(6,2) NOT NULL,
                 CONSTRAINT session_pk PRIMARY KEY (id)
 );
 

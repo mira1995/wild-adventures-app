@@ -23,5 +23,9 @@ export const API = {
   AUTH: '/auth',
   CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
+  COMMENTS: '/comments',
   USERS: '/users',
+}
+export const CONF = {
+  CARD_CONTENT_SIZE: 75,
 }

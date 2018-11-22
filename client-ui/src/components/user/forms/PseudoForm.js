@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, Row, Col, Tooltip } from 'antd'
+import { Form, Icon, Input, Button, Tooltip } from 'antd'
 import bcrypt from 'bcryptjs'
+import Container from './../../../Container'
 
 class PseudoForm extends Component {
   handleSubmit = event => {
@@ -62,53 +63,51 @@ class PseudoForm extends Component {
 
     // TODO: check in real time pseudo unique
     return (
-      <Row type="flex" justify="center" align="middle">
-        <Col>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Current pseudo">
-              {getFieldDecorator('currentPseudo', {
-                initialValue: user.pseudo,
-              })(<Input disabled={true} />)}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
-                  New pseudo&nbsp;
-                  <Tooltip title="What do you want others to call you?">
-                    <Icon type="question-circle-o" />
-                  </Tooltip>
-                </span>
-              }
-            >
-              {getFieldDecorator('pseudo', {
-                rules: [
-                  {
-                    message: 'Please input your nickname!',
-                    whitespace: true,
-                  },
-                  { required: true, message: 'Please input your pseudo!' },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Current password">
-              {getFieldDecorator('confirmPseudoWithPassword', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your current password!',
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Send
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="Current pseudo">
+            {getFieldDecorator('currentPseudo', {
+              initialValue: user.pseudo,
+            })(<Input disabled={true} />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={
+              <span>
+                New pseudo&nbsp;
+                <Tooltip title="What do you want others to call you?">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+          >
+            {getFieldDecorator('pseudo', {
+              rules: [
+                {
+                  message: 'Please input your nickname!',
+                  whitespace: true,
+                },
+                { required: true, message: 'Please input your pseudo!' },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="Current password">
+            {getFieldDecorator('confirmPseudoWithPassword', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your current password!',
+                },
+              ],
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Send
+            </Button>
+          </FormItem>
+        </Form>
+      </Container>
     )
   }
 }

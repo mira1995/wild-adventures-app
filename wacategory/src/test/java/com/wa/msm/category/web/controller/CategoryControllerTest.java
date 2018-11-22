@@ -5,12 +5,11 @@ import com.wa.msm.category.bean.AdventureBean;
 import com.wa.msm.category.entity.Category;
 import com.wa.msm.category.proxy.MSAdventureProxy;
 import com.wa.msm.category.repository.CategoryRepository;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -29,13 +28,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CategoryControllerTest {
 
     private MockMvc mockMvc;
@@ -47,6 +44,9 @@ public class CategoryControllerTest {
     @InjectMocks
     private CategoryController categoryController;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private JacksonTester<Category> jsonCategory;
 
     private JacksonTester<List<Category>> jsonCategoryList;
@@ -55,10 +55,8 @@ public class CategoryControllerTest {
 
     private Category category;
 
-    @Autowired
-    CategoryRepository categoryRepository;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         adventureBean = new AdventureBean();
         adventureBean.setId(1L);
@@ -78,6 +76,15 @@ public class CategoryControllerTest {
 
     }
 
+    private void persistJdd(){
+        categoryRepository.save(category);
+    }
+
+    @AfterEach
+    public void afterTest(){
+        categoryRepository.delete(category);
+    }
+
     @Test
     public void test1_addCategoryTest(){
 
@@ -85,16 +92,17 @@ public class CategoryControllerTest {
                 msAdventureProxy.getAdventure(Mockito.anyLong())).thenReturn(Optional.ofNullable(adventureBean));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/category").accept(MediaType.APPLICATION_JSON).content(jsonCategory.write(category).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin").accept(MediaType.APPLICATION_JSON).content(jsonCategory.write(category).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            category.setId(1L);
-            Assert.assertEquals(response.getContentAsString(), jsonCategory.write(category).getJson());
-
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(jsonCategory.write(category).getJson().substring(11), response.getContentAsString().substring(8));
+            StringBuilder idString = new StringBuilder();
+            idString.append(response.getContentAsString().charAt(6));
+            category.setId(Long.parseLong(idString.toString()));
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
@@ -104,17 +112,16 @@ public class CategoryControllerTest {
     @Test
     @Transactional
     public void test2_getCategoryTest(){
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/category/1").accept(MediaType.APPLICATION_JSON);
+        persistJdd();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+category.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            category.setId(1L);
-            Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(result.getResponse().getContentAsString(), jsonCategory.write(category).getJson());
+            Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+            Assertions.assertEquals(jsonCategory.write(category).getJson(), result.getResponse().getContentAsString());
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
@@ -122,19 +129,18 @@ public class CategoryControllerTest {
     @Test
     @Transactional
     public void test3_categoryList(){
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/categories").accept(MediaType.APPLICATION_JSON);
+        persistJdd();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON);
 
         List<Category> categories = new ArrayList<>();
-        category.setId(1L);
         categories.add(category);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-            Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
-            Assert.assertEquals(result.getResponse().getContentAsString(), jsonCategoryList.write(categories).getJson());
+            Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+            Assertions.assertEquals(result.getResponse().getContentAsString(), jsonCategoryList.write(categories).getJson());
         }catch(Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
@@ -142,36 +148,37 @@ public class CategoryControllerTest {
 
     @Test
     public void test4_updateCategoryTest(){
+        persistJdd();
         Mockito.when(
                 msAdventureProxy.getAdventure(Mockito.anyLong())).thenReturn(Optional.ofNullable(adventureBean));
 
 
-        category.setId(1L);
         category.setDescription("Hello world");
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/category").accept(MediaType.APPLICATION_JSON).content(jsonCategory.write(category).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/admin").accept(MediaType.APPLICATION_JSON).content(jsonCategory.write(category).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assert.assertEquals(response.getContentAsString(), jsonCategory.write(category).getJson());
+            Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+            Assertions.assertEquals(response.getContentAsString(), jsonCategory.write(category).getJson());
 
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
 
     }
 
     @Test
     public void test5_deleteCategoryTest(){
+        persistJdd();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/category/1").accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/"+category.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
-            Assert.assertEquals(HttpStatus.GONE.value(),response.getStatus());
+            Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
         }catch (Exception e){
             e.printStackTrace();
-            Assert.fail("Erreur lors de l'envoi de la requête au controleur REST");
+            Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
         }
     }
 

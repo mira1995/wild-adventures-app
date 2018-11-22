@@ -2,6 +2,7 @@ package com.wa.msm.category.web.controller;
 
 import com.sun.deploy.util.StringUtils;
 import com.wa.msm.category.entity.Category;
+import com.wa.msm.category.entity.CategoryAdventure;
 import com.wa.msm.category.proxy.MSAdventureProxy;
 import com.wa.msm.category.repository.CategoryAdventureRepository;
 import com.wa.msm.category.repository.CategoryRepository;
@@ -45,6 +46,20 @@ public class CategoryController {
         Optional<Category> category = categoryRepository.findById(id);
         if (!category.isPresent()) throw new CategoryNotFoundException("Il n'existe aucune catégorie pour id " + id + ".");
         return category;
+    }
+
+    @GetMapping(value = "/adventure/{adventureId}")
+    public List<Category> categoryListByAdventure(@PathVariable Long adventureId){
+        List<Category> categories = new ArrayList<>(0);
+        List<CategoryAdventure> categoriesAdventure = new ArrayList<>(0);
+        List <Long> categoriesId = new ArrayList<>(0);
+
+        categoryAdventureRepository.findAllByAdventureId(adventureId).iterator().forEachRemaining(categoriesAdventure::add);
+        if (categoriesAdventure.isEmpty()) throw new CategoryNotFoundException("Il n'existe aucune catégories.");
+        categoriesAdventure.iterator().forEachRemaining(categoryAdventure -> categoriesId.add(categoryAdventure.getCategoryId()));
+        categoryRepository.findAllByIdIn(categoriesId).iterator().forEachRemaining(categories::add);
+
+        return categories;
     }
 
     @PostMapping(value = "/admin")
