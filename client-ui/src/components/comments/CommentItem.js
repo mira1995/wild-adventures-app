@@ -32,7 +32,7 @@ class CommentItem extends Component {
   }
 
   render() {
-    const { content, comments, children, isActive } = this.props
+    const { content, comments, children, isActive, isChild } = this.props
     return (
       <Col span={24}>
         <Card title={`${this.state.user.pseudo} a dit`}>
@@ -40,20 +40,23 @@ class CommentItem extends Component {
           <p />
           {children}
           <p>
-            {!isActive && (
-              <Link to="#" onClick={this.answerComment}>
-                Répondre
-              </Link>
-            )}
-            {isActive && (
-              <Link to="#" onClick={this.cancelAnswer}>
-                Annuler
-              </Link>
-            )}
+            {!isActive &&
+              !isChild && (
+                <Link to="#" onClick={this.answerComment}>
+                  Répondre
+                </Link>
+              )}
+            {isActive &&
+              !isChild && (
+                <Link to="#" onClick={this.cancelAnswer}>
+                  Annuler
+                </Link>
+              )}
           </p>
           <div>
             {comments.map(commentChild => (
               <CommentItem
+                isChild={true}
                 key={commentChild.id}
                 userId={commentChild.userId}
                 content={commentChild.content}

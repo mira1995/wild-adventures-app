@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import AdventureItem from '../adventures/AdventureItem'
+import { Row, Col } from 'antd'
 
 class CategoryDetails extends Component {
   constructor(props) {
@@ -23,23 +24,29 @@ class CategoryDetails extends Component {
 
   render() {
     return (
-      <div>
-        <h1>{this.state.category.title}</h1>
-        <div>
-          <p>{this.state.category.description}</p>
-        </div>
-        <h2>Liste des aventures</h2>
-        <div>
-          {this.state.adventures.map(adventure => (
-            <AdventureItem
-              key={adventure.id}
-              index={adventure.id}
-              imagePath="https://i.kym-cdn.com/photos/images/original/001/384/541/1d8.jpg"
-              adventure={adventure}
-            />
-          ))}
-        </div>
-      </div>
+      <Row type="flex" justify="center" align="top">
+        <Col lg={15} md={18} sm={21} xs={22} className="customContainer">
+          <div>
+            <h1>{this.state.category.title}</h1>
+            <div>
+              <p>{this.state.category.description}</p>
+            </div>
+            <h2>Liste des aventures</h2>
+            <div>
+              <Row type="flex" align="center">
+                {this.state.adventures.map(adventure => (
+                  <AdventureItem
+                    key={adventure.id}
+                    index={adventure.id}
+                    imagePath="https://www.riu.com/fr/binaris/new-slide-destino-paradise-island_tcm57-138470.jpg"
+                    adventure={adventure}
+                  />
+                ))}
+              </Row>
+            </div>
+          </div>
+        </Col>
+      </Row>
     )
   }
 }

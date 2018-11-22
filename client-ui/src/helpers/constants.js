@@ -26,3 +26,6 @@ export const API = {
   COMMENTS: '/comments',
   USERS: '/users',
 }
+export const CONF = {
+  CARD_CONTENT_SIZE: 75,
+}

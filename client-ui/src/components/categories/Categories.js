@@ -27,7 +27,7 @@ class Categories extends Component {
             <CategoryItem
               key={category.id}
               index={category.id}
-              imagePath="https://i.kym-cdn.com/photos/images/original/001/384/541/1d8.jpg"
+              imagePath="https://www.riu.com/fr/binaris/new-slide-destino-paradise-island_tcm57-138470.jpg"
               title={category.title}
               description={category.description}
             />
