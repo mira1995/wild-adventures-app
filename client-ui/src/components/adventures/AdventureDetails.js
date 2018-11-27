@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
 import { API, URI } from '../../helpers/constants'
 import { Link } from 'react-router-dom'
-import { Row } from 'antd'
+import { Row, Table, Button } from 'antd'
 import CommentItem from '../comments/CommentItem'
 import CommentForm from './../comments/CommentForm'
 import { BEARER_TOKEN } from './../../helpers/constants'
 import { withRouter } from 'react-router-dom'
 import './AdventureDetails.css'
 import Container from './../../Container'
+import moment from 'moment'
 
 class AdventureDetails extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class AdventureDetails extends Component {
     this.state = {
       adventure: [],
       categories: [],
+      sessions: [],
       comments: [],
       isAnonymous: this.checkIfAnonymous(),
       activeComment: null,
@@ -42,6 +44,11 @@ class AdventureDetails extends Component {
       .get(`${API.COMMENTS}/${this.props.match.params.adventureId}`)
       .then(response => {
         this.setState({ comments: response.data })
+      })
+    http
+      .get(`${API.SESSIONS}/${this.props.match.params.adventureId}`)
+      .then(response => {
+        this.setState({ sessions: response.data })
       })
   }
 
@@ -75,9 +82,53 @@ class AdventureDetails extends Component {
     this.setState({ activeComment })
   }
 
+  formatSessionsDates = sessions => {
+    sessions.map(session => this.formatEndAndStartDate(session))
+  }
+
+  formatEndAndStartDate = session => {
+    const format = 'L'
+    session.startDate = moment(session.startDate).format(format)
+    session.endDate = moment(session.endDate).format(format)
+  }
+
   render() {
-    const { adventure } = this.state
+    const { adventure, sessions } = this.state
     console.log(adventure)
+    this.formatSessionsDates(sessions)
+
+    const columns = [
+      {
+        title: 'Du',
+        dataIndex: 'startDate',
+        key: 'startDate',
+      },
+      {
+        title: 'Au',
+        dataIndex: 'endDate',
+        key: 'endDate',
+      },
+      {
+        title: 'Prix',
+        dataIndex: 'price',
+        key: 'price',
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+          <div>
+            {!this.state.isAnonymous && <Button>Réserver</Button>}{' '}
+            {this.state.isAnonymous && (
+              <p>
+                Pour réserver <Link to={URI.REGISTER}>s'inscrire</Link> ou{' '}
+                <Link to={URI.LOGIN}> se connecter</Link>
+              </p>
+            )}
+          </div>
+        ),
+      },
+    ]
     return (
       <Container>
         <div>
@@ -93,6 +144,10 @@ class AdventureDetails extends Component {
                 </Link>
               ))}
             </ul>
+          </div>
+          <div>
+            <h2>Réserver cette aventure</h2>
+            <Table columns={columns} dataSource={sessions} />
           </div>
           <div>
             <h2>Commentaires</h2>

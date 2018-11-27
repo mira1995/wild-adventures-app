@@ -13,6 +13,7 @@ import Adventures from './components/adventures/Adventures'
 import Account from './components/user/Account'
 import Register from './components/user/Register'
 import Login from './components/user/Login'
+import OrderForm from './components/orders/OrderForm'
 import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
@@ -101,6 +102,7 @@ class App extends Component {
             path={`${URI.ADVENTURES}/:adventureId`}
             component={AdventureDetails}
           />
+          <Route path={`${URI.ORDER}/:sessionId`} component={OrderForm} />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />
