@@ -100,9 +100,9 @@ class App extends Component {
           <Route exact path={URI.ADVENTURES} component={Adventures} />
           <Route
             path={`${URI.ADVENTURES}/:adventureId`}
-            component={AdventureDetails}
+            render={() => <AdventureDetails cookies={cookies} />}
           />
-          <Route path={`${URI.ORDER}/:sessionId`} component={OrderForm} />
+          <Route path={URI.ORDER} component={OrderForm} />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />

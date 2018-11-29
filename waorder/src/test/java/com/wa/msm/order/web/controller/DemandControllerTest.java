@@ -75,10 +75,12 @@ public class DemandControllerTest extends AbstractOrderControllerTest{
         orderDemand = new OrderDemand();
 
         OrderDemandSession orderDemandSession = new OrderDemandSession();
+        orderDemandSession.setNbOrder(1L);
         orderDemandSession.setSessionId(sessionBean.getId());
         orderDemand.getOrderDemandSessions().add(orderDemandSession);
 
         OrderDemandSession orderDemandSession1 = new OrderDemandSession();
+        orderDemandSession1.setNbOrder(2L);
         orderDemandSession1.setSessionId(sessionBean2.getId());
         orderDemand.getOrderDemandSessions().add(orderDemandSession1);
 

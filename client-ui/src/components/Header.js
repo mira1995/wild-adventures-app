@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Menu, Icon } from 'antd'
+import { Menu, Icon, Button, Row, Col } from 'antd'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
 import { BEARER_TOKEN, URI, MENU } from '../helpers/constants'
 
@@ -23,10 +23,16 @@ class Header extends Component {
     this.props.dispatch(action)
   }
 
+  componentDidUpdate = (prevProps, prevState) => {
+    console.log(this.props.buyingBox)
+  }
+
   render() {
     const MenuItem = Menu.Item
+    const SubMenu = Menu.SubMenu
     const auth = this.props.token
-
+    const { buyingBox } = this.props.buyingBox
+    console.log(buyingBox)
     return (
       <Menu
         onClick={this.handleMenu}
@@ -34,33 +40,33 @@ class Header extends Component {
         mode="horizontal"
         theme="dark"
       >
-        <MenuItem key={MENU.HOME}>
+        <MenuItem style={{ float: 'left' }} key={MENU.HOME}>
           <Link to={URI.HOME}>
             <Icon type="home" />
             Wild Adventures
           </Link>
         </MenuItem>
-        <MenuItem key={MENU.CATEGORIES}>
+        <MenuItem style={{ float: 'left' }} key={MENU.CATEGORIES}>
           <Link to={URI.CATEGORIES}>
             <Icon type="heat-map" />
             Categories
           </Link>
         </MenuItem>
-        <MenuItem key={MENU.ADVENTURES}>
+        <MenuItem style={{ float: 'left' }} key={MENU.ADVENTURES}>
           <Link to={URI.ADVENTURES}>
             <Icon type="heat-map" />
             Adventures
           </Link>
         </MenuItem>
         {auth ? (
-          <MenuItem key={MENU.ACCOUNT}>
+          <MenuItem style={{ float: 'left' }} key={MENU.ACCOUNT}>
             <Link to={URI.ACCOUNT}>
               <Icon type="user" />
               Account
             </Link>
           </MenuItem>
         ) : (
-          <MenuItem key={MENU.REGISTER}>
+          <MenuItem style={{ float: 'left' }} key={MENU.REGISTER}>
             <Link to={URI.REGISTER}>
               <Icon type="user-add" />
               Register
@@ -68,19 +74,51 @@ class Header extends Component {
           </MenuItem>
         )}
         {auth ? (
-          <MenuItem key={MENU.LOGOUT}>
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGOUT}>
             <Link to={URI.LOGOUT} onClick={this.handleToken}>
               <Icon type="logout" />
               Logout
             </Link>
           </MenuItem>
         ) : (
-          <MenuItem key={MENU.LOGIN}>
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGIN}>
             <Link to={URI.LOGIN}>
               <Icon type="login" />
               Login
             </Link>
           </MenuItem>
+        )}
+        {auth && (
+          <SubMenu
+            style={{ float: 'right' }}
+            title={
+              <span className="submenu-title-wrapper">
+                <Icon type="shopping-cart" />
+                <span>
+                  Mon panier&nbsp;
+                  {buyingBox ? buyingBox.length : 0}
+                </span>
+              </span>
+            }
+          >
+            {buyingBox.length > 0 &&
+              buyingBox.map(item => (
+                <MenuItem>
+                  {item.adventureName} du {item.startDate} au {item.endDate}
+                </MenuItem>
+              ))}
+            {buyingBox.length > 0 && (
+              <MenuItem>
+                <Row>
+                  <Col span={12} offset={8}>
+                    <Link to={`${URI.ORDER}`}>
+                      <Button type="primary">Commander</Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </MenuItem>
+            )}
+          </SubMenu>
         )}
       </Menu>
     )
@@ -91,6 +129,7 @@ const mapStateToProps = state => {
   return {
     token: state.authentication.token,
     menuKey: state.menu.current,
+    buyingBox: state.buyingBox,
   }
 }
 

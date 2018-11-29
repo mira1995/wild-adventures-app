@@ -160,7 +160,7 @@ public class DemandController {
             orderSessionRepository.delete(orderSession);
         });
         orderDemand.getOrderDemandSessions().iterator().forEachRemaining(orderDemandSession -> {
-                OrderSession orderSession = new OrderSession(orderDemand.getOrder(),orderDemand.getOrder().getId(), orderDemandSession.getSessionId());
+                OrderSession orderSession = new OrderSession(orderDemand.getOrder(),orderDemandSession.getNbOrder(), orderDemand.getOrder().getId(), orderDemandSession.getSessionId());
                 orderSessions.add(orderSession);
         });
         orderDemand.getOrder().setOrderSessions(orderSessions);

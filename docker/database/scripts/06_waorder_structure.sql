@@ -33,6 +33,7 @@ CREATE TABLE waorder.order_demand (
 ALTER SEQUENCE waorder.order_id_seq OWNED BY waorder.order_demand.id;
 
 CREATE TABLE waorder.order_demand_session (
+				nb_order INTEGER NOT NULL,
                 demand_id INTEGER NOT NULL,
                 session_id INTEGER NOT NULL,
                 CONSTRAINT order_demand_session_pk PRIMARY KEY (demand_id, session_id)
@@ -40,6 +41,7 @@ CREATE TABLE waorder.order_demand_session (
 
 
 CREATE TABLE waorder.order_session (
+				nb_order INTEGER NOT NULL,
                 order_id INTEGER NOT NULL,
                 session_id INTEGER NOT NULL,
                 CONSTRAINT order_session_pk PRIMARY KEY (order_id, session_id)
