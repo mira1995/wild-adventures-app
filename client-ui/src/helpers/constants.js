@@ -18,6 +18,7 @@ export const URI = {
   LOGIN: '/login',
   FORGOT_PASSWORD: '/forgot',
   ORDER: '/order',
+  PAYMENT: '/payment',
 }
 export const API = {
   BASE_URL: 'http://localhost:9000',
@@ -27,6 +28,7 @@ export const API = {
   SESSIONS: '/adventures/sessions',
   COMMENTS: '/comments',
   USERS: '/users',
+  ORDERS: '/orders',
 }
 export const CONF = {
   CARD_CONTENT_SIZE: 75,

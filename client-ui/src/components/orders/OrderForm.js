@@ -6,7 +6,8 @@ import { Row, Button, Col } from 'antd'
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
 import { http } from '../../configurations/axiosConf'
-import { API } from '../../helpers/constants'
+import { API, URI } from '../../helpers/constants'
+import { Redirect } from 'react-router-dom'
 
 class OrderForm extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class OrderForm extends Component {
     this.state = {
       total: 0,
       userAccount: null,
+      order: null,
     }
   }
 
@@ -65,15 +67,30 @@ class OrderForm extends Component {
       orderSessions: [],
     }
     const { buyingBox } = this.props.buyingBox
+    console.log(buyingBox)
     buyingBox.map(item =>
-      order.orderSessions.push({ sessionId: item.id, nbOrder: item.nbOrder })
+      order.orderSessions.push({
+        sessionId: item.id,
+        nbOrder: typeof item.nbOrder !== 'undefined' ? item.nbOrder : 1,
+      })
     )
-    console.log(order)
+
+    http
+      .post(API.ORDERS, order)
+      .then(response => {
+        order = response.data
+        this.setState({ order })
+      })
+      .catch(error => console.log('error', error))
   }
 
   render() {
     const { buyingBox } = this.props.buyingBox
-    const { total } = this.state
+    const { order, total } = this.state
+
+    if (order !== null) {
+      return <Redirect to={`${URI.PAYMENT}/${order.id}`} />
+    }
     return (
       <Container>
         <h1>Réaliser votre commande</h1>
