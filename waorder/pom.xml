@@ -24,6 +24,7 @@
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Finchley.SR1</spring-cloud.version>
         <h2-db.version>1.4.194</h2-db.version>
+		<stripe.version>4.2.0</stripe.version>
 	</properties>
 
 	<dependencies>
@@ -104,6 +105,11 @@
 			<artifactId>h2</artifactId>
 			<version>${h2-db.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>${stripe.version}</version>
 		</dependency>
 	</dependencies>
 

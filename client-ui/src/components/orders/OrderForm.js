@@ -58,6 +58,11 @@ class OrderForm extends Component {
     this.getTotal()
   }
 
+  onDeleteItem = item => {
+    const action = { type: 'TOGGLE_BUYINGBOX', value: item }
+    this.props.dispatch(action)
+  }
+
   continueOrder = () => {
     let order = {
       orderDate: moment(),
@@ -80,8 +85,14 @@ class OrderForm extends Component {
       .then(response => {
         order = response.data
         this.setState({ order })
+        this.clearBuyingBox()
       })
       .catch(error => console.log('error', error))
+  }
+
+  clearBuyingBox = () => {
+    const action = { type: 'CLEAR_BUYINGBOX', value: null }
+    this.props.dispatch(action)
   }
 
   render() {
@@ -102,8 +113,10 @@ class OrderForm extends Component {
             }`}
             nbOrder={item.nbOrder}
             index={index}
+            item={item}
             price={item.price}
             action={this.onItemNbChange}
+            actionDelete={this.onDeleteItem}
           />
         ))}
         {buyingBox.length > 0 && (

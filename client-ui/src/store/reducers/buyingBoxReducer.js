@@ -29,6 +29,12 @@ function toggleBuyingBox(state = initialState, action) {
       nextState = state
       nextState.buyingBox = buyingBox
       return nextState || state
+    case 'CLEAR_BUYINGBOX':
+      nextState = {
+        ...state,
+        buyingBox: [],
+      }
+      return nextState || state
     default:
       return state
   }
