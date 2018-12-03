@@ -14,7 +14,6 @@ class Header extends Component {
 
   handleToken = () => {
     this.props.cookies.remove(BEARER_TOKEN)
-    sessionStorage.clear()
     this.toggleAction(TOGGLE_AUTH, null)
   }
 
