@@ -21,9 +21,9 @@ class Login extends Component {
           .then(response => {
             const bearerToken = response.headers.authorization
             console.log(bearerToken)
+            const { cookies } = this.props
+
             if (values.remember) {
-              // If remember, create cookie
-              const { cookies } = this.props
               const decoded = jwt.decode(bearerToken.substring(7))
               const exp = moment.unix(decoded.exp)
 
@@ -31,7 +31,13 @@ class Login extends Component {
                 path: '/',
                 expires: exp.toDate(),
               })
-            } else sessionStorage.setItem(BEARER_TOKEN, bearerToken)
+            } else {
+              const exp = moment().add(15, 'minutes')
+              cookies.set(BEARER_TOKEN, bearerToken, {
+                path: '/',
+                expires: exp.toDate(),
+              })
+            }
 
             this.toggleAction(TOGGLE_AUTH, bearerToken)
             this.toggleAction(TOGGLE_MENU, URI.HOME)

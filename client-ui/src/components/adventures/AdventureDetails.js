@@ -46,7 +46,7 @@ class AdventureDetails extends Component {
   }
 
   checkIfAnonymous() {
-    return sessionStorage.getItem(BEARER_TOKEN) === null
+    return this.props.cookies.get(BEARER_TOKEN) === null
   }
 
   handleSubmit = comment => {

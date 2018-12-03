@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox, Tooltip, DatePicker } from 'antd'
 import bcrypt from 'bcryptjs'
+import moment from 'moment'
 import { http } from '../../configurations/axiosConf'
 import { URI, API, BEARER_TOKEN } from '../../helpers/constants'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
@@ -36,11 +37,13 @@ class Register extends Component {
               .then(response => {
                 const bearerToken = response.headers.authorization
                 console.log(bearerToken)
-                sessionStorage.setItem(BEARER_TOKEN, bearerToken)
-                this.toggleAction(
-                  TOGGLE_AUTH,
-                  sessionStorage.getItem(BEARER_TOKEN)
-                )
+                const { cookies } = this.props
+                const exp = moment().add(15, 'minutes')
+                cookies.set(BEARER_TOKEN, bearerToken, {
+                  path: '/',
+                  expires: exp.toDate(),
+                })
+                this.toggleAction(TOGGLE_AUTH, cookies.get(BEARER_TOKEN))
                 this.toggleAction(TOGGLE_MENU, URI.HOME)
               })
               .catch(error => {

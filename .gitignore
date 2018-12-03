@@ -42,3 +42,6 @@ hs_err_pid*
 # Rubbish
 Thumbs.db
 .DS_Store
+
+# JavaScript
+node_modules/
