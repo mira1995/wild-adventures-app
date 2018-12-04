@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Elements, StripeProvider } from 'react-stripe-elements'
 import Payment from './Payment'
 import { withRouter } from 'react-router-dom'
 import StripeCheckout from 'react-stripe-checkout'
@@ -25,21 +24,7 @@ class PaymentForm extends Component {
   render() {
     return (
       <div>
-        <StripeProvider apiKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H">
-          <Elements>
-            <Payment />
-          </Elements>
-        </StripeProvider>
-
-        <StripeCheckout
-          token={this.onToken}
-          currency="EUR"
-          locale="fr"
-          amount={1000}
-          email="info@wild-adventures.com"
-          name="Wild Adventures CIE"
-          stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
-        />
+        <Payment />
       </div>
     )
   }

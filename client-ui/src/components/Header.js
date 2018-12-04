@@ -89,6 +89,14 @@ class Header extends Component {
           </MenuItem>
         )}
         {auth && (
+          <MenuItem style={{ float: 'left' }} key={MENU.MYORDERS}>
+            <Link to={URI.MYORDERS}>
+              <Icon type="barcode" />
+              Mes commandes
+            </Link>
+          </MenuItem>
+        )}
+        {auth && (
           <SubMenu
             style={{ float: 'right' }}
             title={

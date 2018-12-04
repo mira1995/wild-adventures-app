@@ -118,6 +118,7 @@ class AdventureDetails extends Component {
   }
 
   formatEndAndStartDate = session => {
+    /* const format = 'L' */
     const format = 'L'
     session.startDate = moment(session.startDate).format(format)
     session.endDate = moment(session.endDate).format(format)

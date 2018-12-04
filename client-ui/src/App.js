@@ -14,11 +14,12 @@ import Account from './components/user/Account'
 import Register from './components/user/Register'
 import Login from './components/user/Login'
 import OrderForm from './components/orders/OrderForm'
-import PaymentForm from './components/orders/PaymentForm'
+import Payment from './components/orders/Payment'
 import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
 import AdventureDetails from './components/adventures/AdventureDetails'
+import MyOrders from './components/orders/MyOrders'
 
 class App extends Component {
   constructor(props) {
@@ -104,7 +105,8 @@ class App extends Component {
             render={() => <AdventureDetails cookies={cookies} />}
           />
           <Route path={URI.ORDER} component={OrderForm} />
-          <Route path={`${URI.PAYMENT}/:orderId`} component={PaymentForm} />
+          <Route path={`${URI.PAYMENT}/:orderId`} component={Payment} />
+          <Route path={URI.MYORDERS} component={MyOrders} />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />

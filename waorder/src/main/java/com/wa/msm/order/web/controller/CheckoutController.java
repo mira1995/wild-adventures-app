@@ -26,11 +26,12 @@ public class CheckoutController {
     @CrossOrigin
     @PostMapping("/charge")
     public ResponseEntity<Charge> charge(@RequestBody ChargeRequest chargeRequest){
-        Charge charge = new Charge();
+        Charge charge = null;
         try{
             DateFormat df = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
             Date today = Calendar.getInstance().getTime();
-            String OrderDate = df.format(today);
+            String orderDate = df.format(today);
+            chargeRequest.setDescription(orderDate+" wild adventures transaction number : "+Math.random());
             charge = stripeService.charge(chargeRequest);
         }catch( Exception e){
             throw  new ChargeException("Erreur lors de la transaction via Stripe");

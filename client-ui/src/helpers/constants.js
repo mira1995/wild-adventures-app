@@ -7,6 +7,7 @@ export const MENU = {
   REGISTER: 'register',
   LOGOUT: 'logout',
   LOGIN: 'login',
+  MYORDERS: 'Mes commandes',
 }
 export const URI = {
   HOME: '/',
@@ -19,6 +20,7 @@ export const URI = {
   FORGOT_PASSWORD: '/forgot',
   ORDER: '/order',
   PAYMENT: '/payment',
+  MYORDERS: '/myOrders',
 }
 export const API = {
   BASE_URL: 'http://localhost:9000',

@@ -2,25 +2,47 @@ import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import Container from '../../Container'
-import { Button } from 'antd/lib/radio'
 import { Redirect, withRouter } from 'react-router-dom'
 import { URI } from './../../helpers/constants'
-import { CardElement, injectStripe } from 'react-stripe-elements'
+import StripeCheckout from 'react-stripe-checkout'
 
 class Payment extends Component {
   constructor(props) {
     super(props)
-    this.submit = this.submit.bind(this)
     this.state = {
       order: null,
+      adventures: [],
+      sessions: [],
+      items: [],
     }
   }
 
-  componentWillMount = () => {
+  componentWillMount() {
+    let sessionsId = []
     http
       .get(`${API.ORDERS}/${this.props.match.params.orderId}`)
       .then(response => {
-        this.setState({ order: response.data })
+        let order = response.data
+        order.orderSessions.map(session => sessionsId.push(session.sessionId))
+        console.log(sessionsId)
+        http
+          .post(`${API.ADVENTURES}/sessions`, sessionsId)
+          .then(response => {
+            const sessions = response.data
+            let adventures = []
+            sessions.map(session =>
+              http
+                .get(`${API.ADVENTURES}/${session.adventureId}`)
+                .then(response => {
+                  adventures.push(response.data)
+                })
+                .catch(error => console.log('error', error))
+            )
+
+            order.sessions = sessions
+          })
+          .catch(error => console.log('error', error))
+        this.setState({ order: order })
       })
       .catch(error => console.log('error', error))
   }
@@ -35,21 +57,20 @@ class Payment extends Component {
       .catch(error => console.log('error', error))
   }
 
-  async submit(ev) {
-    // User clicked submit
-    let { token } = await this.props.stripe.createToken({ name: 'Name' })
-    let response = await fetch(`${API.ORDERS}/charge`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: {
-        stripeToken: token.id,
-        amount: 10000,
-        currency: 'EUR',
-        stripeEmail: 'test@gmail.com',
-      },
-    })
-
-    if (response.ok) this.payOrder()
+  onToken = token => {
+    const chargeRequest = {
+      stripeToken: token.id,
+      amount: 10000,
+      currency: 'EUR',
+      stripeEmail: 'test@gmail.com',
+    }
+    http
+      .post(`${API.ORDERS}/charge`, chargeRequest)
+      .then(response => {
+        alert(`We are in business,`)
+      })
+      .catch(error => console.log('error', error))
+    this.payOrder()
   }
 
   render() {
@@ -57,14 +78,34 @@ class Payment extends Component {
       return <Redirect to={URI.HOME} />
     }
     const { order } = this.state
-    console.log(order)
+    console.log(this.state)
     return (
       <Container>
-        <CardElement />
-        <Button onClick={this.payOrder}>Payer</Button>
+        <h1>Récapitulatif de commande</h1>
+        <div>
+          {order &&
+            order.orderSessions.map((orderSession, index) => (
+              <div key={index}>
+                {order.adventures[index].title} du
+                {order.sessions[index].startDate} au
+                {order.session[index].endDate} pour un total de
+                {orderSession.nbOrder * order.session[index][index].price}
+              </div>
+            ))}
+        </div>
+
+        <StripeCheckout
+          token={this.onToken}
+          currency="EUR"
+          locale="fr"
+          amount={1000}
+          email="info@wild-adventures.com"
+          name="Wild Adventures CIE"
+          stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
+        />
       </Container>
     )
   }
 }
 
-export default injectStripe(withRouter(Payment))
+export default withRouter(Payment)
