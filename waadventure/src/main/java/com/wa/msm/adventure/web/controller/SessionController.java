@@ -8,6 +8,8 @@ import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotValidException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "/sessions")
 public class SessionController {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     SessionRepository sessionRepository;
@@ -42,11 +46,28 @@ public class SessionController {
 
     @PostMapping
     public List<Session> getAllById(@RequestBody List<Long> sessionsIdList){
+        log.info("Start of method : getAllById, parameter[sessionId:"+sessionsIdList.toString()+"]");
         if(sessionsIdList == null || sessionsIdList.isEmpty())throw new SessionNotFoundException("Aucun id de session transmis");
         List<Session> sessions = new ArrayList<>(0);
         sessionRepository.findAllByIdIn(sessionsIdList).forEach(sessions::add);
         if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions pour cette liste d'id.");
         return sessions;
+    }
+
+    @GetMapping(value= "/single/{sessionId}")
+    public ResponseEntity<Session> getSessionById(@PathVariable Long sessionId){
+        log.info("Start of method : getSessionById, parameter[sessionId:"+sessionId+"]");
+        if(sessionId == null){
+            log.error("Exception in method : getSessionById, exception : SessionNotFoundException ->Aucun id de session transmis");
+            throw new SessionNotFoundException("Aucun id de session transmis");
+        }
+        Optional <Session> session = sessionRepository.findById(sessionId);
+        if(!session.isPresent()){
+            log.error("Exception in method : getSessionById, exception : SessionNotFoundException ->Aucune session de trouver pour cet id :" +sessionId);
+            throw new SessionNotFoundException("Aucune session de trouver pour cet id :" +sessionId);
+        }
+        log.info("End of method : getSessionById");
+        return new ResponseEntity<>(session.get(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/admin")

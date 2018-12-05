@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Payment from './Payment'
 import { withRouter } from 'react-router-dom'
-import StripeCheckout from 'react-stripe-checkout'
 import { API } from '../../helpers/constants'
 import { http } from '../../configurations/axiosConf'
 

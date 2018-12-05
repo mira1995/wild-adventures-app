@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
-import { API } from '../../helpers/constants'
+import { API, ORDERSTATUS } from '../../helpers/constants'
 import { connect } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import Container from '../../Container'
@@ -34,21 +34,61 @@ class MyOrders extends Component {
   }
 
   actionColumnRender = record => {
+    const buttonStyle = {
+      marginRight: '10px',
+    }
     switch (record.status) {
-      case 'NOT_PAID':
+      case ORDERSTATUS.NOT_PAID:
         return (
-          <Link to={`${URI.PAYMENT}/${record.id}`}>
-            <Button type="danger">Payer</Button>
-          </Link>
+          <div>
+            <Link to={`${URI.PAYMENT}/${record.id}`}>
+              <Button style={buttonStyle} type="danger">
+                Payer
+              </Button>
+            </Link>
+            <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
+              <Button type="danger">Annuler</Button>
+            </Link>
+          </div>
         )
-      case 'FINALIZED':
+      case ORDERSTATUS.FINALIZED:
         return (
-          <Link to={`${URI.PAYMENT}/${record.id}`}>
-            <Button type="primary">Modifier</Button>
-          </Link>
+          <div>
+            <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
+              <Button style={buttonStyle} type="primary">
+                Modifier
+              </Button>
+            </Link>
+            <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
+              <Button type="danger">Annuler</Button>
+            </Link>
+          </div>
+        )
+      case ORDERSTATUS.DELETE_DEMAND:
+        return <div>Demande de suppression en cours de traitement</div>
+      case ORDERSTATUS.UPDATE_DEMAND:
+        return (
+          <div>
+            Demande de mise à jour de la commande en cours de traitement
+          </div>
         )
       default:
-        return <div>Aucune action</div>
+        return <div>Aucune action disponible</div>
+    }
+  }
+
+  statusColumnRender = record => {
+    switch (record.status) {
+      case ORDERSTATUS.NOT_PAID:
+        return <div>Non Payée</div>
+      case ORDERSTATUS.FINALIZED:
+        return <div>Finalisée</div>
+      case ORDERSTATUS.DELETE_DEMAND:
+        return <div>Demande de suppression</div>
+      case ORDERSTATUS.UPDATE_DEMAND:
+        return <div>Demande de mise à jour</div>
+      default:
+        return <div>Statut non reconnu</div>
     }
   }
 
@@ -62,9 +102,7 @@ class MyOrders extends Component {
       {
         title: 'Statut',
         rowKey: 'status',
-        render: (text, record) => (
-          <div>{record.status === 'NOT_PAID' ? 'Non Payée' : 'Finalisée'}</div>
-        ),
+        render: (text, record) => <div>{this.statusColumnRender(record)}</div>,
       },
       {
         title: 'Action',
@@ -75,8 +113,17 @@ class MyOrders extends Component {
     console.log(this.state)
     return (
       <Container>
+        <h1>Liste de mes commandes</h1>
         <div>
-          <Table columns={columns} dataSource={this.state.orders} rowKey="id" />
+          {this.state.orders && this.state.orders.length > 0 ? (
+            <Table
+              columns={columns}
+              dataSource={this.state.orders}
+              rowKey="id"
+            />
+          ) : (
+            <p>Vous n'avez réalisé aucune commande</p>
+          )}
         </div>
       </Container>
     )

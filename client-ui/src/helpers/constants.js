@@ -21,6 +21,8 @@ export const URI = {
   ORDER: '/order',
   PAYMENT: '/payment',
   MYORDERS: '/myOrders',
+  CANCELDEMAND: '/cancel',
+  UPDATEDEMAND: '/update',
 }
 export const API = {
   BASE_URL: 'http://localhost:9000',
@@ -34,4 +36,12 @@ export const API = {
 }
 export const CONF = {
   CARD_CONTENT_SIZE: 75,
+}
+
+export const ORDERSTATUS = {
+  FINALIZED: 'FINALIZED',
+  NOT_PAID: 'NOT_PAID',
+  UPDATE_DEMAND: 'UPDATE_DEMAND',
+  DELETE_DEMAND: 'DELETE_DEMAND',
+  CANCELED: 'CANCELED',
 }

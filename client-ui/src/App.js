@@ -20,6 +20,8 @@ import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
 import AdventureDetails from './components/adventures/AdventureDetails'
 import MyOrders from './components/orders/MyOrders'
+import CancelDemand from './components/orders/CancelDemand'
+import UpdateDemand from './components/orders/UpdateDemand'
 
 class App extends Component {
   constructor(props) {
@@ -106,7 +108,15 @@ class App extends Component {
           />
           <Route path={URI.ORDER} component={OrderForm} />
           <Route path={`${URI.PAYMENT}/:orderId`} component={Payment} />
-          <Route path={URI.MYORDERS} component={MyOrders} />
+          <Route exact path={URI.MYORDERS} component={MyOrders} />
+          <Route
+            path={`${URI.MYORDERS}${URI.CANCELDEMAND}/:orderId`}
+            component={CancelDemand}
+          />
+          <Route
+            path={`${URI.MYORDERS}${URI.UPDATEDEMAND}/:orderId`}
+            component={UpdateDemand}
+          />
           <Route path={URI.ACCOUNT} component={Account} />
           <Route path={URI.REGISTER} component={Register} />
           <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />
