@@ -33,6 +33,7 @@ export const API = {
   COMMENTS: '/comments',
   USERS: '/users',
   ORDERS: '/orders',
+  DEMANDS: '/demands',
 }
 export const CONF = {
   CARD_CONTENT_SIZE: 75,
@@ -44,4 +45,10 @@ export const ORDERSTATUS = {
   UPDATE_DEMAND: 'UPDATE_DEMAND',
   DELETE_DEMAND: 'DELETE_DEMAND',
   CANCELED: 'CANCELED',
+}
+
+export const DEMANDSTATUS = {
+  OPENED_DEMAND: 'OPENED_DEMAND',
+  VALIDATED_DEMAND: 'VALIDATED_DEMAND',
+  REJECTED_DEMAND: 'REJECTED_DEMAND',
 }

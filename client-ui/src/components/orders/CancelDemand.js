@@ -1,20 +1,23 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import Container from '../../Container'
 import { Input, Form, Button } from 'antd'
 import { http } from './../../configurations/axiosConf'
-import { API } from '../../helpers/constants'
+import { API, URI, ORDERSTATUS } from '../../helpers/constants'
 import { connect } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import OrderRecap from './OrderRecap'
+import { DEMANDSTATUS } from './../../helpers/constants'
 
 class CancelDemand extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isWrongUser: false,
+      isSavedDemand: false,
     }
   }
+
   componentWillMount() {
     const token = this.props.token.substring(7)
     const decoded = jwt.decode(token)
@@ -36,13 +39,49 @@ class CancelDemand extends Component {
     })
   }
 
-  initiateState = (order, userAccount) => {}
+  initiateState = orderSessions => {
+    const { orderItem } = this.state
+    orderItem.orderSessions = orderSessions
+    this.setState({ orderItem })
+  }
 
   persistDemand = event => {
     event.preventDefault()
+    this.props.form.validateFields((error, values) => {
+      if (!error) {
+        const { orderItem } = this.state
+        let orderDemandSessions = []
+        orderItem.orderSessions.map(orderSession =>
+          orderDemandSessions.push({
+            nbOrder: orderSession.nbOrder,
+            sessionId: orderSession.sessionId,
+          })
+        )
+        const demand = {
+          orderDate: orderItem.orderDate,
+          status: orderItem.status,
+          isPaid: orderItem.isPaid,
+          userAccountId: orderItem.userAccountId,
+          order: { ...orderItem, status: ORDERSTATUS.DELETE_DEMAND },
+          demandStatus: DEMANDSTATUS.OPENED_DEMAND,
+          orderDemandSessions: orderDemandSessions,
+          demandMessage: values.message,
+        }
+
+        http
+          .post(`${API.ORDERS}${API.DEMANDS}`, demand)
+          .then(response => {
+            this.setState({ isSavedDemand: true })
+          })
+          .catch(error => console.log('error', error))
+      }
+    })
   }
 
   render() {
+    if (this.state.isSavedDemand) {
+      return <Redirect to={URI.MYORDERS} />
+    }
     const orderId = this.props.match.params.orderId
     const FormItem = Form.Item
     const { getFieldDecorator } = this.props.form
@@ -54,15 +93,18 @@ class CancelDemand extends Component {
         <h2>Annulation de la commande du {orderItem && orderItem.orderDate}</h2>
         {orderItem &&
           orderItem.orderSessions && (
-            <OrderRecap orderSessions={orderItem.orderSessions} />
+            <OrderRecap
+              action={this.initiateState}
+              orderSessions={orderItem.orderSessions}
+            />
           )}
         <Form
           id={orderId}
           className={`orderDemandForm`}
-          onSubmit={this.persistComment}
+          onSubmit={this.persistDemand}
         >
           <FormItem>
-            {getFieldDecorator('content', {
+            {getFieldDecorator('message', {
               rules: [
                 {
                   required: true,

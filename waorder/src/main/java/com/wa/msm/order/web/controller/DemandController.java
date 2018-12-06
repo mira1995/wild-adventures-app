@@ -90,7 +90,7 @@ public class DemandController {
             orderDemandSession.setDemandId(orderDemandSaved.getId());
             orderDemandSessionRepository.save(orderDemandSession);
         });
-
+        orderRepository.save(orderDemand.getOrder());
         return new ResponseEntity<>(orderDemand, HttpStatus.CREATED);
     }
 

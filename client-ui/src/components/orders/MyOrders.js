@@ -54,7 +54,7 @@ class MyOrders extends Component {
       case ORDERSTATUS.FINALIZED:
         return (
           <div>
-            <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
+            <Link to={`${URI.MYORDERS}${URI.UPDATEDEMAND}/${record.id}`}>
               <Button style={buttonStyle} type="primary">
                 Modifier
               </Button>
