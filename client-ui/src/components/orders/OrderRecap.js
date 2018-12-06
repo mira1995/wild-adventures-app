@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
-import { Table, InputNumber, Button } from 'antd'
+import { message, Table } from 'antd'
+import RemoveSessionButton from './RemoveSessionButton'
+import NbOrderUpdateInput from './NbOrderUpdateInput'
 
 class OrderRecap extends Component {
   constructor(props) {
@@ -14,12 +16,35 @@ class OrderRecap extends Component {
     }
   }
 
-  onChange = value => {
-    this.props.action(this.state.orderSessions)
+  actionOnChange = record => {
+    const { orderSessions } = this.state
+    const sessionIndex = orderSessions.findIndex(
+      item =>
+        item.sessionId === record.sessionId && item.orderId === record.orderId
+    )
+    console.log(sessionIndex)
+    orderSessions[sessionIndex].nbOrder = record.nbOrder
+    this.props.action(orderSessions)
   }
 
-  onClick = event => {
-    this.props.action(this.state.orderSessions)
+  actionOnClick = record => {
+    console.log(
+      this.state.orderSessions.filter(
+        (item, index) =>
+          item.sessionId === record.sessionId && item.orderId === record.orderId
+      )
+    )
+    if (this.props.orderSessions.length > 1) {
+      this.props.action(
+        this.state.orderSessions.filter(
+          (item, index) =>
+            item.sessionId === record.sessionId &&
+            item.orderId === record.orderId
+        )
+      )
+    } else {
+      message.error('Votre commande doit au moins contenir une aventure')
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -86,10 +111,9 @@ class OrderRecap extends Component {
             key: 'nbOrder',
             render: (text, record) => (
               <div>
-                <InputNumber
-                  min={1}
-                  defaultValue={record.nbOrder ? record.nbOrder : 1}
-                  onChange={this.onChange}
+                <NbOrderUpdateInput
+                  record={record}
+                  actionOnChange={this.actionOnChange}
                 />
               </div>
             ),
@@ -100,16 +124,19 @@ class OrderRecap extends Component {
             rowKey: 'subTotal',
           },
           {
-            title: 'Nombre de participant',
-            key: 'nbOrder',
+            title: 'Suppression',
+            key: 'delete',
             render: (text, record) => (
               <div>
-                <Button type="danger" onClick={this.onClick} />
+                <RemoveSessionButton
+                  actionOnClick={this.actionOnClick}
+                  record={record}
+                />
               </div>
             ),
           },
         ]
-    console.log(this.state)
+    console.log(this.props)
 
     const { orderSessions } = this.state
     console.log(orderSessions)

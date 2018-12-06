@@ -5,6 +5,7 @@ import Container from '../../Container'
 import { Redirect, withRouter } from 'react-router-dom'
 import { URI } from './../../helpers/constants'
 import StripeCheckout from 'react-stripe-checkout'
+import OrderRecap from './OrderRecap'
 
 class Payment extends Component {
   constructor(props) {
@@ -14,15 +15,17 @@ class Payment extends Component {
       adventures: [],
       sessions: [],
       items: [],
+      total: 0,
     }
   }
 
   componentWillMount() {
     let sessionsId = []
+    let total = 0
     http
       .get(`${API.ORDERS}/${this.props.match.params.orderId}`)
       .then(response => {
-        let order = response.data
+        var order = response.data
         order.orderSessions.map(session => sessionsId.push(session.sessionId))
         console.log(sessionsId)
         http
@@ -35,6 +38,12 @@ class Payment extends Component {
                 .get(`${API.ADVENTURES}/${session.adventureId}`)
                 .then(response => {
                   adventures.push(response.data)
+                  const orderSession = order.orderSessions.filter(
+                    (item, index) => item.sessionId === session.id
+                  )[0]
+                  total = total + session.price * orderSession.nbOrder
+                  console.log(total)
+                  this.setState({ total: total })
                 })
                 .catch(error => console.log('error', error))
             )
@@ -57,10 +66,17 @@ class Payment extends Component {
       .catch(error => console.log('error', error))
   }
 
+  initiateState = orderSessions => {
+    const { order } = this.state
+    order.orderSessions = orderSessions
+    this.setState({ order })
+  }
+
   onToken = token => {
+    const { total } = this.state
     const chargeRequest = {
       stripeToken: token.id,
-      amount: 10000,
+      amount: total * 100,
       currency: 'EUR',
       stripeEmail: 'test@gmail.com',
     }
@@ -73,36 +89,42 @@ class Payment extends Component {
     this.payOrder()
   }
 
+  calculateTotalOrder = order => {
+    let total = 0
+    order.orderSessions(item => (total += item.subTotal))
+    return total
+  }
+
   render() {
     if (this.state.order && this.state.order.isPaid) {
       return <Redirect to={URI.HOME} />
     }
-    const { order } = this.state
+
+    const { order, total } = this.state
     console.log(this.state)
     return (
       <Container>
         <h1>Récapitulatif de commande</h1>
         <div>
           {order &&
-            order.orderSessions.map((orderSession, index) => (
-              <div key={index}>
-                {order.adventures[index].title} du
-                {order.sessions[index].startDate} au
-                {order.session[index].endDate} pour un total de
-                {orderSession.nbOrder * order.session[index][index].price}
+            order.orderSessions && (
+              <div>
+                <OrderRecap
+                  action={this.initiateState}
+                  orderSessions={order.orderSessions}
+                />
+                <StripeCheckout
+                  token={this.onToken}
+                  currency="EUR"
+                  locale="fr"
+                  amount={total * 100}
+                  email="info@wild-adventures.com"
+                  name="Wild Adventures CIE"
+                  stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
+                />
               </div>
-            ))}
+            )}
         </div>
-
-        <StripeCheckout
-          token={this.onToken}
-          currency="EUR"
-          locale="fr"
-          amount={1000}
-          email="info@wild-adventures.com"
-          name="Wild Adventures CIE"
-          stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
-        />
       </Container>
     )
   }

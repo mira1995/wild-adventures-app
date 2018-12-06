@@ -62,7 +62,7 @@ class UpdateDemand extends Component {
           status: orderItem.status,
           isPaid: orderItem.isPaid,
           userAccountId: orderItem.userAccountId,
-          order: { ...orderItem, status: ORDERSTATUS.DELETE_DEMAND },
+          order: { ...orderItem, status: ORDERSTATUS.UPDATE_DEMAND },
           demandStatus: DEMANDSTATUS.OPENED_DEMAND,
           orderDemandSessions: orderDemandSessions,
           demandMessage: values.message,
@@ -89,7 +89,7 @@ class UpdateDemand extends Component {
     console.log(this.state)
     return (
       <Container>
-        <h1>Demande d'annulation de commande</h1>
+        <h1>Demande de mise à jour de commande</h1>
         <h2>Annulation de la commande du {orderItem && orderItem.orderDate}</h2>
         {orderItem &&
           orderItem.orderSessions && (
