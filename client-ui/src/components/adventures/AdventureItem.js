@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card, Col } from 'antd'
 import { URI, CONF } from './../../helpers/constants'
+import { strings } from '../../helpers/strings'
 
 const { Meta } = Card
 
@@ -33,7 +34,9 @@ const AdventureItem = ({ index, imagePath, adventure }) => (
         </Card.Grid>
         <Card.Grid style={gridStyle}>
           <div>
-            <p>Localisation : {adventure.location}</p>
+            <p>
+              {strings.adventures.location} : {adventure.location}
+            </p>
           </div>
         </Card.Grid>
       </Card>

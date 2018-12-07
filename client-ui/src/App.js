@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import jwt from 'jsonwebtoken'
-import moment from 'moment'
 import { withCookies } from 'react-cookie'
 import './App.css'
 import Header from './components/Header'
 import Home from './components/Home'
 import Categories from './components/categories/Categories'
 import CategoryDetails from './components/categories/CategoryDetails'
-import Adventures from './components/adventures/Adventures'
 import Account from './components/user/Account'
 import Register from './components/user/Register'
 import Login from './components/user/Login'
@@ -30,25 +27,8 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const tokenSession = sessionStorage.getItem(BEARER_TOKEN)
-    const tokenCookie = this.props.cookies.get(BEARER_TOKEN)
-    let token
+    const token = this.props.cookies.get(BEARER_TOKEN)
 
-    if (!tokenSession) {
-      if (tokenCookie) {
-        // Si cookie, vérifier token cookie puis créer session
-        token = this.tokenIsFine(tokenCookie)
-        if (token) {
-          sessionStorage.setItem(BEARER_TOKEN, token)
-          this.toggleAction(TOGGLE_AUTH, token)
-        }
-      }
-    } else {
-      // Si session, vérifier token session
-      token = this.tokenIsFine(tokenSession)
-    }
-
-    //const token = this.tokenIsFine(this.state.token)
     const { path } = this.state
     console.log(path, 'path')
 
@@ -61,26 +41,23 @@ class App extends Component {
   }
 
   // Delete token in sessionStorage if exp is exceeded
-  tokenIsFine(token) {
-    if (token) {
-      const decoded = jwt.decode(token.substring(7))
-      const format = 'DD MMMM YYYY hh:mm:ss'
-      const now = moment()
-      const iat = moment.unix(decoded.iat)
-      const exp = moment.unix(decoded.exp)
-      console.log(decoded, 'decoded')
-      console.log(iat.format(format), 'iat')
-      console.log(exp.format(format), 'exp')
-      console.log(exp.diff(now), 'diff')
-      if (exp.diff(now) <= 0) {
-        token = null
-        this.props.cookies.remove(BEARER_TOKEN)
-        sessionStorage.clear()
-      }
-    }
+  // tokenIsFine(token) {
+  //   if (token) {
+  //     const decoded = jwt.decode(token.substring(7))
+  //     const format = 'DD MMMM YYYY hh:mm:ss'
+  //     const now = moment()
+  //     const exp = moment.unix(decoded.exp)
+  //     console.log(decoded, 'decoded')
+  //     console.log(exp.format(format), 'exp')
+  //     console.log(exp.diff(now), 'diff')
+  //     if (exp.diff(now) <= 0) {
+  //       token = null
+  //       this.props.cookies.remove(BEARER_TOKEN)
+  //     }
+  //   }
 
-    return token
-  }
+  //   return token
+  // }
 
   toggleAction(type, value) {
     const action = { type, value }
@@ -94,6 +71,7 @@ class App extends Component {
       <div>
         <Header cookies={cookies} />
 
+        {window.location.pathname.includes('index.html') && <Redirect to="/" />}
         <Switch>
           <Route exact path={URI.HOME} component={Home} />
           <Route exact path={URI.CATEGORIES} component={Categories} />
@@ -101,7 +79,6 @@ class App extends Component {
             path={`${URI.CATEGORIES}/:categoryId`}
             component={CategoryDetails}
           />
-          <Route exact path={URI.ADVENTURES} component={Adventures} />
           <Route
             path={`${URI.ADVENTURES}/:adventureId`}
             render={() => <AdventureDetails cookies={cookies} />}
@@ -117,10 +94,26 @@ class App extends Component {
             path={`${URI.MYORDERS}${URI.UPDATEDEMAND}/:orderId`}
             component={UpdateDemand}
           />
-          <Route path={URI.ACCOUNT} component={Account} />
-          <Route path={URI.REGISTER} component={Register} />
-          <Route path={URI.LOGOUT} render={() => <Redirect to={URI.HOME} />} />
-          <Route path={URI.LOGIN} render={() => <Login cookies={cookies} />} />
+          <Route
+            exact
+            path={URI.ACCOUNT}
+            render={() => <Account cookies={cookies} />}
+          />
+          <Route
+            exact
+            path={URI.REGISTER}
+            render={() => <Register cookies={cookies} />}
+          />
+          <Route
+            exact
+            path={URI.LOGOUT}
+            render={() => <Redirect to={URI.HOME} />}
+          />
+          <Route
+            exact
+            path={URI.LOGIN}
+            render={() => <Login cookies={cookies} />}
+          />
           <Route component={NoMatch} />
         </Switch>
       </div>

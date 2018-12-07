@@ -6,11 +6,12 @@ import { Row, Table, Button } from 'antd'
 import CommentItem from '../comments/CommentItem'
 import CommentForm from './../comments/CommentForm'
 import { BEARER_TOKEN } from './../../helpers/constants'
-import './AdventureDetails.css'
 import Container from './../../Container'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+
+import { strings } from '../../helpers/strings'
 
 class AdventureDetails extends Component {
   constructor(props) {
@@ -54,12 +55,11 @@ class AdventureDetails extends Component {
   }
 
   checkIfAnonymous() {
-    return sessionStorage.getItem(BEARER_TOKEN) === null
+    return !this.props.cookies.get(BEARER_TOKEN)
   }
 
+  // Use fx arrow to bind this
   handleSubmit = comment => {
-    /* window.location.reload() */
-    //Bind this
     let { comments } = this.state
     if (typeof this.getIndex(comments, comment.id) !== 'undefined') {
       comments[this.getIndex(comments, comment.id)].comments = comment.comments
@@ -78,8 +78,8 @@ class AdventureDetails extends Component {
     }
   }
 
+  // Use fx arrow to bind this
   handleAnswerClick = activeComment => {
-    //Bind this
     this.setState({ activeComment })
   }
 
@@ -178,14 +178,17 @@ class AdventureDetails extends Component {
         ),
       },
     ]
+
     return (
       <Container>
         <div>
           <h1>{adventure.title}</h1>
           <div>
             <p>{adventure.description}</p>
-            <p>Localisation : {adventure.location}</p>
-            <h2>Liste des catégories de l'aventure : </h2>
+            <p>
+              {strings.adventures.location} : {adventure.location}
+            </p>
+            <h2>{strings.adventures.categoriesListAdventure}</h2>
             <ul>
               {this.state.categories.map(category => (
                 <Link key={category.id} to={`${URI.CATEGORIES}/${category.id}`}>
@@ -215,7 +218,7 @@ class AdventureDetails extends Component {
             )}
           </div>
           <div>
-            <h2>Commentaires</h2>
+            <h2>{strings.comments.commentsList}</h2>
             {!this.state.isAnonymous &&
               this.state.activeComment === null && (
                 <Row>

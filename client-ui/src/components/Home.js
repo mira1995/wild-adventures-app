@@ -1,5 +1,11 @@
 import React from 'react'
+import { strings } from '../helpers/strings'
+import Container from '../Container'
 
-const Home = () => <h2>Home</h2>
+const Home = () => (
+  <Container>
+    <h2>{strings.routes.home}</h2>
+  </Container>
+)
 
 export default Home

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
+import { strings } from '../../../helpers/strings'
 
 class EmailForm extends Component {
   handleSubmit = event => {
@@ -65,35 +66,44 @@ class EmailForm extends Component {
     return (
       <Container>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="Current e-mail">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.currentEmailLabel}
+          >
             {getFieldDecorator('currentEmail', {
               initialValue: user.email,
             })(<Input disabled={true} />)}
           </FormItem>
-          <FormItem {...formItemLayout} label="New e-mail">
+          <FormItem {...formItemLayout} label={strings.user.form.newEmailLabel}>
             {getFieldDecorator('email', {
               rules: [
                 {
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: strings.user.form.usernameValidEmail,
                 },
-                { required: true, message: 'Please input your email!' },
+                {
+                  required: true,
+                  message: strings.user.form.usernameMessageRule,
+                },
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem {...formItemLayout} label="Current password">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.currentPasswordLabel}
+          >
             {getFieldDecorator('confirmEmailWithPassword', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your current password!',
+                  message: strings.user.form.passwordMessageRule,
                 },
               ],
             })(<Input type="password" />)}
           </FormItem>
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              Send
+              {strings.user.send}
             </Button>
           </FormItem>
         </Form>

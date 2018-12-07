@@ -2,19 +2,43 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu, Icon, Button, Row, Col } from 'antd'
+import moment from 'moment'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
-import { BEARER_TOKEN, URI, MENU } from '../helpers/constants'
+import { BEARER_TOKEN, URI, MENU, LANGUAGE } from '../helpers/constants'
+import { strings, languagesList } from '../helpers/strings'
 
 class Header extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      language: null,
+    }
+  }
+
+  componentWillMount() {
+    const language = this.props.cookies.get(LANGUAGE) || strings.getLanguage()
+    strings.setLanguage(language)
+    this.setState({ language })
+  }
+
   handleMenu = event => {
     console.log(event, 'click')
     if (event.key === URI.LOGOUT) this.toggleAction(TOGGLE_MENU, URI.HOME)
-    else this.toggleAction(TOGGLE_MENU, URI.HOME + event.key)
+    else if (event.key.includes(MENU.LANGUAGE)) {
+      const language = event.key.substring(MENU.LANGUAGE.length + 1)
+      strings.setLanguage(language)
+      this.setState({ language })
+      this.props.cookies.set(LANGUAGE, language, {
+        path: '/',
+        expires: moment()
+          .add(1, 'years')
+          .toDate(),
+      })
+    } else this.toggleAction(TOGGLE_MENU, URI.HOME + event.key)
   }
 
   handleToken = () => {
     this.props.cookies.remove(BEARER_TOKEN)
-    sessionStorage.clear()
     this.toggleAction(TOGGLE_AUTH, null)
   }
 
@@ -23,16 +47,13 @@ class Header extends Component {
     this.props.dispatch(action)
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    console.log(this.props.buyingBox)
-  }
-
   render() {
     const MenuItem = Menu.Item
     const SubMenu = Menu.SubMenu
     const auth = this.props.token
     const { buyingBox } = this.props.buyingBox
-    console.log(buyingBox)
+    const currentLanguage = this.state.language
+
     return (
       <Menu
         onClick={this.handleMenu}
@@ -43,48 +64,27 @@ class Header extends Component {
         <MenuItem style={{ float: 'left' }} key={MENU.HOME}>
           <Link to={URI.HOME}>
             <Icon type="home" />
-            Wild Adventures
+            {strings.routes.wildAdventures}
           </Link>
         </MenuItem>
         <MenuItem style={{ float: 'left' }} key={MENU.CATEGORIES}>
           <Link to={URI.CATEGORIES}>
             <Icon type="heat-map" />
-            Categories
-          </Link>
-        </MenuItem>
-        <MenuItem style={{ float: 'left' }} key={MENU.ADVENTURES}>
-          <Link to={URI.ADVENTURES}>
-            <Icon type="heat-map" />
-            Adventures
+            {strings.routes.categories}
           </Link>
         </MenuItem>
         {auth ? (
           <MenuItem style={{ float: 'left' }} key={MENU.ACCOUNT}>
             <Link to={URI.ACCOUNT}>
               <Icon type="user" />
-              Account
+              {strings.routes.account}
             </Link>
           </MenuItem>
         ) : (
           <MenuItem style={{ float: 'left' }} key={MENU.REGISTER}>
             <Link to={URI.REGISTER}>
               <Icon type="user-add" />
-              Register
-            </Link>
-          </MenuItem>
-        )}
-        {auth ? (
-          <MenuItem style={{ float: 'left' }} key={MENU.LOGOUT}>
-            <Link to={URI.LOGOUT} onClick={this.handleToken}>
-              <Icon type="logout" />
-              Logout
-            </Link>
-          </MenuItem>
-        ) : (
-          <MenuItem style={{ float: 'left' }} key={MENU.LOGIN}>
-            <Link to={URI.LOGIN}>
-              <Icon type="login" />
-              Login
+              {strings.routes.register}
             </Link>
           </MenuItem>
         )}
@@ -93,6 +93,21 @@ class Header extends Component {
             <Link to={URI.MYORDERS}>
               <Icon type="barcode" />
               Mes commandes
+            </Link>
+          </MenuItem>
+        )}
+        {auth ? (
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGOUT}>
+            <Link to={URI.LOGOUT} onClick={this.handleToken}>
+              <Icon type="logout" />
+              {strings.routes.logout}
+            </Link>
+          </MenuItem>
+        ) : (
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGIN}>
+            <Link to={URI.LOGIN}>
+              <Icon type="login" />
+              {strings.routes.login}
             </Link>
           </MenuItem>
         )}
@@ -128,6 +143,17 @@ class Header extends Component {
             )}
           </SubMenu>
         )}
+        <SubMenu title={<Icon type="flag" />}>
+          {strings.getAvailableLanguages().map(language => (
+            <MenuItem key={`${MENU.LANGUAGE}:${language}`}>
+              {currentLanguage === language ? (
+                <b>{languagesList[language]}</b>
+              ) : (
+                languagesList[language]
+              )}
+            </MenuItem>
+          ))}
+        </SubMenu>
       </Menu>
     )
   }

@@ -1,13 +1,14 @@
 export const BEARER_TOKEN = 'bearerToken'
+export const LANGUAGE = 'language'
 export const MENU = {
   HOME: 'home',
   CATEGORIES: 'categories',
-  ADVENTURES: 'adventures',
   ACCOUNT: 'account',
   REGISTER: 'register',
   LOGOUT: 'logout',
   LOGIN: 'login',
   MYORDERS: 'Mes commandes',
+  LANGUAGE: 'language',
 }
 export const URI = {
   HOME: '/',

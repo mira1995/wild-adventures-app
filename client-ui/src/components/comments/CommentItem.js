@@ -3,6 +3,7 @@ import { Card, Col } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import { Link } from 'react-router-dom'
+import { strings } from '../../helpers/strings'
 
 class CommentItem extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class CommentItem extends Component {
     const { content, comments, children, isActive, isChild } = this.props
     return (
       <Col span={24}>
-        <Card title={`${this.state.user.pseudo} a dit`}>
+        <Card title={`${this.state.user.pseudo} ${strings.comments.said}`}>
           <p>{content} </p>
           <p />
           {children}
@@ -43,13 +44,13 @@ class CommentItem extends Component {
             {!isActive &&
               !isChild && (
                 <Link to="#" onClick={this.answerComment}>
-                  Répondre
+                  {strings.comments.reply}
                 </Link>
               )}
             {isActive &&
               !isChild && (
                 <Link to="#" onClick={this.cancelAnswer}>
-                  Annuler
+                  {strings.comments.cancel}
                 </Link>
               )}
           </p>
