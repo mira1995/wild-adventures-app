@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Menu, Icon } from 'antd'
+import { Menu, Icon, Button, Row, Col } from 'antd'
 import moment from 'moment'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
 import { BEARER_TOKEN, URI, MENU, LANGUAGE } from '../helpers/constants'
@@ -51,6 +51,7 @@ class Header extends Component {
     const MenuItem = Menu.Item
     const SubMenu = Menu.SubMenu
     const auth = this.props.token
+    const { buyingBox } = this.props.buyingBox
     const currentLanguage = this.state.language
 
     return (
@@ -60,53 +61,87 @@ class Header extends Component {
         mode="horizontal"
         theme="dark"
       >
-        <MenuItem key={MENU.HOME}>
+        <MenuItem style={{ float: 'left' }} key={MENU.HOME}>
           <Link to={URI.HOME}>
             <Icon type="home" />
             {strings.routes.wildAdventures}
           </Link>
         </MenuItem>
-        <MenuItem key={MENU.CATEGORIES}>
+        <MenuItem style={{ float: 'left' }} key={MENU.CATEGORIES}>
           <Link to={URI.CATEGORIES}>
             <Icon type="heat-map" />
             {strings.routes.categories}
           </Link>
         </MenuItem>
-        <MenuItem key={MENU.ADVENTURES}>
-          <Link to={URI.ADVENTURES}>
-            <Icon type="heat-map" />
-            {strings.routes.adventures}
-          </Link>
-        </MenuItem>
         {auth ? (
-          <MenuItem key={MENU.ACCOUNT}>
+          <MenuItem style={{ float: 'left' }} key={MENU.ACCOUNT}>
             <Link to={URI.ACCOUNT}>
               <Icon type="user" />
               {strings.routes.account}
             </Link>
           </MenuItem>
         ) : (
-          <MenuItem key={MENU.REGISTER}>
+          <MenuItem style={{ float: 'left' }} key={MENU.REGISTER}>
             <Link to={URI.REGISTER}>
               <Icon type="user-add" />
               {strings.routes.register}
             </Link>
           </MenuItem>
         )}
+        {auth && (
+          <MenuItem style={{ float: 'left' }} key={MENU.MYORDERS}>
+            <Link to={URI.MYORDERS}>
+              <Icon type="barcode" />
+              Mes commandes
+            </Link>
+          </MenuItem>
+        )}
         {auth ? (
-          <MenuItem key={MENU.LOGOUT}>
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGOUT}>
             <Link to={URI.LOGOUT} onClick={this.handleToken}>
               <Icon type="logout" />
               {strings.routes.logout}
             </Link>
           </MenuItem>
         ) : (
-          <MenuItem key={MENU.LOGIN}>
+          <MenuItem style={{ float: 'left' }} key={MENU.LOGIN}>
             <Link to={URI.LOGIN}>
               <Icon type="login" />
               {strings.routes.login}
             </Link>
           </MenuItem>
+        )}
+        {auth && (
+          <SubMenu
+            style={{ float: 'right' }}
+            title={
+              <span className="submenu-title-wrapper">
+                <Icon type="shopping-cart" />
+                <span>
+                  Mon panier&nbsp;
+                  {buyingBox ? buyingBox.length : 0}
+                </span>
+              </span>
+            }
+          >
+            {buyingBox.length > 0 &&
+              buyingBox.map(item => (
+                <MenuItem>
+                  {item.adventureName} du {item.startDate} au {item.endDate}
+                </MenuItem>
+              ))}
+            {buyingBox.length > 0 && (
+              <MenuItem>
+                <Row>
+                  <Col span={12} offset={8}>
+                    <Link to={`${URI.ORDER}`}>
+                      <Button type="primary">Commander</Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </MenuItem>
+            )}
+          </SubMenu>
         )}
         <SubMenu title={<Icon type="flag" />}>
           {strings.getAvailableLanguages().map(language => (
@@ -128,6 +163,7 @@ const mapStateToProps = state => {
   return {
     token: state.authentication.token,
     menuKey: state.menu.current,
+    buyingBox: state.buyingBox,
   }
 }
 

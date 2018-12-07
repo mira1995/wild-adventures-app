@@ -11,6 +11,8 @@ import com.wa.msm.order.util.enumeration.OrderStatusEnum;
 import com.wa.msm.order.web.exception.OrderNotFoundException;
 import com.wa.msm.order.web.exception.OrderValidationException;
 import com.wa.msm.order.web.exception.SessionNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.Optional;
 
 @RestController
 public class OrderController {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private OrderRepository orderRepository;
@@ -54,6 +58,7 @@ public class OrderController {
     public Optional<Order> getOrder(@PathVariable Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
         if(!order.isPresent()) throw new OrderNotFoundException("La commande d'id : "+ orderId + "n'existe pas");
+        log.info("Récupération de la commande d'id : "+order.get().getId());
         return order;
     }
 

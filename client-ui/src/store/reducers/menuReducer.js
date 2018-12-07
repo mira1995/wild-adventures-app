@@ -15,9 +15,6 @@ function toggleMenu(state = initialState, action) {
         case URI.CATEGORIES:
           current = MENU.CATEGORIES
           break
-        case URI.ADVENTURES:
-          current = MENU.ADVENTURES
-          break
         case URI.ACCOUNT:
           current = MENU.ACCOUNT
           break

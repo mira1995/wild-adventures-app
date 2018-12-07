@@ -7,14 +7,18 @@ import Header from './components/Header'
 import Home from './components/Home'
 import Categories from './components/categories/Categories'
 import CategoryDetails from './components/categories/CategoryDetails'
-import Adventures from './components/adventures/Adventures'
 import Account from './components/user/Account'
 import Register from './components/user/Register'
 import Login from './components/user/Login'
+import OrderForm from './components/orders/OrderForm'
+import Payment from './components/orders/Payment'
 import NoMatch from './components/NoMatch'
 import { TOGGLE_AUTH, TOGGLE_MENU } from './store/actions/types'
 import { BEARER_TOKEN, URI } from './helpers/constants'
 import AdventureDetails from './components/adventures/AdventureDetails'
+import MyOrders from './components/orders/MyOrders'
+import CancelDemand from './components/orders/CancelDemand'
+import UpdateDemand from './components/orders/UpdateDemand'
 
 class App extends Component {
   constructor(props) {
@@ -75,10 +79,20 @@ class App extends Component {
             path={`${URI.CATEGORIES}/:categoryId`}
             component={CategoryDetails}
           />
-          <Route exact path={URI.ADVENTURES} component={Adventures} />
           <Route
             path={`${URI.ADVENTURES}/:adventureId`}
             render={() => <AdventureDetails cookies={cookies} />}
+          />
+          <Route path={URI.ORDER} component={OrderForm} />
+          <Route path={`${URI.PAYMENT}/:orderId`} component={Payment} />
+          <Route exact path={URI.MYORDERS} component={MyOrders} />
+          <Route
+            path={`${URI.MYORDERS}${URI.CANCELDEMAND}/:orderId`}
+            component={CancelDemand}
+          />
+          <Route
+            path={`${URI.MYORDERS}${URI.UPDATEDEMAND}/:orderId`}
+            component={UpdateDemand}
           />
           <Route
             exact

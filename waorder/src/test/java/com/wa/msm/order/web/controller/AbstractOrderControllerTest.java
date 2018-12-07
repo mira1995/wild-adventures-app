@@ -102,10 +102,12 @@ public abstract class AbstractOrderControllerTest {
         order.setUserAccountId(1L);
 
         OrderSession orderSession= new OrderSession();
+        orderSession.setNbOrder(1L);
         orderSession.setSessionId(sessionBean.getId());
         orderSessions.add(orderSession);
 
         OrderSession orderSession2= new OrderSession();
+        orderSession2.setNbOrder(2L);
         orderSession2.setSessionId(sessionBean2.getId());
         orderSessions.add(orderSession2);
         order.setOrderSessions(orderSessions);

@@ -19,6 +19,9 @@ public class OrderSession implements Serializable {
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Order order;
 
+    @Column(name = "nb_order")
+    private Long nbOrder;
+
     @Id
     @Column(name = "order_id")
     private Long orderId;

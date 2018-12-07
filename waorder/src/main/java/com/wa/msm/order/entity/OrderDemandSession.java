@@ -18,6 +18,9 @@ public class OrderDemandSession {
     @JoinColumn(name = "demand_id", referencedColumnName = "id", insertable = false, updatable = false)
     private OrderDemand orderDemand;
 
+    @Column(name = "nb_order")
+    private Long nbOrder;
+
     @Id
     @Column(name = "demand_id")
     private Long demandId;
