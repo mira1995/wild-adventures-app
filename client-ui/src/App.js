@@ -67,6 +67,7 @@ class App extends Component {
       <div>
         <Header cookies={cookies} />
 
+        {window.location.pathname.includes('index.html') && <Redirect to="/" />}
         <Switch>
           <Route exact path={URI.HOME} component={Home} />
           <Route exact path={URI.CATEGORIES} component={Categories} />

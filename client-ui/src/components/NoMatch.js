@@ -1,5 +1,11 @@
 import React from 'react'
+import { strings } from '../helpers/strings'
 
-const NoMatch = ({ location }) => <h2>404 NOT FOUND : {location.pathname}</h2>
+const NoMatch = ({ location }) => (
+  <div>
+    <h2>{strings.routes.notMatch}</h2>
+    <code>{location.pathname}</code>
+  </div>
+)
 
 export default NoMatch

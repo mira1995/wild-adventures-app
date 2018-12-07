@@ -1,7 +1,7 @@
-.container {
-  flex-direction: column;
-  height: 500px;
-}
+/* .customContainer {
+  display: flex;
+  justify-content: center;
+} */
 
 .login-form {
   max-width: 300px;

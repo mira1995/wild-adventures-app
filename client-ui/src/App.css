@@ -1,6 +1,5 @@
 body {
-  background: url('https://www.riu.com/fr/binaris/new-slide-destino-paradise-island_tcm57-138470.jpg')
-    no-repeat center fixed;
+  background: url('/images/background.jpg') no-repeat center fixed;
   background-size: cover;
 }
 

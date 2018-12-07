@@ -5,6 +5,7 @@ import { API } from '../../helpers/constants'
 import CategoryItem from './CategoryItem'
 import Container from './../../Container'
 import { CONF } from './../../helpers/constants'
+import { strings } from '../../helpers/strings'
 
 class Categories extends Component {
   state = {
@@ -31,14 +32,15 @@ class Categories extends Component {
       <Container>
         <div>
           <h1>
-            Liste des catégories <small>Partez à l'aventure</small>
+            {strings.categories.categoriesList}{' '}
+            <small>{strings.categories.goAdventure}</small>
           </h1>
           <Row type="flex" justify="center" align="middle">
             {this.state.categories.map(category => (
               <CategoryItem
                 key={category.id}
                 index={category.id}
-                imagePath="https://www.riu.com/fr/binaris/new-slide-destino-paradise-island_tcm57-138470.jpg"
+                imagePath="/images/background.jpg"
                 title={category.title}
                 description={this.formatContent(category.description)}
               />

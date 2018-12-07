@@ -4,6 +4,7 @@ import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import jwt from 'jsonwebtoken'
 import { connect } from 'react-redux'
+import { strings } from '../../helpers/strings'
 
 class CommentForm extends Component {
   constructor(props) {
@@ -30,7 +31,6 @@ class CommentForm extends Component {
     event.preventDefault()
     this.props.form.validateFields((error, values) => {
       if (!error) {
-        console.log('Received values of form: ', values)
         const commentToAdd = {
           content: values.content,
           reported: false,
@@ -74,15 +74,23 @@ class CommentForm extends Component {
         <FormItem>
           {getFieldDecorator('content', {
             rules: [
-              { required: true, message: 'Merci de rentrer un commentaire' },
+              {
+                required: true,
+                message: strings.comments.form.contentMessageRule,
+              },
             ],
-          })(<Input rows={4} placeholder="Ecrivez votre commentaire ici" />)}
+          })(
+            <Input
+              rows={4}
+              placeholder={strings.comments.form.contentPlaceholder}
+            />
+          )}
           <Button
             type="primary"
             htmlType="submit"
             className="login-form-button"
           >
-            Envoyer
+            {strings.comments.send}
           </Button>
         </FormItem>
       </Form>

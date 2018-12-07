@@ -1,4 +1,5 @@
 export const BEARER_TOKEN = 'bearerToken'
+export const LANGUAGE = 'language'
 export const MENU = {
   HOME: 'home',
   CATEGORIES: 'categories',
@@ -7,6 +8,7 @@ export const MENU = {
   REGISTER: 'register',
   LOGOUT: 'logout',
   LOGIN: 'login',
+  LANGUAGE: 'language',
 }
 export const URI = {
   HOME: '/',
