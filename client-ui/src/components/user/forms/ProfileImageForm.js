@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Icon, Button, Upload, message } from 'antd'
+import moment from 'moment'
 import Container from './../../../Container'
 import { http } from '../../../configurations/axiosConf'
-import moment from 'moment'
+import { strings } from '../../../helpers/strings'
 
 class ProfileImageForm extends Component {
   constructor() {
@@ -116,7 +117,7 @@ class ProfileImageForm extends Component {
     return (
       <Container>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="Profile image">
+          <FormItem {...formItemLayout} label={strings.user.form.avatarLabel}>
             {getFieldDecorator('profileImage', {})(
               <Upload
                 name="avatar"
@@ -139,7 +140,7 @@ class ProfileImageForm extends Component {
                 ) : (
                   <Button>
                     <Icon type={this.state.loading ? 'loading' : 'plus'} />
-                    Upload
+                    {strings.user.upload}
                   </Button>
                 )}
               </Upload>

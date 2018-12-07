@@ -4,6 +4,7 @@ import { API } from '../../helpers/constants'
 import AdventureItem from '../adventures/AdventureItem'
 import { Row } from 'antd'
 import Container from '../../Container'
+import { strings } from '../../helpers/strings'
 
 class CategoryDetails extends Component {
   constructor(props) {
@@ -31,14 +32,14 @@ class CategoryDetails extends Component {
           <div>
             <p>{this.state.category.description}</p>
           </div>
-          <h2>Liste des aventures</h2>
+          <h2>{strings.categories.adventuresList}</h2>
           <div>
             <Row type="flex" align="center">
               {this.state.adventures.map(adventure => (
                 <AdventureItem
                   key={adventure.id}
                   index={adventure.id}
-                  imagePath="https://www.riu.com/fr/binaris/new-slide-destino-paradise-island_tcm57-138470.jpg"
+                  imagePath="/images/background.jpg"
                   adventure={adventure}
                 />
               ))}

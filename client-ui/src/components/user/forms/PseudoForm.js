@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Icon, Input, Button, Tooltip } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
+import { strings } from '../../../helpers/strings'
 
 class PseudoForm extends Component {
   handleSubmit = event => {
@@ -65,7 +66,10 @@ class PseudoForm extends Component {
     return (
       <Container>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="Current pseudo">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.currentPseudoLabel}
+          >
             {getFieldDecorator('currentPseudo', {
               initialValue: user.pseudo,
             })(<Input disabled={true} />)}
@@ -74,8 +78,9 @@ class PseudoForm extends Component {
             {...formItemLayout}
             label={
               <span>
-                New pseudo&nbsp;
-                <Tooltip title="What do you want others to call you?">
+                {strings.user.form.newPseudoLabel}
+                &nbsp;
+                <Tooltip title={strings.user.form.pseudoTooltipTitle}>
                   <Icon type="question-circle-o" />
                 </Tooltip>
               </span>
@@ -84,26 +89,32 @@ class PseudoForm extends Component {
             {getFieldDecorator('pseudo', {
               rules: [
                 {
-                  message: 'Please input your nickname!',
+                  message: strings.user.form.pseudoMessageRule,
                   whitespace: true,
                 },
-                { required: true, message: 'Please input your pseudo!' },
+                {
+                  required: true,
+                  message: strings.user.form.pseudoMessageRule,
+                },
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem {...formItemLayout} label="Current password">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.currentPasswordLabel}
+          >
             {getFieldDecorator('confirmPseudoWithPassword', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your current password!',
+                  message: strings.user.form.passwordMessageRule,
                 },
               ],
             })(<Input type="password" />)}
           </FormItem>
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              Send
+              {strings.user.send}
             </Button>
           </FormItem>
         </Form>

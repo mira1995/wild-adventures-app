@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
+import { strings } from '../../../helpers/strings'
 
 class PasswordForm extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class PasswordForm extends Component {
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form
     if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!')
+      callback(strings.user.form.compareToFirstPassword)
     } else {
       callback()
     }
@@ -90,22 +91,28 @@ class PasswordForm extends Component {
     return (
       <Container>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="Current password">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.currentPasswordLabel}
+          >
             {getFieldDecorator('confirmPasswordWithPassword', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your current password!',
+                  message: strings.user.form.passwordMessageRule,
                 },
               ],
             })(<Input type="password" />)}
           </FormItem>
-          <FormItem {...formItemLayout} label="New password">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.newPasswordLabel}
+          >
             {getFieldDecorator('password', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your new password!',
+                  message: strings.user.form.newPasswordMessageRule,
                 },
                 {
                   validator: this.validateToNextPassword,
@@ -113,12 +120,15 @@ class PasswordForm extends Component {
               ],
             })(<Input type="password" />)}
           </FormItem>
-          <FormItem {...formItemLayout} label="Confirm new password">
+          <FormItem
+            {...formItemLayout}
+            label={strings.user.form.confirmNewPasswordLabel}
+          >
             {getFieldDecorator('confirmNew', {
               rules: [
                 {
                   required: true,
-                  message: 'Please confirm your password!',
+                  message: strings.user.form.confirmNewPasswordMessageRule,
                 },
                 {
                   validator: this.compareToFirstPassword,
@@ -128,7 +138,7 @@ class PasswordForm extends Component {
           </FormItem>
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              Send
+              {strings.user.send}
             </Button>
           </FormItem>
         </Form>

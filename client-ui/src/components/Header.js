@@ -2,14 +2,39 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu, Icon } from 'antd'
+import moment from 'moment'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
-import { BEARER_TOKEN, URI, MENU } from '../helpers/constants'
+import { BEARER_TOKEN, URI, MENU, LANGUAGE } from '../helpers/constants'
+import { strings, languagesList } from '../helpers/strings'
 
 class Header extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      language: null,
+    }
+  }
+
+  componentWillMount() {
+    const language = this.props.cookies.get(LANGUAGE) || strings.getLanguage()
+    strings.setLanguage(language)
+    this.setState({ language })
+  }
+
   handleMenu = event => {
     console.log(event, 'click')
     if (event.key === URI.LOGOUT) this.toggleAction(TOGGLE_MENU, URI.HOME)
-    else this.toggleAction(TOGGLE_MENU, URI.HOME + event.key)
+    else if (event.key.includes(MENU.LANGUAGE)) {
+      const language = event.key.substring(MENU.LANGUAGE.length + 1)
+      strings.setLanguage(language)
+      this.setState({ language })
+      this.props.cookies.set(LANGUAGE, language, {
+        path: '/',
+        expires: moment()
+          .add(1, 'years')
+          .toDate(),
+      })
+    } else this.toggleAction(TOGGLE_MENU, URI.HOME + event.key)
   }
 
   handleToken = () => {
@@ -24,7 +49,9 @@ class Header extends Component {
 
   render() {
     const MenuItem = Menu.Item
+    const SubMenu = Menu.SubMenu
     const auth = this.props.token
+    const currentLanguage = this.state.language
 
     return (
       <Menu
@@ -36,33 +63,33 @@ class Header extends Component {
         <MenuItem key={MENU.HOME}>
           <Link to={URI.HOME}>
             <Icon type="home" />
-            Wild Adventures
+            {strings.routes.wildAdventures}
           </Link>
         </MenuItem>
         <MenuItem key={MENU.CATEGORIES}>
           <Link to={URI.CATEGORIES}>
             <Icon type="heat-map" />
-            Categories
+            {strings.routes.categories}
           </Link>
         </MenuItem>
         <MenuItem key={MENU.ADVENTURES}>
           <Link to={URI.ADVENTURES}>
             <Icon type="heat-map" />
-            Adventures
+            {strings.routes.adventures}
           </Link>
         </MenuItem>
         {auth ? (
           <MenuItem key={MENU.ACCOUNT}>
             <Link to={URI.ACCOUNT}>
               <Icon type="user" />
-              Account
+              {strings.routes.account}
             </Link>
           </MenuItem>
         ) : (
           <MenuItem key={MENU.REGISTER}>
             <Link to={URI.REGISTER}>
               <Icon type="user-add" />
-              Register
+              {strings.routes.register}
             </Link>
           </MenuItem>
         )}
@@ -70,17 +97,28 @@ class Header extends Component {
           <MenuItem key={MENU.LOGOUT}>
             <Link to={URI.LOGOUT} onClick={this.handleToken}>
               <Icon type="logout" />
-              Logout
+              {strings.routes.logout}
             </Link>
           </MenuItem>
         ) : (
           <MenuItem key={MENU.LOGIN}>
             <Link to={URI.LOGIN}>
               <Icon type="login" />
-              Login
+              {strings.routes.login}
             </Link>
           </MenuItem>
         )}
+        <SubMenu title={<Icon type="flag" />}>
+          {strings.getAvailableLanguages().map(language => (
+            <MenuItem key={`${MENU.LANGUAGE}:${language}`}>
+              {currentLanguage === language ? (
+                <b>{languagesList[language]}</b>
+              ) : (
+                languagesList[language]
+              )}
+            </MenuItem>
+          ))}
+        </SubMenu>
       </Menu>
     )
   }
