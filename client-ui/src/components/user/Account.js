@@ -61,6 +61,12 @@ class Account extends Component {
   }
 
   updateUser(updatableUser, credentials, refreshToken) {
+    if (!updatableUser.active) {
+      // Remove image DB + files-server
+      this.deleteAvatar(updatableUser.profileImageId, updatableUser.id)
+      updatableUser.profileImageId = null
+    }
+
     http
       .patch(API.USERS, updatableUser)
       .then(response => {
@@ -97,6 +103,11 @@ class Account extends Component {
           message.error(strings.statusCode.wrongCredentials)
         else message.error(strings.statusCode.serverNotFound)
       })
+  }
+
+  deleteAvatar(profileImageId, userId) {
+    http.delete(`/images/user/${profileImageId}`)
+    http.delete(`http://localhost:8000/avatar/${userId}`)
   }
 
   toggleAction(type, value) {

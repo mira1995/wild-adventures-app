@@ -36,10 +36,14 @@ app.post('/avatar', (req, res) => {
   })
 })
 
-app.delete('/avatar', (req, res) => {
-  const folder = `${__dirname}/public/images/users/${req.body.userID}`
-  if (fs.existsSync(folder)) fs.removeSync(folder)
-  res.send('Folder successfully deleted.')
+app.delete('/avatar/:userId', (req, res) => {
+  const folder = `${__dirname}/public/images/users/${req.params.userId}`
+  if (fs.existsSync(folder)) {
+    fs.removeSync(folder)
+    res.send('Folder successfully deleted.')
+  } else {
+    res.send('There is nothing to delete.')
+  }
 })
 
 app.listen(PORT, () => {
