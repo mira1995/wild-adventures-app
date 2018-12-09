@@ -16,3 +16,7 @@ body {
 .cardCol {
   height: 100%;
 }
+
+.lastFiveCategories{
+  margin-bottom:20px;
+}

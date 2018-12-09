@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Iterable<Category> findAllByIdIn(List<Long> categoriesIdList);
+    Iterable<Category> findTop5ByOrderByIdDesc();
 }

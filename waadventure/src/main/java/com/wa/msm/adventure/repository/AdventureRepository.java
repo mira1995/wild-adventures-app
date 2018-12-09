@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AdventureRepository extends JpaRepository<Adventure, Long> {
+    Iterable<Adventure> findTop5ByOrderByIdDesc();
 }
