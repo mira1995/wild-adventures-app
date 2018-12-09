@@ -6,5 +6,6 @@ import lombok.Data;
 public class UserAccountBean {
     private String email;
     private String password;
+    private Boolean active;
     private String role;
 }

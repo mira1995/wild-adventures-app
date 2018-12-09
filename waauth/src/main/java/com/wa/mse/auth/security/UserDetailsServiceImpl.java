@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserAccountBean> userAccount = msUserAccountProxy.getUserByEmail(username);
-        if (!userAccount.isPresent()) throw new UsernameNotFoundException("Username: " + username + " not found");
+        if (!userAccount.isPresent() || !userAccount.get().getActive()) throw new UsernameNotFoundException("Username: " + username + " not found");
         else {
             // Remember that Spring needs roles to be in this format: "ROLE_" + userRole (i.e. "ROLE_ADMIN")
             // So, we need to set it to that format, so we can verify and compare roles (i.e. hasRole("ADMIN")).
