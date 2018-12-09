@@ -17,7 +17,7 @@ class ProfileImageForm extends Component {
       http
         .get(`/images/user/${user.profileImageId}`)
         .then(response => this.setState({ imageURI: response.data.uri }))
-        .catch(error => console.log(error))
+        .catch(() => message.error(strings.statusCode.userAvatar))
     }
   }
 
@@ -76,10 +76,10 @@ class ProfileImageForm extends Component {
           http
             .post('http://localhost:8000/avatar', data, config)
             .then(() => upload.onSuccess('done'))
-            .catch(error => console.log(error))
+            .catch(() => message.error(strings.statusCode.userAvatarUpdate))
           upload.onSuccess('done')
         })
-        .catch(error => console.log('error', error))
+        .catch(() => message.error(strings.statusCode.userAvatarUpdate))
     } else {
       http
         .post('/images/user', profileImage)
@@ -89,10 +89,10 @@ class ProfileImageForm extends Component {
           http
             .post('http://localhost:8000/avatar', data, config)
             .then(() => upload.onSuccess('done'))
-            .catch(error => console.log(error))
+            .catch(() => message.error(strings.statusCode.userAvatarUpdate))
           upload.onSuccess('done')
         })
-        .catch(error => console.log('error', error))
+        .catch(() => message.error(strings.statusCode.userAvatarUpdate))
     }
   }
 

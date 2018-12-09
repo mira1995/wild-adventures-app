@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Form, Icon, Input, Button, Tooltip, DatePicker } from 'antd'
+import { Form, Icon, Input, Button, Tooltip, DatePicker, message } from 'antd'
 import bcrypt from 'bcryptjs'
 import moment from 'moment'
 import { http } from '../../configurations/axiosConf'
@@ -28,7 +28,6 @@ class Register extends Component {
         http
           .post(API.USERS, { ...userAccount })
           .then(() => {
-            // TODO: Envoyer le mot de passe crypté
             const user = {
               username: formatedValues.email,
               password: formatedValues.password,
@@ -48,11 +47,13 @@ class Register extends Component {
                 this.toggleAction(TOGGLE_MENU, URI.HOME)
               })
               .catch(error => {
-                console.log('error', error)
-                this.props.form.setFieldsValue({ password: null })
+                if (error.response.status === 401)
+                  message.error(strings.statusCode.wrongCredentials)
+                else message.error(strings.statusCode.serverNotFound)
+                return <Redirect to={URI.LOGIN} />
               })
           })
-          .catch(error => console.log('error', error))
+          .catch(() => message.error(strings.statusCode.accountCreation))
       }
     })
   }

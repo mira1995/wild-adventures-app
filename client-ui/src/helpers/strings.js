@@ -94,6 +94,13 @@ export let strings = new LocalizedStrings({
     },
     statusCode: {
       wrongCredentials: 'Wrong credentials.',
+      accountCreation: 'Problem when creating the account. Please try again.',
+      userInformations:
+        'Problem when retrieving user information. Please try again.',
+      userUpdate: 'Problem while updating the user. Please try again.',
+      userAvatar: 'Problem while recovering the user avatar. Please try again.',
+      userAvatarUpdate:
+        'Problem when updating the user avatar. Please try again.',
       serverNotFound: 'Problems accessing the server. Please, try again later.',
     },
   },
@@ -188,6 +195,16 @@ export let strings = new LocalizedStrings({
     },
     statusCode: {
       wrongCredentials: 'Identifiants invalides.',
+      accountCreation:
+        'Problème lors de la création du compte. Merci de réessayer.',
+      userInformations:
+        'Problème lors de la récupération des informations utilisateur.',
+      userUpdate:
+        "Problème lors de la mise à jour de l'utilisateur. Merci de réessayer.",
+      userAvatar:
+        "Problème lors de la récupération de l'avatar utilisateur. Merci de réessayer.",
+      userAvatarUpdate:
+        "Problème lors de la mise à jour de l'avatar utilisateur. Merci de réessayer.",
       serverNotFound:
         "Problèmes d'accès au serveur. Merci de réessayer plus tard.",
     },

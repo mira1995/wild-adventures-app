@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import jwt from 'jsonwebtoken'
+import { message } from 'antd'
 import moment from 'moment'
 import { http } from '../../configurations/axiosConf'
 import { URI, API, BEARER_TOKEN } from '../../helpers/constants'
@@ -12,6 +13,7 @@ import WrappedPasswordForm from './forms/PasswordForm'
 import WrappedAddressForm from './forms/AddressForm'
 import WrappedDeactivateForm from './forms/DeactivateForm'
 import WrappedProfileImageForm from './forms/ProfileImageForm'
+import { strings } from '../../helpers/strings'
 
 class Account extends Component {
   constructor(props) {
@@ -31,7 +33,7 @@ class Account extends Component {
         console.log(userAccount)
         this.setState({ userAccount })
       })
-      .catch(error => console.log(error))
+      .catch(() => message.error(strings.statusCode.userInformations))
   }
 
   // Use fx arrow to bind this
@@ -73,7 +75,7 @@ class Account extends Component {
           if (refreshToken) this.refreshToken(credentials)
         }
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.userUpdate))
   }
 
   refreshToken(credentials) {
@@ -90,7 +92,11 @@ class Account extends Component {
         })
         this.toggleAction(TOGGLE_AUTH, cookies.get(BEARER_TOKEN))
       })
-      .catch(error => console.log('error', error))
+      .catch(error => {
+        if (error.response.status === 401)
+          message.error(strings.statusCode.wrongCredentials)
+        else message.error(strings.statusCode.serverNotFound)
+      })
   }
 
   toggleAction(type, value) {
