@@ -3,22 +3,19 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Menu, Icon, Button, Row, Col } from 'antd'
 import moment from 'moment'
-import { TOGGLE_AUTH, TOGGLE_MENU } from '../store/actions/types'
+import {
+  TOGGLE_AUTH,
+  TOGGLE_MENU,
+  TOGGLE_LANGUAGE,
+} from '../store/actions/types'
 import { BEARER_TOKEN, URI, MENU, LANGUAGE } from '../helpers/constants'
 import { strings, languagesList } from '../helpers/strings'
 
 class Header extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      language: null,
-    }
-  }
-
   componentWillMount() {
     const language = this.props.cookies.get(LANGUAGE) || strings.getLanguage()
     strings.setLanguage(language)
-    this.setState({ language })
+    this.toggleAction(TOGGLE_LANGUAGE, language)
   }
 
   handleMenu = event => {
@@ -27,7 +24,7 @@ class Header extends Component {
     else if (event.key.includes(MENU.LANGUAGE)) {
       const language = event.key.substring(MENU.LANGUAGE.length + 1)
       strings.setLanguage(language)
-      this.setState({ language })
+      this.toggleAction(TOGGLE_LANGUAGE, language)
       this.props.cookies.set(LANGUAGE, language, {
         path: '/',
         expires: moment()
@@ -52,7 +49,7 @@ class Header extends Component {
     const SubMenu = Menu.SubMenu
     const auth = this.props.token
     const { buyingBox } = this.props.buyingBox
-    const currentLanguage = this.state.language
+    const currentLanguage = this.props.languageCode
 
     return (
       <Menu
@@ -164,6 +161,7 @@ const mapStateToProps = state => {
     token: state.authentication.token,
     menuKey: state.menu.current,
     buyingBox: state.buyingBox,
+    languageCode: state.language.code,
   }
 }
 

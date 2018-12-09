@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Tooltip } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
@@ -125,4 +126,8 @@ class PseudoForm extends Component {
 
 const WrappedPseudoForm = Form.create()(PseudoForm)
 
-export default WrappedPseudoForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedPseudoForm)

@@ -296,6 +296,7 @@ const WrappedRegisterForm = Form.create()(Register)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 

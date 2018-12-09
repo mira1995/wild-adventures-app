@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Icon, Button, Upload, message } from 'antd'
 import moment from 'moment'
 import Container from './../../../Container'
@@ -154,4 +155,8 @@ class ProfileImageForm extends Component {
 
 const WrappedProfileImageForm = Form.create()(ProfileImageForm)
 
-export default WrappedProfileImageForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedProfileImageForm)

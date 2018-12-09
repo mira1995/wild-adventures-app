@@ -138,6 +138,7 @@ const WrappedUpdateDemandForm = Form.create()(UpdateDemand)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 

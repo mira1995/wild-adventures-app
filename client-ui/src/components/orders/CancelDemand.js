@@ -137,6 +137,7 @@ const WrappedCancelDemandForm = Form.create()(CancelDemand)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 

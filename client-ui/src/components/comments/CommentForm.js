@@ -108,6 +108,7 @@ const WrappedCommentForm = Form.create()(CommentForm)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 

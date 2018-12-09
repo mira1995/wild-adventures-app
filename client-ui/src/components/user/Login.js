@@ -141,6 +141,7 @@ const WrappedLoginForm = Form.create()(Login)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 
