@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import jwt from 'jsonwebtoken'
@@ -24,7 +24,7 @@ class CommentForm extends Component {
         const { password, ...userAccount } = response.data
         this.setState({ userAccount })
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.userInformations))
   }
 
   persistComment = event => {
@@ -48,14 +48,14 @@ class CommentForm extends Component {
             .then(response => {
               this.props.action(response.data)
             })
-            .catch(error => console.log('error', error))
+            .catch(() => message.error(strings.statusCode.commentUpdate))
         } else {
           http
             .post(API.COMMENTS, commentToAdd)
             .then(response => {
               this.props.action(response.data)
             })
-            .catch(error => console.log('error', error))
+            .catch(() => message.error(strings.statusCode.commentAdd))
         }
       }
     })

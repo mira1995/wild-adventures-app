@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'antd'
+import { strings } from '../../helpers/strings'
 
 class RemoveSessionButton extends Component {
   onClick = event => {
@@ -9,7 +10,7 @@ class RemoveSessionButton extends Component {
   render() {
     return (
       <Button type="danger" onClick={this.onClick}>
-        Supprimer
+        {strings.orders.remove}
       </Button>
     )
   }

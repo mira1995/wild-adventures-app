@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import Container from '../../Container'
-import { Input, Form, Button } from 'antd'
+import { Input, Form, Button, message } from 'antd'
 import { http } from './../../configurations/axiosConf'
 import { API, URI, ORDERSTATUS } from '../../helpers/constants'
 import { connect } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import OrderRecap from './OrderRecap'
 import { DEMANDSTATUS } from './../../helpers/constants'
+import { strings } from '../../helpers/strings'
 
 class CancelDemand extends Component {
   constructor(props) {
@@ -24,10 +25,8 @@ class CancelDemand extends Component {
     let userAccount = {}
     http
       .post(`${API.USERS}/email`, decoded.sub)
-      .then(response => {
-        userAccount = response.data
-      })
-      .catch(error => console.log('error', error))
+      .then(response => (userAccount = response.data))
+      .catch(() => message.error(strings.statusCode.userInformations))
     http.get(`${API.ORDERS}/${this.props.match.params.orderId}`).then(res => {
       let order = res.data
       console.log(order)
@@ -70,27 +69,27 @@ class CancelDemand extends Component {
 
         http
           .post(`${API.ORDERS}${API.DEMANDS}`, demand)
-          .then(response => {
-            this.setState({ isSavedDemand: true })
-          })
-          .catch(error => console.log('error', error))
+          .then(() => this.setState({ isSavedDemand: true }))
+          .catch(() => message.error(strings.statusCode.creatingDemandError))
       }
     })
   }
 
   render() {
-    if (this.state.isSavedDemand) {
-      return <Redirect to={URI.MYORDERS} />
-    }
+    if (this.state.isSavedDemand) return <Redirect to={URI.MYORDERS} />
+
     const orderId = this.props.match.params.orderId
     const FormItem = Form.Item
     const { getFieldDecorator } = this.props.form
     const { orderItem } = this.state
-    console.log(this.state)
+
     return (
       <Container>
-        <h1>Demande d'annulation de commande</h1>
-        <h2>Annulation de la commande du {orderItem && orderItem.orderDate}</h2>
+        <h1>{strings.orders.orderCancellationRequest}</h1>
+        <h2>
+          {strings.orders.orderCancellationDate}{' '}
+          {orderItem && orderItem.orderDate}
+        </h2>
         {orderItem &&
           orderItem.orderSessions && (
             <OrderRecap
@@ -108,14 +107,13 @@ class CancelDemand extends Component {
               rules: [
                 {
                   required: true,
-                  message:
-                    'Merci de rentrer un message pour les administrateurs',
+                  message: strings.orders.form.messageMessageRule,
                 },
               ],
             })(
               <Input
                 rows={4}
-                placeholder="Ecrivez votre message pour les administrateurs"
+                placeholder={strings.orders.form.messagePlaceholder}
               />
             )}
             <Button
@@ -123,7 +121,7 @@ class CancelDemand extends Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Annuler ma commande
+              {strings.orders.orderCancellation}
             </Button>
           </FormItem>
         </Form>

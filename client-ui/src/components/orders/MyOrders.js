@@ -4,9 +4,10 @@ import { API, ORDERSTATUS } from '../../helpers/constants'
 import { connect } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import Container from '../../Container'
-import { Table, Button } from 'antd'
+import { Table, Button, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { URI } from './../../helpers/constants'
+import { strings } from '../../helpers/strings'
 
 class MyOrders extends Component {
   constructor(props) {
@@ -25,12 +26,11 @@ class MyOrders extends Component {
       .then(response => {
         const { password, ...userAccount } = response.data
         this.setState({ userAccount })
-        http.get(`${API.ORDERS}/user/${userAccount.id}`).then(response => {
-          const orders = response.data
-          this.setState({ orders })
-        })
+        http
+          .get(`${API.ORDERS}/user/${userAccount.id}`)
+          .then(response => this.setState({ orders: response.data }))
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.userInformations))
   }
 
   actionColumnRender = record => {
@@ -43,11 +43,11 @@ class MyOrders extends Component {
           <div>
             <Link to={`${URI.PAYMENT}/${record.id}`}>
               <Button style={buttonStyle} type="danger">
-                Payer
+                {strings.orders.pay}
               </Button>
             </Link>
             <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
-              <Button type="danger">Annuler</Button>
+              <Button type="danger">{strings.orders.cancel}</Button>
             </Link>
           </div>
         )
@@ -56,56 +56,52 @@ class MyOrders extends Component {
           <div>
             <Link to={`${URI.MYORDERS}${URI.UPDATEDEMAND}/${record.id}`}>
               <Button style={buttonStyle} type="primary">
-                Modifier
+                {strings.orders.edit}
               </Button>
             </Link>
             <Link to={`${URI.MYORDERS}${URI.CANCELDEMAND}/${record.id}`}>
-              <Button type="danger">Annuler</Button>
+              <Button type="danger">{strings.orders.cancel}</Button>
             </Link>
           </div>
         )
       case ORDERSTATUS.DELETE_DEMAND:
-        return <div>Demande de suppression en cours de traitement</div>
+        return <div>{strings.orders.requestDeletionTreatment}</div>
       case ORDERSTATUS.UPDATE_DEMAND:
-        return (
-          <div>
-            Demande de mise à jour de la commande en cours de traitement
-          </div>
-        )
+        return <div>{strings.orders.requestUpdateProcessed}</div>
       default:
-        return <div>Aucune action disponible</div>
+        return <div>{strings.orders.noActionAvailable}</div>
     }
   }
 
   statusColumnRender = record => {
     switch (record.status) {
       case ORDERSTATUS.NOT_PAID:
-        return <div>Non Payée</div>
+        return <div>{strings.orders.unpaid}</div>
       case ORDERSTATUS.FINALIZED:
-        return <div>Finalisée</div>
+        return <div>{strings.orders.finalized}</div>
       case ORDERSTATUS.DELETE_DEMAND:
-        return <div>Demande de suppression</div>
+        return <div>{strings.orders.deletionRequest}</div>
       case ORDERSTATUS.UPDATE_DEMAND:
-        return <div>Demande de mise à jour</div>
+        return <div>{strings.orders.updateRequest}</div>
       default:
-        return <div>Statut non reconnu</div>
+        return <div>{strings.orders.unrecognizedStatus}</div>
     }
   }
 
   render() {
     const columns = [
       {
-        title: 'Date de commande',
+        title: strings.orders.orderDate,
         dataIndex: 'orderDate',
         rowKey: 'orderDate',
       },
       {
-        title: 'Statut',
+        title: strings.orders.status,
         rowKey: 'status',
         render: (text, record) => <div>{this.statusColumnRender(record)}</div>,
       },
       {
-        title: 'Action',
+        title: strings.orders.action,
         rowKey: 'action',
         render: (text, record) => <div>{this.actionColumnRender(record)}</div>,
       },
@@ -113,7 +109,7 @@ class MyOrders extends Component {
     console.log(this.state)
     return (
       <Container>
-        <h1>Liste de mes commandes</h1>
+        <h1>{strings.orders.ordersList}</h1>
         <div>
           {this.state.orders && this.state.orders.length > 0 ? (
             <Table
@@ -122,7 +118,7 @@ class MyOrders extends Component {
               rowKey="id"
             />
           ) : (
-            <p>Vous n'avez réalisé aucune commande</p>
+            <p>{strings.orders.emptyOrdersList}</p>
           )}
         </div>
       </Container>
