@@ -33,25 +33,17 @@ class AdventureDetails extends Component {
 
   getDatas() {
     http
-      .get(`${API.ADVENTURES}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ adventure: response.data })
-      })
+      .get(`${API.ADVENTURES}/getOne/${this.props.match.params.adventureId}`)
+      .then(response => this.setState({ adventure: response.data }))
     http
       .get(`${API.CATEGORIES}/adventure/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ categories: response.data })
-      })
+      .then(response => this.setState({ categories: response.data }))
     http
-      .get(`${API.COMMENTS}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ comments: response.data })
-      })
+      .get(`${API.COMMENTS}/getAll/${this.props.match.params.adventureId}`)
+      .then(response => this.setState({ comments: response.data }))
     http
       .get(`${API.SESSIONS}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ sessions: response.data })
-      })
+      .then(response => this.setState({ sessions: response.data }))
   }
 
   checkIfAnonymous() {

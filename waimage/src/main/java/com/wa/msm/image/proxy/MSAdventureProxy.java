@@ -11,6 +11,6 @@ import java.util.Optional;
 @FeignClient(name = "wa-adventure")
 @RibbonClient(name = "wa-adventure")
 public interface MSAdventureProxy {
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/getOne/{id}")
     Optional<AdventureBean> getAdventure(@PathVariable("id") Long id);
 }

@@ -44,14 +44,14 @@ class CommentForm extends Component {
           parent.comments.push(commentToAdd)
           console.log(parent)
           http
-            .patch(API.COMMENTS, parent)
+            .patch(`${API.COMMENTS}/update`, parent)
             .then(response => {
               this.props.action(response.data)
             })
             .catch(() => message.error(strings.statusCode.commentUpdate))
         } else {
           http
-            .post(API.COMMENTS, commentToAdd)
+            .post(`${API.COMMENTS}/add`, commentToAdd)
             .then(response => {
               this.props.action(response.data)
             })

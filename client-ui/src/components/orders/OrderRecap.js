@@ -62,7 +62,7 @@ class OrderRecap extends Component {
         .then(response => {
           session = response.data
           http
-            .get(`${API.ADVENTURES}/${session.adventureId}`)
+            .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
             .then(response => {
               adventure = response.data
               orderSession.adventureTitle = `${adventure.title} ${

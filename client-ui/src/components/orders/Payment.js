@@ -36,7 +36,7 @@ class Payment extends Component {
             let adventures = []
             sessions.map(session =>
               http
-                .get(`${API.ADVENTURES}/${session.adventureId}`)
+                .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
                 .then(response => {
                   adventures.push(response.data)
                   const orderSession = order.orderSessions.filter(
