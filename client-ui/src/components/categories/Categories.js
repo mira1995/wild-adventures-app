@@ -13,10 +13,9 @@ class Categories extends Component {
   }
 
   componentWillMount() {
-    http.get(API.CATEGORIES).then(response => {
-      const categories = response.data
-      this.setState({ categories })
-    })
+    http
+      .get(`${API.CATEGORIES}/getAll`)
+      .then(response => this.setState({ categories: response.data }))
   }
 
   formatContent(content) {

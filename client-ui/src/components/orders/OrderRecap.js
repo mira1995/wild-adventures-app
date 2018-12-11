@@ -4,6 +4,7 @@ import { API } from '../../helpers/constants'
 import { message, Table } from 'antd'
 import RemoveSessionButton from './RemoveSessionButton'
 import NbOrderUpdateInput from './NbOrderUpdateInput'
+import { strings } from '../../helpers/strings'
 
 class OrderRecap extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class OrderRecap extends Component {
         )
       )
     } else {
-      message.error('Votre commande doit au moins contenir une aventure')
+      message.error(strings.statusCode.orderLength)
     }
   }
 
@@ -61,20 +62,22 @@ class OrderRecap extends Component {
         .then(response => {
           session = response.data
           http
-            .get(`${API.ADVENTURES}/${session.adventureId}`)
+            .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
             .then(response => {
               adventure = response.data
-              orderSession.adventureTitle = `${adventure.title} du ${
-                session.startDate
-              } au ${session.endDate}`
+              orderSession.adventureTitle = `${adventure.title} ${
+                strings.orders.from
+              } ${session.startDate} ${strings.orders.to} ${session.endDate}`
               adventureTitles.push(orderSession.adventureTitle)
               orderSession.subTotal = session.price * orderSession.nbOrder
               subTotals.push(orderSession.subTotal)
               /* nextProps.total += orderSession.subTotal */
             })
-            .catch(error => console.log('error', error))
+            .catch(() =>
+              message.error(strings.statusCode.gettingAdventureError)
+            )
         })
-        .catch(error => console.log('error', error))
+        .catch(() => message.error(strings.statusCode.gettingSessionError))
       return orderSession
     })
     /* nextProps.action(nextProps.orderSessions) */
@@ -85,29 +88,29 @@ class OrderRecap extends Component {
     const columns = !this.props.updateComponent
       ? [
           {
-            title: 'Aventure',
+            title: strings.orders.adventure,
             dataIndex: 'adventureTitle',
             key: 'adventureTitle',
           },
           {
-            title: 'Nombre de participant',
+            title: strings.orders.numberParticipants,
             dataIndex: 'nbOrder',
             key: 'nbOrder',
           },
           {
-            title: 'Total en euros',
+            title: strings.orders.totalEuro,
             dataIndex: 'subTotal',
             rowKey: 'subTotal',
           },
         ]
       : [
           {
-            title: 'Aventure',
+            title: strings.orders.adventure,
             dataIndex: 'adventureTitle',
             key: 'adventureTitle',
           },
           {
-            title: 'Nombre de participant',
+            title: strings.orders.numberParticipants,
             key: 'nbOrder',
             render: (text, record) => (
               <div>
@@ -119,12 +122,12 @@ class OrderRecap extends Component {
             ),
           },
           {
-            title: 'Total en euros',
+            title: strings.orders.totalEuro,
             dataIndex: 'subTotal',
             rowKey: 'subTotal',
           },
           {
-            title: 'Suppression',
+            title: strings.orders.suppression,
             key: 'delete',
             render: (text, record) => (
               <div>
@@ -136,7 +139,6 @@ class OrderRecap extends Component {
             ),
           },
         ]
-    console.log(this.props)
 
     const { orderSessions } = this.state
     console.log(orderSessions)

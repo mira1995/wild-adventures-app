@@ -8,6 +8,8 @@ import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotValidException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Api(description = "API pour les opérations CRUD sur les sessions")
 @RestController
 @RequestMapping(value = "/sessions")
 public class SessionController {
@@ -35,70 +38,122 @@ public class SessionController {
     @Autowired
     AdventureRepository adventureRepository;
 
+    @ApiOperation(value = "Récupère la liste des sessions d'une aventure, s'il y en existe au moins une.")
     @GetMapping(value = "/{adventureId}")
     public List<Session> sessionList(@PathVariable Long adventureId) {
+        log.info("Tentative de récupération de la liste des sessions");
+
         adventureNotFound(adventureId);
         List<Session> sessions = new ArrayList<>(0);
         sessionRepository.findAllByAdventureId(adventureId).forEach(sessions::add);
-        if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions pour cette aventure.");
+        if (sessions.isEmpty()) {
+            String message = "Il n'existe aucune sessions pour cette aventure";
+            log.error(message);
+            throw new SessionNotFoundException(message);
+        }
+
+        log.info("Liste des sessions récupérée");
         return sessions;
     }
 
+    @ApiOperation(value = "Récupère la liste des sessions selon une liste d'ID, s'il y en existe au moins une.")
     @PostMapping
     public List<Session> getAllById(@RequestBody List<Long> sessionsIdList){
-        log.info("Start of method : getAllById, parameter[sessionId:"+sessionsIdList.toString()+"]");
-        if(sessionsIdList == null || sessionsIdList.isEmpty())throw new SessionNotFoundException("Aucun id de session transmis");
+        log.info("Tentative de récupération de la liste des sessions selon la liste d'ID");
+
+        if(sessionsIdList == null || sessionsIdList.isEmpty()) {
+            String message = "Aucun id de session transmis";
+            log.error(message);
+            throw new SessionNotFoundException(message);
+        }
+
         List<Session> sessions = new ArrayList<>(0);
         sessionRepository.findAllByIdIn(sessionsIdList).forEach(sessions::add);
-        if (sessions.isEmpty()) throw new SessionNotFoundException("Il n'existe aucune sessions pour cette liste d'id.");
+        if (sessions.isEmpty()) {
+            String message = "Il n'existe aucune sessions pour cette liste d'id";
+            log.error(message);
+            throw new SessionNotFoundException(message);
+        }
+
+        log.info("Récupération réussie des sessions liées à la liste d'ID");
         return sessions;
     }
 
+    @ApiOperation(value = "Récupère une session selon son ID.")
     @GetMapping(value= "/single/{sessionId}")
     public ResponseEntity<Session> getSessionById(@PathVariable Long sessionId){
-        log.info("Start of method : getSessionById, parameter[sessionId:"+sessionId+"]");
+        log.info("Tentative de récupération de la session");
+
         if(sessionId == null){
-            log.error("Exception in method : getSessionById, exception : SessionNotFoundException ->Aucun id de session transmis");
-            throw new SessionNotFoundException("Aucun id de session transmis");
+            String message = "Aucun id de session transmis";
+            log.error(message);
+            throw new SessionNotFoundException(message);
         }
         Optional <Session> session = sessionRepository.findById(sessionId);
         if(!session.isPresent()){
-            log.error("Exception in method : getSessionById, exception : SessionNotFoundException ->Aucune session de trouver pour cet id :" +sessionId);
-            throw new SessionNotFoundException("Aucune session de trouver pour cet id :" +sessionId);
+            String message = "Aucune session de trouver pour cet id : " + sessionId;
+            log.error(message);
+            throw new SessionNotFoundException(message);
         }
-        log.info("End of method : getSessionById");
+
+        log.info("Session récupérée");
         return new ResponseEntity<>(session.get(), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Avec ce truc, tu peux ajouter une session si t'es admin. Cool hein ?")
     @PostMapping(value = "/admin")
     public ResponseEntity<Session> addSession(@RequestBody Session session) {
+        log.info("Tentative de création de la session");
+
         adventureNotFound(session.getAdventureId());
         validateSession(session);
+
+        log.info("Session créée");
         return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Si tu veux mettre à jour une session en étant admin, c'est ici.")
     @PatchMapping(value = "/admin")
     public ResponseEntity<Session> updateSession(@RequestBody Session session) {
+        log.info("Tentative de mise à jour de la session");
+
         adventureNotFound(session.getAdventureId());
-        if (session.getId() == null || !sessionRepository.findById(session.getId()).isPresent())
-            throw new SessionNotFoundException("La session envoyée n'existe pas.");
+        if (session.getId() == null || !sessionRepository.findById(session.getId()).isPresent()) {
+            String message = "La session envoyée n'existe pas";
+            log.error(message);
+            throw new SessionNotFoundException(message);
+        }
         validateSession(session);
+
+        log.info("Session mise à jour");
         return new ResponseEntity<>(sessionRepository.save(session), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Si tu veux supprimer l'existence d'une session, c'est à tes risques et périls. En tant qu'admin tu le sais, non ?")
     @DeleteMapping(value = "/admin/{id}")
     public ResponseEntity<String> deleteSession(@PathVariable Long id) {
+        log.info("Tentative de suppression de la session");
+
         Optional<Session> sessionToDelete = sessionRepository.findById(id);
-        if (!sessionToDelete.isPresent()) throw new SessionNotFoundException("La session correspondante à l'id " + id + " n'existe pas.");
+        if (!sessionToDelete.isPresent()) {
+            String message = "La session correspondante à l'id " + id + " n'existe pas";
+            log.error(message);
+            throw new SessionNotFoundException(message);
+        }
         else sessionRepository.deleteById(sessionToDelete.get().getId());
-        return new ResponseEntity<>("La session pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
+
+        String message = "La session pour id " + id + " a bien été supprimé";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.GONE);
     }
 
-    // Vérifier si l'aventure existe
     private void adventureNotFound(Long adventureId) {
         Optional<Adventure> adventure = adventureRepository.findById(adventureId);
-        if (!adventure.isPresent())
-            throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + adventureId + ".");
+        if (!adventure.isPresent()) {
+            String message = "Il n'existe aucune aventure pour id " + adventureId + ".";
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
     }
 
     private void validateSession(Session session) {
@@ -110,7 +165,11 @@ public class SessionController {
             constraintViolations.iterator().forEachRemaining(constraintViolation ->
                     violationMessages.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage()));
 
-            throw new SessionNotValidException("La session n'est pas valide. " + StringUtils.join(violationMessages, " ; "));
+            String message = "La session n'est pas valide. " + StringUtils.join(violationMessages, " ; ");
+            log.error(message);
+            throw new SessionNotValidException(message);
         }
+
+        log.info("La session est valide");
     }
 }

@@ -33,25 +33,17 @@ class AdventureDetails extends Component {
 
   getDatas() {
     http
-      .get(`${API.ADVENTURES}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ adventure: response.data })
-      })
+      .get(`${API.ADVENTURES}/getOne/${this.props.match.params.adventureId}`)
+      .then(response => this.setState({ adventure: response.data }))
     http
       .get(`${API.CATEGORIES}/adventure/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ categories: response.data })
-      })
+      .then(response => this.setState({ categories: response.data }))
     http
-      .get(`${API.COMMENTS}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ comments: response.data })
-      })
+      .get(`${API.COMMENTS}/getAll/${this.props.match.params.adventureId}`)
+      .then(response => this.setState({ comments: response.data }))
     http
       .get(`${API.SESSIONS}/${this.props.match.params.adventureId}`)
-      .then(response => {
-        this.setState({ sessions: response.data })
-      })
+      .then(response => this.setState({ sessions: response.data }))
   }
 
   checkIfAnonymous() {
@@ -61,7 +53,7 @@ class AdventureDetails extends Component {
   // Use fx arrow to bind this
   handleSubmit = comment => {
     let { comments } = this.state
-    if (typeof this.getIndex(comments, comment.id) !== 'undefined') {
+    if (this.getIndex(comments, comment.id)) {
       comments[this.getIndex(comments, comment.id)].comments = comment.comments
     } else {
       comments.push(comment)
@@ -143,35 +135,42 @@ class AdventureDetails extends Component {
 
     const columns = [
       {
-        title: 'Du',
+        title: strings.adventures.from,
         dataIndex: 'startDate',
         key: 'startDate',
       },
       {
-        title: 'Au',
+        title: strings.adventures.to,
         dataIndex: 'endDate',
         key: 'endDate',
       },
       {
-        title: 'Prix',
+        title: strings.adventures.price,
         dataIndex: 'price',
         key: 'price',
       },
       {
-        title: 'Action',
+        title: strings.adventures.price,
         key: 'action',
         render: (text, record) => (
           <div>
             {!this.state.isAnonymous &&
-              !this.isInBuyingBox(record) && <Button>Réserver</Button>}
+              !this.isInBuyingBox(record) && (
+                <Button>{strings.adventures.reserve}</Button>
+              )}
             {!this.state.isAnonymous &&
               this.isInBuyingBox(record) && (
-                <Button type="danger">Supprimer du panier</Button>
+                <Button type="danger">
+                  {strings.adventures.removeFromCart}
+                </Button>
               )}
             {this.state.isAnonymous && (
               <p>
-                Pour réserver <Link to={URI.REGISTER}>s'inscrire</Link> ou&nbsp;
-                <Link to={URI.LOGIN}> se connecter</Link>
+                {strings.adventures.toReserve}{' '}
+                <Link to={URI.REGISTER}>{strings.adventures.register}</Link>{' '}
+                {strings.adventures.or}
+                &nbsp;
+                <Link to={URI.LOGIN}> {strings.adventures.logIn}</Link>
               </p>
             )}
           </div>
@@ -199,7 +198,7 @@ class AdventureDetails extends Component {
           </div>
 
           <div>
-            <h2>Réserver cette aventure</h2>
+            <h2>{strings.adventures.reserveAdventure}</h2>
             {sessions.length > 0 && (
               <Table
                 onRow={record => {
@@ -213,9 +212,7 @@ class AdventureDetails extends Component {
                 dataSource={sessions}
               />
             )}
-            {!sessions.length > 0 && (
-              <p>Aucune session de programmée pour cette aventure</p>
-            )}
+            {!sessions.length > 0 && <p>{strings.adventures.noSessions}</p>}
           </div>
           <div>
             <h2>{strings.comments.commentsList}</h2>

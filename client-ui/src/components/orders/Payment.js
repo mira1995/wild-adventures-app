@@ -6,7 +6,8 @@ import { Redirect, withRouter } from 'react-router-dom'
 import { URI } from './../../helpers/constants'
 import StripeCheckout from 'react-stripe-checkout'
 import OrderRecap from './OrderRecap'
-
+import { strings } from '../../helpers/strings'
+import { message } from 'antd'
 class Payment extends Component {
   constructor(props) {
     super(props)
@@ -25,7 +26,7 @@ class Payment extends Component {
     http
       .get(`${API.ORDERS}/${this.props.match.params.orderId}`)
       .then(response => {
-        var order = response.data
+        const order = response.data
         order.orderSessions.map(session => sessionsId.push(session.sessionId))
         console.log(sessionsId)
         http
@@ -35,7 +36,7 @@ class Payment extends Component {
             let adventures = []
             sessions.map(session =>
               http
-                .get(`${API.ADVENTURES}/${session.adventureId}`)
+                .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
                 .then(response => {
                   adventures.push(response.data)
                   const orderSession = order.orderSessions.filter(
@@ -45,25 +46,24 @@ class Payment extends Component {
                   console.log(total)
                   this.setState({ total: total })
                 })
-                .catch(error => console.log('error', error))
+                .catch(() =>
+                  message.error(strings.statusCode.gettingAdventureError)
+                )
             )
 
             order.sessions = sessions
           })
-          .catch(error => console.log('error', error))
+          .catch(() => message.error(strings.statusCode.sessionUpdateError))
         this.setState({ order: order })
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.getOrderError))
   }
 
   payOrder = () => {
     http
       .patch(`${API.ORDERS}/pay/${this.props.match.params.orderId}`)
-      .then(response => {
-        this.setState({ order: response.data })
-        console.log(this.state.order)
-      })
-      .catch(error => console.log('error', error))
+      .then(response => this.setState({ order: response.data }))
+      .catch(() => message.error(strings.statusCode.paymentError))
   }
 
   initiateState = orderSessions => {
@@ -82,10 +82,8 @@ class Payment extends Component {
     }
     http
       .post(`${API.ORDERS}/charge`, chargeRequest)
-      .then(response => {
-        alert(`We are in business,`)
-      })
-      .catch(error => console.log('error', error))
+      .then(() => message.warning(`We are in business.`))
+      .catch(() => message.error(strings.statusCode.orderChargeError))
     this.payOrder()
   }
 
@@ -104,7 +102,7 @@ class Payment extends Component {
     console.log(this.state)
     return (
       <Container>
-        <h1>Récapitulatif de commande</h1>
+        <h1>{strings.orders.orderSummary}</h1>
         <div>
           {order &&
             order.orderSessions && (

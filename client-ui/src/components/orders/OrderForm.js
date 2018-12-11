@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import Container from './../../Container'
 import { connect } from 'react-redux'
 import OrderItem from './OrderItem'
-import { Row, Button, Col } from 'antd'
+import { Row, Button, Col, message } from 'antd'
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
 import { http } from '../../configurations/axiosConf'
 import { API, URI } from '../../helpers/constants'
 import { Redirect } from 'react-router-dom'
+import { strings } from '../../helpers/strings'
 
 class OrderForm extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class OrderForm extends Component {
         const { password, ...userAccount } = response.data
         this.setState({ userAccount })
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.userInformations))
     this.getTotal()
   }
 
@@ -40,11 +41,8 @@ class OrderForm extends Component {
   }
 
   addToTotalIfNbOrderExist = (item, total) => {
-    if (typeof item.nbOrder !== 'undefined') {
-      total += item.nbOrder * item.price
-    } else {
-      total += item.price
-    }
+    if (item.nbOrder) total += item.nbOrder * item.price
+    else total += item.price
     console.log(total)
     return total
   }
@@ -76,7 +74,7 @@ class OrderForm extends Component {
     buyingBox.map(item =>
       order.orderSessions.push({
         sessionId: item.id,
-        nbOrder: typeof item.nbOrder !== 'undefined' ? item.nbOrder : 1,
+        nbOrder: item.nbOrder ? item.nbOrder : 1,
       })
     )
 
@@ -87,7 +85,7 @@ class OrderForm extends Component {
         this.setState({ order })
         this.clearBuyingBox()
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.creatingOrderError))
   }
 
   clearBuyingBox = () => {
@@ -99,18 +97,17 @@ class OrderForm extends Component {
     const { buyingBox } = this.props.buyingBox
     const { order, total } = this.state
 
-    if (order !== null) {
-      return <Redirect to={`${URI.PAYMENT}/${order.id}`} />
-    }
+    if (order) return <Redirect to={`${URI.PAYMENT}/${order.id}`} />
+
     return (
       <Container>
-        <h1>Réaliser votre commande</h1>
+        <h1>{strings.orders.makeOrder}</h1>
         {buyingBox.map((item, index) => (
           <OrderItem
             key={index}
-            title={`${item.adventureName} du ${item.startDate} au ${
-              item.endDate
-            }`}
+            title={`${item.adventureName} ${strings.orders.from} ${
+              item.startDate
+            } ${strings.orders.to} ${item.endDate}`}
             nbOrder={item.nbOrder}
             index={index}
             item={item}
@@ -122,17 +119,17 @@ class OrderForm extends Component {
         {buyingBox.length > 0 && (
           <Row>
             <Col offest={6} span={12}>
-              <h2>Total : {total}€</h2>
+              <h2>
+                {strings.orders.total} : {total}€
+              </h2>
 
               <Button type="primary" onClick={this.continueOrder}>
-                Poursuivre ma commande
+                {strings.orders.continueOrder}
               </Button>
             </Col>
           </Row>
         )}
-        {!buyingBox.length > 0 && (
-          <p>Aucune session n'a été ajouté au panier</p>
-        )}
+        {!buyingBox.length > 0 && <p>{strings.orders.noSessionsCart}</p>}
       </Container>
     )
   }

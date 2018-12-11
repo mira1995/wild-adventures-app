@@ -17,7 +17,7 @@ class CategoryDetails extends Component {
 
   componentWillMount() {
     http
-      .get(`${API.CATEGORIES}/${this.props.match.params.categoryId}`)
+      .get(`${API.CATEGORIES}/getOne/${this.props.match.params.categoryId}`)
       .then(response => this.setState({ category: response.data }))
     http
       .get(`${API.ADVENTURES}/category/${this.props.match.params.categoryId}`)

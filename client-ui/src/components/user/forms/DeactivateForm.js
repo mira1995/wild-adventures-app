@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
@@ -79,4 +80,8 @@ class DeactivateForm extends Component {
 
 const WrappedDeactivateForm = Form.create()(DeactivateForm)
 
-export default WrappedDeactivateForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedDeactivateForm)

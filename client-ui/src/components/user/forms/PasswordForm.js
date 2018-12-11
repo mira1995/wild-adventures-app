@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
@@ -149,4 +150,8 @@ class PasswordForm extends Component {
 
 const WrappedPasswordForm = Form.create()(PasswordForm)
 
-export default WrappedPasswordForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedPasswordForm)

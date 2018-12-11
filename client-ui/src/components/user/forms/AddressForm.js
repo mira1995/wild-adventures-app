@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Input, Button, DatePicker } from 'antd'
 import moment from 'moment'
 import Container from './../../../Container'
@@ -164,4 +165,8 @@ class AddressForm extends Component {
 
 const WrappedAddressForm = Form.create()(AddressForm)
 
-export default WrappedAddressForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedAddressForm)
