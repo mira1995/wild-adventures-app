@@ -3,6 +3,8 @@ import Payment from './Payment'
 import { withRouter } from 'react-router-dom'
 import { API } from '../../helpers/constants'
 import { http } from '../../configurations/axiosConf'
+import { message } from 'antd'
+import { strings } from '../../helpers/strings'
 
 class PaymentForm extends Component {
   onToken = token => {
@@ -14,10 +16,8 @@ class PaymentForm extends Component {
     }
     http
       .post(`${API.ORDERS}/charge`, chargeRequest)
-      .then(response => {
-        alert(`We are in business,`)
-      })
-      .catch(error => console.log('error', error))
+      .then(() => message.warning(`We are in business.`))
+      .catch(() => message.error(strings.statusCode.orderChargeError))
   }
 
   render() {

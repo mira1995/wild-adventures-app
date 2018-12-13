@@ -8,6 +8,8 @@ import com.wa.msm.adventure.repository.AdventureRepository;
 import com.wa.msm.adventure.repository.SessionRepository;
 import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.AdventureNotValidException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Api(description = "API pour les opérations CRUD sur les aventures")
 @RestController
 public class AdventureController implements HealthIndicator {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
-
 
     @Autowired
     AdventureRepository adventureRepository;
@@ -51,18 +53,23 @@ public class AdventureController implements HealthIndicator {
         return Health.up().build();
     }
 
-    @GetMapping
+    @ApiOperation(value = "Récupère la liste des aventures, s'il en existe au moins une.")
+    @GetMapping(value = "/getAll")
     public List<Adventure> adventureList() {
-        log.info("Début de la méthode : adventureList()");
+        log.info("Tentative de récupération de la liste des aventures");
         List<Adventure> adventures = new ArrayList<>(0);
         adventureRepository.findAll().iterator().forEachRemaining(adventures::add);
-        if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+        if (adventures.isEmpty()) {
+            String message = "Il n'existe aucune aventures.";
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
 
-        log.info("Récupération de la liste des aventures");
-
+        log.info("Liste des aventures récupérée");
         return adventures;
     }
 
+    @ApiOperation(value = "Récupère la liste des cinq dernières aventures publiées, s'il en existe au moins une.")
     @GetMapping(value= "/last5ById")
     public List<Adventure> findLastFiveAdventure(){
         log.info("Début de la méthode : findLastFiveAdventure()");
@@ -73,71 +80,97 @@ public class AdventureController implements HealthIndicator {
         return adventures;
     }
 
+    @ApiOperation(value = "Récupère la liste des aventures d'une catégorie, s'il y en existe au moins une.")
     @GetMapping(value = "/category/{categoryId}")
     public List<Adventure> adventureList(@PathVariable Long categoryId) {
-        log.info("Début de la méthode : adventureList()");
+        log.info("Tentative de récupération de la liste des aventures");
+
         List<Adventure> adventures = new ArrayList<>(0);
 
-        // Vérifier si la catégorie existe
+        log.info("Vérifier si la catégorie existe");
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
         category.ifPresent(categoryBean ->
                 categoryBean.getCategoryAdventures().forEach(categoryAdventureBean ->
                         adventureRepository.findById(categoryAdventureBean.getAdventureId()).ifPresent(adventures::add)));
         if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
         log.info("Récupération des aventures liées à la catégorie d'id "+categoryId);
+        if (adventures.isEmpty()) {
+            String message = "Il n'existe aucune aventures.";
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
+
         return adventures;
     }
 
-    @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Récupère une aventure selon son ID.")
+    @GetMapping(value = "/getOne/{id}")
     public Optional<Adventure> getAdventure(@PathVariable Long id) {
-        log.info("Début de la méthode : getAdventure()");
+        log.info("Tentative de récupération de l'aventure");
+
         Optional<Adventure> adventure = adventureRepository.findById(id);
-        if (!adventure.isPresent()) throw new AdventureNotFoundException("Il n'existe aucune aventure pour id " + id + ".");
-        log.info("Récupération de l'aventure d'id "+id);
+        if (!adventure.isPresent()) {
+            String message = "Il n'existe aucune aventure pour id " + id;
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
+
+        log.info("Aventure récupérée");
         return adventure;
     }
 
+    @ApiOperation(value = "Avec ce truc, tu peux ajouter une aventure si t'es admin. Cool hein ?")
     @PostMapping(value = "/admin/{categoryId}")
     public ResponseEntity<Adventure> addAdventure(@RequestBody Adventure adventure, @PathVariable Long categoryId) {
-        log.info("Début de la méthode : addAdventure()");
+        log.info("Tentative de création de l'aventure");
+
         Adventure newAdventure = new Adventure();
-        // Vérifier si la catégorie existe
+
+        log.info("Vérifier si la catégorie existe");
         Optional<CategoryBean> category = msCategoryProxy.getCategory(categoryId);
         if (category.isPresent()) {
             validateAdventure(adventure);
             newAdventure = adventureRepository.save(adventure);
-            // Pour le client
-            /*List<CategoryAdventureBean> categoryAdventures = category.get().getCategoryAdventures();
-            categoryAdventures.add(new CategoryAdventureBean(categoryId, newAdventure.getId()));
-            category.get().setCategoryAdventures(categoryAdventures);
-            msCategoryProxy.updateCategory(category.get());*/
         }
-        log.info("Création d'une aventure");
+
+        log.info("Aventure créée");
         return new ResponseEntity<>(newAdventure, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Si tu veux mettre à jour une aventure en étant admin, c'est ici.")
     @PatchMapping(value = "/admin")
     public ResponseEntity<Adventure> updateAdventure(@RequestBody Adventure adventure) {
-        log.info("Début de la méthode : updateAdventure()");
-        if (adventure == null || !adventureRepository.findById(adventure.getId()).isPresent())
-            throw new AdventureNotFoundException("L'aventure envoyée n'existe pas.");
+        log.info("Tentative de mise à jour de l'aventure");
+
+        if (adventure == null || !adventureRepository.findById(adventure.getId()).isPresent()) {
+            String message = "L'aventure envoyée n'existe pas";
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
         validateAdventure(adventure);
-        log.info("Mise à jour de l'aventure d'id "+adventure.getId());
+
+        log.info("Aventure mise à jour");
         return new ResponseEntity<>(adventureRepository.save(adventure), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Si tu veux supprimer l'existence d'une aventure, c'est à tes risques et périls. En tant qu'admin tu le sais, non ?")
     @DeleteMapping(value = "/admin/{id}")
     public ResponseEntity<String> deleteAdventure(@PathVariable Long id) {
-        log.info("Début de la méthode : deleteAdventure()");
+        log.info("Tentative de suppression de l'aventure");
+
         Optional<Adventure> adventureToDelete = adventureRepository.findById(id);
-        if (!adventureToDelete.isPresent()) throw new AdventureNotFoundException("L'aventure correspondante à l'id " + id + " n'existe pas.");
+        if (!adventureToDelete.isPresent()) {
+            String message = "L'aventure correspondante à l'id " + id + " n'existe pas.";
+            log.error(message);
+            throw new AdventureNotFoundException(message);
+        }
         else {
-            // Pour le client
-            // msCommentProxy.deleteCommentByAdventureId(adventureToDelete.get().getId());
             adventureRepository.deleteById(adventureToDelete.get().getId());
         }
-        log.info("Suppression de l'aventure d'id "+id);
-        return new ResponseEntity<>("L'aventure pour id " + id + " a bien été supprimé.", HttpStatus.GONE);
+
+        String message = "L'aventure pour id \" + id + \" a bien été supprimé.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.GONE);
     }
 
     private void validateAdventure(Adventure adventure) {
@@ -149,7 +182,11 @@ public class AdventureController implements HealthIndicator {
             constraintViolations.iterator().forEachRemaining(constraintViolation ->
                     violationMessages.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage()));
 
-            throw new AdventureNotValidException("L'aventure n'est pas valide. " + StringUtils.join(violationMessages, " ; "));
+            String message = "L'aventure n'est pas valide. " + StringUtils.join(violationMessages, " ; ");
+            log.error(message);
+            throw new AdventureNotValidException(message);
         }
+
+        log.info("L'aventure est valide");
     }
 }

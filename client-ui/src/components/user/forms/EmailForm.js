@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Input, Button } from 'antd'
 import bcrypt from 'bcryptjs'
 import Container from './../../../Container'
@@ -114,4 +115,8 @@ class EmailForm extends Component {
 
 const WrappedEmailForm = Form.create()(EmailForm)
 
-export default WrappedEmailForm
+const mapStateToProps = state => ({
+  languageCode: state.language.code,
+})
+
+export default connect(mapStateToProps)(WrappedEmailForm)

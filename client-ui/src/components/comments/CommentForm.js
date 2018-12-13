@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import jwt from 'jsonwebtoken'
@@ -24,7 +24,7 @@ class CommentForm extends Component {
         const { password, ...userAccount } = response.data
         this.setState({ userAccount })
       })
-      .catch(error => console.log('error', error))
+      .catch(() => message.error(strings.statusCode.userInformations))
   }
 
   persistComment = event => {
@@ -44,18 +44,18 @@ class CommentForm extends Component {
           parent.comments.push(commentToAdd)
           console.log(parent)
           http
-            .patch(API.COMMENTS, parent)
+            .patch(`${API.COMMENTS}/update`, parent)
             .then(response => {
               this.props.action(response.data)
             })
-            .catch(error => console.log('error', error))
+            .catch(() => message.error(strings.statusCode.commentUpdate))
         } else {
           http
-            .post(API.COMMENTS, commentToAdd)
+            .post(`${API.COMMENTS}/add`, commentToAdd)
             .then(response => {
               this.props.action(response.data)
             })
-            .catch(error => console.log('error', error))
+            .catch(() => message.error(strings.statusCode.commentAdd))
         }
       }
     })
@@ -108,6 +108,7 @@ const WrappedCommentForm = Form.create()(CommentForm)
 const mapStateToProps = state => {
   return {
     token: state.authentication.token,
+    languageCode: state.language.code,
   }
 }
 
