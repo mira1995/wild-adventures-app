@@ -16,6 +16,8 @@ class UpdateDemand extends Component {
     this.state = {
       isWrongUser: false,
       isSavedDemand: false,
+      adventures: [],
+      subTotals: [],
     }
   }
 
@@ -23,6 +25,7 @@ class UpdateDemand extends Component {
     const token = this.props.token.substring(7)
     const decoded = jwt.decode(token)
     let userAccount = {}
+    let sessionsId = []
     http
       .post(`${API.USERS}/email`, decoded.sub)
       .then(response => (userAccount = response.data))
@@ -31,13 +34,61 @@ class UpdateDemand extends Component {
       .get(`${API.ORDERS}/${this.props.match.params.orderId}`)
       .then(response => {
         let order = response.data
+        let total = 0
+        order.orderSessions.map(session => sessionsId.push(session.sessionId))
+        http
+          .post(`${API.ADVENTURES}/sessions`, sessionsId)
+          .then(response => {
+            const sessions = response.data
+            let { adventures } = this.state
+            let { subTotals } = this.state
+            sessions.map(session =>
+              http
+                .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
+                .then(response => {
+                  const adventure = response.data
+                  adventures.push(adventure.title)
+
+                  const orderSession = order.orderSessions.filter(
+                    (item, index) => item.sessionId === session.id
+                  )[0]
+                  subTotals.push(session.price * orderSession.nbOrder)
+                  this.setState({
+                    adventures: adventures,
+                    subTotals: subTotals,
+                  })
+                })
+                .catch(() =>
+                  message.error(strings.statusCode.gettingAdventureError)
+                )
+            )
+          })
+          .catch(() => message.error(strings.statusCode.sessionUpdateError))
         console.log(order)
+
         this.setState({
           userAccount: userAccount,
           orderItem: order,
           isWrongUser: order.userAccountId !== userAccount.id ? true : false,
+          total: total,
         })
       })
+  }
+
+  updateOrderSession = (orderSession, currentIndex) => {
+    const { adventures, subTotals } = this.state
+    console.log(adventures)
+
+    orderSession.adventureTitle = adventures[currentIndex]
+
+    orderSession.subTotal = subTotals[currentIndex]
+    return orderSession
+  }
+
+  getCurrentObject = (index, currentIndex, element) => {
+    if (index === currentIndex) {
+      return element
+    }
   }
 
   initiateState = orderSessions => {
@@ -90,12 +141,12 @@ class UpdateDemand extends Component {
       <Container>
         <h1>{strings.orders.orderUpdateRequest}</h1>
         <h2>
-          {strings.orders.orderCancellationDate}{' '}
-          {orderItem && orderItem.orderDate}
+          {strings.orders.orderUpdateDate} {orderItem && orderItem.orderDate}
         </h2>
         {orderItem &&
           orderItem.orderSessions && (
             <OrderRecap
+              formalizeSession={this.updateOrderSession}
               action={this.initiateState}
               orderSessions={orderItem.orderSessions}
               updateComponent={true}

@@ -14,7 +14,7 @@ class Payment extends Component {
     this.state = {
       order: null,
       adventures: [],
-      sessions: [],
+      subTotals: [],
       items: [],
       total: 0,
     }
@@ -34,17 +34,23 @@ class Payment extends Component {
           .then(response => {
             const sessions = response.data
             let adventures = []
+            let subTotals = []
             sessions.map(session =>
               http
                 .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
                 .then(response => {
-                  adventures.push(response.data)
+                  adventures.push(response.data.title)
                   const orderSession = order.orderSessions.filter(
                     (item, index) => item.sessionId === session.id
                   )[0]
                   total = total + session.price * orderSession.nbOrder
                   console.log(total)
-                  this.setState({ total: total })
+                  subTotals.push(session.price * orderSession.nbOrder)
+                  this.setState({
+                    total: total,
+                    adventures: adventures,
+                    subTotals: subTotals,
+                  })
                 })
                 .catch(() =>
                   message.error(strings.statusCode.gettingAdventureError)
@@ -70,6 +76,16 @@ class Payment extends Component {
     const { order } = this.state
     order.orderSessions = orderSessions
     this.setState({ order })
+  }
+
+  updateOrderSession = (orderSession, currentIndex) => {
+    const { adventures, subTotals } = this.state
+    console.log(adventures)
+
+    orderSession.adventureTitle = adventures[currentIndex]
+
+    orderSession.subTotal = subTotals[currentIndex]
+    return orderSession
   }
 
   onToken = token => {
@@ -108,6 +124,7 @@ class Payment extends Component {
             order.orderSessions && (
               <div>
                 <OrderRecap
+                  formalizeSession={this.updateOrderSession}
                   action={this.initiateState}
                   orderSessions={order.orderSessions}
                 />
