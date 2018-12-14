@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Api(description = "API pour les opérations CRUD sur les images")
 @RestController
+@RequestMapping(value = "/api")
 public class ImageController extends AbstractImageController<Image, Long> {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 

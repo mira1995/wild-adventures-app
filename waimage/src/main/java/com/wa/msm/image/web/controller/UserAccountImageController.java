@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Api(description = "API pour les opérations CRUD sur les images de profil")
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/users")
 public class UserAccountImageController extends AbstractImageController<UserAccountImage, Long> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());

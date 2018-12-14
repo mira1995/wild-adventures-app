@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Api(description = "API pour les opérations CRUD sur les images liés à des catégories")
 @RestController
-@RequestMapping(value = "/category")
+@RequestMapping(value = "/api/categories")
 public class CategoryImageController extends AbstractImageDependencyController<CategoryImage, CategoryImageKey> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());

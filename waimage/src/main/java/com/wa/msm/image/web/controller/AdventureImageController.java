@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Api(description = "API pour les opérations CRUD sur les images liés à des aventures")
 @RestController
-@RequestMapping(value = "/adventure")
+@RequestMapping(value = "/api/adventures")
 public class AdventureImageController extends AbstractImageDependencyController<AdventureImage, AdventureImageKey> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());

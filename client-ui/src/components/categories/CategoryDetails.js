@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import AdventureItem from '../adventures/AdventureItem'
-import { Row } from 'antd'
+import { Row, message } from 'antd'
 import Container from '../../Container'
 import { strings } from '../../helpers/strings'
 
@@ -12,6 +12,7 @@ class CategoryDetails extends Component {
     this.state = {
       category: [],
       adventures: [],
+      adventuresImages: [],
     }
   }
 
@@ -21,10 +22,34 @@ class CategoryDetails extends Component {
       .then(response => this.setState({ category: response.data }))
     http
       .get(`${API.ADVENTURES}/category/${this.props.match.params.categoryId}`)
-      .then(response => this.setState({ adventures: response.data }))
+      .then(response => {
+        let adventures = response.data
+        adventures.map(adventure =>
+          http
+            .get(`${API.IMAGES}${API.ADVENTURES}/${adventure.id}`)
+            .then(response => {
+              let { adventuresImages } = this.state
+              adventuresImages.push(response.data)
+              this.setState({ adventuresImages: adventuresImages })
+            })
+            .catch(() =>
+              message.error(strings.statusCode.gettingAdventureError)
+            )
+        )
+        this.setState({ adventures: response.data })
+      })
   }
 
   render() {
+    const { adventures, adventuresImages } = this.state
+    console.log(adventures)
+    if (adventures && adventuresImages) {
+      adventures.map((adventure, index) => {
+        if (adventuresImages[index]) {
+          adventure.image = adventuresImages[index][0]
+        }
+      })
+    }
     return (
       <Container>
         <div>
@@ -39,7 +64,11 @@ class CategoryDetails extends Component {
                 <AdventureItem
                   key={adventure.id}
                   index={adventure.id}
-                  imagePath="/images/background.jpg"
+                  imagePath={
+                    adventure.image
+                      ? `/images/adventures/${adventure.image.uri}`
+                      : '/images/background.jpg'
+                  }
                   adventure={adventure}
                 />
               ))}

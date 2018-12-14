@@ -30,10 +30,11 @@ export const API = {
   AUTH: '/auth',
   CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
+  IMAGES: '/images/api',
   SESSIONS: '/adventures/sessions',
   COMMENTS: '/comments',
   USERS: '/users',
-  ORDERS: '/orders',
+  ORDERS: '/orders/api',
   DEMANDS: '/demands',
 }
 export const CONF = {
