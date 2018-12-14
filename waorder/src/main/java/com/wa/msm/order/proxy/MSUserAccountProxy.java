@@ -11,6 +11,6 @@ import java.util.Optional;
 @FeignClient(name = "wa-user")
 @RibbonClient(name = "wa-user")
 public interface MSUserAccountProxy {
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/api/{userId}")
     Optional<UserAccountBean> getUserById(@PathVariable("userId") Long userId);
 }

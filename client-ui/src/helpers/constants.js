@@ -33,7 +33,7 @@ export const API = {
   IMAGES: '/images/api',
   SESSIONS: '/adventures/sessions',
   COMMENTS: '/comments',
-  USERS: '/users',
+  USERS: '/users/api',
   ORDERS: '/orders/api',
   DEMANDS: '/demands',
 }
