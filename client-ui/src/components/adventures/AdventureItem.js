@@ -14,6 +14,10 @@ const gridBodyStyle = {
   width: '100%',
 }
 
+const imageStyle = {
+  height: '300px',
+}
+
 let formatContent = content => {
   if (content.length > CONF.CARD_CONTENT_SIZE) {
     return content.substring(0, CONF.CARD_CONTENT_SIZE - 1) + '...'
@@ -25,7 +29,10 @@ let formatContent = content => {
 const AdventureItem = ({ index, imagePath, adventure }) => (
   <Col sm={24} xl={12} className="cardCol">
     <Link to={`${URI.ADVENTURES}/${index}`}>
-      <Card hoverable cover={<img alt="example" src={imagePath} />}>
+      <Card
+        hoverable
+        cover={<img style={imageStyle} alt="example" src={imagePath} />}
+      >
         <Card.Grid style={gridStyle}>
           <Meta title={adventure.title} />
         </Card.Grid>

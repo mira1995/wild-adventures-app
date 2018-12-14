@@ -3,7 +3,7 @@ import { strings } from '../helpers/strings'
 import Container from '../Container'
 import { http } from '../configurations/axiosConf'
 import { API, CONF } from './../helpers/constants'
-import { Row } from 'antd'
+import { Row, message } from 'antd'
 import AdventureItem from './adventures/AdventureItem'
 import CategoryItem from './categories/CategoryItem'
 
@@ -17,14 +17,34 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    http
-      .get(`${API.ADVENTURES}/last5ById`)
-      .then(response => this.setState({ lastFiveAdventures: response.data }))
-      .catch(error => console.log(error))
-    http
-      .get(`${API.CATEGORIES}/lastFiveCategories`)
-      .then(response => this.setState({ lastFiveCategories: response.data }))
-      .catch(error => console.log(error))
+    http.get(`${API.ADVENTURES}/last5ById`).then(response => {
+      let adventuresResponse = response.data
+      adventuresResponse.map(adventure =>
+        http
+          .get(`${API.IMAGES}${API.ADVENTURES}/${adventure.id}`)
+          .then(response => {
+            let { lastFiveAdventures } = this.state
+            adventure.image = response.data[0]
+            lastFiveAdventures.push(adventure)
+            this.setState({ lastFiveAdventures: lastFiveAdventures })
+          })
+          .catch(() => message.error(strings.statusCode.gettingAdventureError))
+      )
+    })
+    http.get(`${API.CATEGORIES}/lastFiveCategories`).then(response => {
+      let categoriesResponse = response.data
+      categoriesResponse.map(category =>
+        http
+          .get(`${API.IMAGES}${API.CATEGORIES}/${category.id}`)
+          .then(response => {
+            let { lastFiveCategories } = this.state
+            category.image = response.data[0]
+            lastFiveCategories.push(category)
+            this.setState({ lastFiveCategories: lastFiveCategories })
+          })
+          .catch(() => message.error(strings.statusCode.gettingAdventureError))
+      )
+    })
   }
 
   formatContent(content) {
@@ -47,7 +67,11 @@ class Home extends Component {
               <CategoryItem
                 key={category.id}
                 index={category.id}
-                imagePath="/images/background.jpg"
+                imagePath={
+                  category.image
+                    ? `/images/categories/${category.image.uri}`
+                    : '/images/background.jpg'
+                }
                 title={category.title}
                 description={this.formatContent(category.description)}
               />
@@ -61,7 +85,11 @@ class Home extends Component {
               <AdventureItem
                 key={adventure.id}
                 index={adventure.id}
-                imagePath="/images/background.jpg"
+                imagePath={
+                  adventure.image
+                    ? `/images/adventures/${adventure.image.uri}`
+                    : '/images/background.jpg'
+                }
                 adventure={adventure}
               />
             ))}
