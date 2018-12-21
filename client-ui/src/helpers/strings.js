@@ -18,6 +18,12 @@ export let strings = new LocalizedStrings({
       home: 'Home',
       notMatch: 'This page does not exist.',
     },
+    home: {
+      welcomeText:
+        'Wild Aventures wish you welcome, find the categories of adventures in the spotlight as well as our most popular adventures.',
+      adventureTitle: 'Adventures in the spotlight',
+      categoryTitle: 'Categories in the spotlight',
+    },
     adventures: {
       location: 'Location',
       categoriesListAdventure: 'Categories list of the adventure',
@@ -109,6 +115,7 @@ export let strings = new LocalizedStrings({
       totalSession: 'Total for this session.',
       remove: 'Remove',
       orderUpdateRequest: 'Request for update of order',
+      orderUpdateDate: 'Update of the order of the',
       orderCancellationRequest: 'Request for cancellation of order',
       orderCancellationDate: 'Cancellation of the order of the',
       orderCancellation: 'Cancel my order',
@@ -181,6 +188,12 @@ export let strings = new LocalizedStrings({
       login: 'Connexion',
       home: 'Accueil',
       notMatch: "Cette page n'existe pas.",
+    },
+    home: {
+      welcomeText:
+        "Wild Aventures vous souhaite la bienvenue, retrouvez les catégories d'aventures à l'honneur ainsi que nos aventures les plus populaires.",
+      adventureTitle: "Les aventures à l'honneur",
+      categoryTitle: "Les catégories à l'honneur",
     },
     adventures: {
       location: 'Localisation',
@@ -276,6 +289,7 @@ export let strings = new LocalizedStrings({
       totalSession: 'Total pour cette session.',
       remove: 'Supprimer',
       orderUpdateRequest: 'Demande de mise à jour de commande',
+      orderUpdateDate: 'Mise à jour de la commande du',
       orderCancellationRequest: "Demande d'annulation de commande",
       orderCancellationDate: 'Annulation de la commande du',
       orderCancellation: 'Annuler ma commande',

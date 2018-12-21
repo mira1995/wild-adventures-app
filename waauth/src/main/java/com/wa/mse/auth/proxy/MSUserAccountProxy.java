@@ -13,6 +13,6 @@ import java.util.Optional;
 @FeignClient(name = "wa-user")
 @RibbonClient(name = "wa-user")
 public interface MSUserAccountProxy {
-    @PostMapping(value = "/email")
+    @PostMapping(value = "/api/email")
     Optional<UserAccountBean> getUserByEmail(@RequestBody String email);
 }

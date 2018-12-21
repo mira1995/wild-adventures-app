@@ -113,7 +113,7 @@ public class CategoryControllerTest {
     @Transactional
     public void test2_getCategoryTest(){
         persistJdd();
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+category.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getOne/"+category.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -130,7 +130,7 @@ public class CategoryControllerTest {
     @Transactional
     public void test3_categoryList(){
         persistJdd();
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAll").accept(MediaType.APPLICATION_JSON);
 
         List<Category> categories = new ArrayList<>();
         categories.add(category);

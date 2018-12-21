@@ -9,4 +9,5 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     Optional<UserAccount> findUserAccountByEmail(String email);
     Integer countUserAccountByPseudo(String pseudo);
     Integer countUserAccountByEmail(String email);
+    UserAccount findTopByOrderByIdDesc();
 }

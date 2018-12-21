@@ -1,6 +1,5 @@
 package com.wa.msm.adventure.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.entity.Session;
 import com.wa.msm.adventure.repository.AdventureRepository;
@@ -10,6 +9,7 @@ import com.wa.msm.adventure.web.exception.SessionNotFoundException;
 import com.wa.msm.adventure.web.exception.SessionNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

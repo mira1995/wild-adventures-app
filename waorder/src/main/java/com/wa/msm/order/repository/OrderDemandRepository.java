@@ -11,4 +11,6 @@ public interface OrderDemandRepository extends JpaRepository<OrderDemand, Long> 
     List<OrderDemand> findByUserAccountId(Long userAccountId);
 
     List<OrderDemand> findByDemandStatus(OrderDemandEnum orderStatus);
+
+    OrderDemand findTopByOrderByIdDesc();
 }

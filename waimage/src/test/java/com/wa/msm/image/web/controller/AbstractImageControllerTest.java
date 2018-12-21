@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public abstract class AbstractImageControllerTest {
 
     @Autowired
@@ -26,28 +28,38 @@ public abstract class AbstractImageControllerTest {
 
     JacksonTester<Image> jsonImage;
 
-    @BeforeEach
-    @Transactional
-    public void setUpDatas(){
+    private void instantiateImageType(){
         imageTypeAdv = new ImageType();
         imageTypeAdv.setName("adventure");
         imageTypeAdv.setCode("ADV");
-        imageTypeRepository.save(imageTypeAdv);
 
         imageTypeCat = new ImageType();
         imageTypeCat.setName("category");
         imageTypeCat.setCode("CAT");
-        imageTypeRepository.save(imageTypeCat);
 
         imageTypeUsr = new ImageType();
         imageTypeUsr.setName("user");
         imageTypeUsr.setCode("USR");
-        imageTypeRepository.save(imageTypeUsr);
+
+    }
+
+    @BeforeEach
+    @Transactional
+    public void setUpDatas(){
+        List<ImageType> imageTypeList =  imageTypeRepository.findAll();
+
+        instantiateImageType();
+        if(imageTypeList.isEmpty()){
+            imageTypeRepository.save(imageTypeAdv);
+            imageTypeRepository.save(imageTypeCat);
+            imageTypeRepository.save(imageTypeUsr);
+        }
 
         imagePersisted = new Image();
         imagePersisted.setAlt("test");
         imagePersisted.setDescription("test description");
         imagePersisted.setUri("/test/test.jpeg");
+
     }
 
     @AfterEach

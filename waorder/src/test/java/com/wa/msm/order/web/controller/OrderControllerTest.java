@@ -6,10 +6,7 @@ import com.wa.msm.order.proxy.MSAdventureProxy;
 import com.wa.msm.order.proxy.MSUserAccountProxy;
 
 import com.wa.msm.order.util.enumeration.OrderStatusEnum;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -50,19 +47,29 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
     @BeforeEach
     void setUp(){
 
+        List<Order> orderList = orderRepository.findAll();
+        if(!orderList.isEmpty()){
+            orderRepository.deleteAll();
+        }
+
         JacksonTester.initFields(this, new ObjectMapper());
         // MockMvc standalone approach
         mockMvc = MockMvcBuilders.standaloneSetup(orderController)
                 .build();
     }
 
+    private static final String urlPrefix = "/api";
+
     @AfterEach
     @Transactional
     public void afterTest(){
-        if(order.getId() !=null && !isDeleted) orderRepository.delete(order);
+        if(order.getId() !=null && !isDeleted){
+            orderRepository.delete(order);
+        }
     }
 
     @Test
+    @Transactional
     void test1_createOrderTest(){
         Mockito.when(
                 msAdventureProxy.getAllById(Mockito.anyList())).thenReturn(sessionBeanList);
@@ -70,11 +77,12 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
                 msUserAccountProxy.getUserById(Mockito.anyLong())).thenReturn(Optional.ofNullable(userAccount));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonOrder.write(order).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix).accept(MediaType.APPLICATION_JSON).content(jsonOrder.write(order).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
+            order = orderRepository.findTopByOrderByIdDesc();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assertions.assertEquals(jsonOrder.write(order).getJson().substring(11,81), response.getContentAsString().substring(8,78));
+            Assertions.assertEquals(jsonOrder.write(order).getJson(), response.getContentAsString());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -93,7 +101,7 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
         order.setIsPaid(true);
         order.setStatus(OrderStatusEnum.FINALIZED);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/admin").accept(MediaType.APPLICATION_JSON).content(jsonOrder.write(order).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonOrder.write(order).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -115,7 +123,7 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
 
         persistJddOrder();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/pay/"+order.getId()).accept(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch(urlPrefix+"/pay/"+order.getId()).accept(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             order.setIsPaid(true);
@@ -134,7 +142,7 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
     void test4_deleteOrderTest(){
         persistJddOrder();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/"+order.getId()).accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(urlPrefix+"/admin/"+order.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
@@ -154,12 +162,13 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
         List<Order> orders = new ArrayList<>();
         orders.add(order);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/admin").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
             Assertions.assertEquals(result.getResponse().getContentAsString(), jsonOrderList.write(orders).getJson());
+            order.setOrderSessions(null);
         }catch(Exception e){
             e.printStackTrace();
             Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
@@ -178,12 +187,13 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
         List<Order> orders = new ArrayList<>();
         orders.add(order);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/user/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
             Assertions.assertEquals(result.getResponse().getContentAsString(), jsonOrderList.write(orders).getJson());
+            order.setOrderSessions(null);
         }catch(Exception e){
             e.printStackTrace();
             Assertions.fail("Erreur lors de l'envoi de la requête au controleur REST");
@@ -196,7 +206,7 @@ public class OrderControllerTest extends AbstractOrderControllerTest{
     void test7_getOrderTest(){
         persistJddOrder();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+order.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/"+order.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();

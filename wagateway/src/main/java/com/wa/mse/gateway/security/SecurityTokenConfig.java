@@ -37,14 +37,14 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/categories/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/sessions/admin/**").hasRole("ADMIN")
-                .antMatchers("/users/admin/**").hasRole("ADMIN")
+                .antMatchers("/users/api/admin/**").hasRole("ADMIN")
                 //.antMatchers("/users/**").hasRole("USER")
-                .antMatchers("/images/admin/**").hasRole("ADMIN")
-                .antMatchers("/images/adventure/admin/**").hasRole("ADMIN")
-                .antMatchers("/images/category/admin/**").hasRole("ADMIN")
-                .antMatchers("/images/user/admin/**").hasRole("ADMIN")
-                .antMatchers("/orders/admin/**").hasRole("ADMIN")
-                .antMatchers("/orders/demands/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/api/adventure/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/api/category/admin/**").hasRole("ADMIN")
+                .antMatchers("/images/api/user/admin/**").hasRole("ADMIN")
+                .antMatchers("/orders/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/orders/api/demands/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
         // TODO: Demande du token pour les actions utilisateurs et cie
     }

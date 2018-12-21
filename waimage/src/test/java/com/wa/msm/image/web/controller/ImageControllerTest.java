@@ -30,6 +30,8 @@ public class ImageControllerTest extends AbstractImageControllerTest {
     @Autowired
     private ImageController imageController;
 
+    private static final String urlPrefix = "/api";
+
     @BeforeEach
     @Transactional
     public void setUp(){
@@ -40,14 +42,16 @@ public class ImageControllerTest extends AbstractImageControllerTest {
     }
 
     @Test
+    @Transactional
     public void test1_create(){
         imagePersisted.setType(imageTypeAdv);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image").accept(MediaType.APPLICATION_JSON).content(jsonImage.write(imagePersisted).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonImage.write(imagePersisted).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
+            imagePersisted = imageRepository.findTopByOrderByIdDesc();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-            Assertions.assertEquals(jsonImage.write(imagePersisted).getJson().substring(11), response.getContentAsString().substring(8));
+            Assertions.assertEquals(jsonImage.write(imagePersisted).getJson(), response.getContentAsString());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -60,7 +64,7 @@ public class ImageControllerTest extends AbstractImageControllerTest {
         Image image = persistJddImage(imageTypeAdv);
         image.setUri("/hello/world.jpg");
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/image").accept(MediaType.APPLICATION_JSON).content(jsonImage.write(image).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonImage.write(image).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -75,7 +79,7 @@ public class ImageControllerTest extends AbstractImageControllerTest {
     @Test
     public void test3_findById(){
         Image image = persistJddImage(imageTypeAdv);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/image/"+image.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/"+image.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -91,7 +95,7 @@ public class ImageControllerTest extends AbstractImageControllerTest {
     public void test4_delete(){
         Image image = persistJddImage(imageTypeAdv);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/image/"+image.getId()).accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(urlPrefix+"/admin/"+image.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());

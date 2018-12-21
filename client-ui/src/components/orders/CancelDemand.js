@@ -16,6 +16,8 @@ class CancelDemand extends Component {
     this.state = {
       isWrongUser: false,
       isSavedDemand: false,
+      adventures: [],
+      subTotals: [],
     }
   }
 
@@ -23,19 +25,60 @@ class CancelDemand extends Component {
     const token = this.props.token.substring(7)
     const decoded = jwt.decode(token)
     let userAccount = {}
+    let sessionsId = []
     http
       .post(`${API.USERS}/email`, decoded.sub)
       .then(response => (userAccount = response.data))
       .catch(() => message.error(strings.statusCode.userInformations))
-    http.get(`${API.ORDERS}/${this.props.match.params.orderId}`).then(res => {
-      let order = res.data
-      console.log(order)
-      this.setState({
-        userAccount: userAccount,
-        orderItem: order,
-        isWrongUser: order.userAccountId !== userAccount.id ? true : false,
+    http
+      .get(`${API.ORDERS}/${this.props.match.params.orderId}`)
+      .then(response => {
+        let order = response.data
+        order.orderSessions.map(session => sessionsId.push(session.sessionId))
+        http
+          .post(`${API.ADVENTURES}/sessions`, sessionsId)
+          .then(response => {
+            const sessions = response.data
+            let { adventures } = this.state
+            let { subTotals } = this.state
+            sessions.map(session =>
+              http
+                .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
+                .then(response => {
+                  const adventure = response.data
+                  adventures.push(adventure.title)
+
+                  const orderSession = order.orderSessions.filter(
+                    (item, index) => item.sessionId === session.id
+                  )[0]
+                  subTotals.push(session.price * orderSession.nbOrder)
+                  this.setState({
+                    adventures: adventures,
+                    subTotals: subTotals,
+                  })
+                })
+                .catch(() =>
+                  message.error(strings.statusCode.gettingAdventureError)
+                )
+            )
+          })
+          .catch(() => message.error(strings.statusCode.sessionUpdateError))
+        this.setState({
+          userAccount: userAccount,
+          orderItem: order,
+          isWrongUser: order.userAccountId !== userAccount.id ? true : false,
+        })
       })
-    })
+  }
+
+  updateOrderSession = (orderSession, currentIndex) => {
+    const { adventures, subTotals } = this.state
+    console.log(adventures)
+
+    orderSession.adventureTitle = adventures[currentIndex]
+
+    orderSession.subTotal = subTotals[currentIndex]
+    return orderSession
   }
 
   initiateState = orderSessions => {
@@ -93,6 +136,7 @@ class CancelDemand extends Component {
         {orderItem &&
           orderItem.orderSessions && (
             <OrderRecap
+              formalizeSession={this.updateOrderSession}
               action={this.initiateState}
               orderSessions={orderItem.orderSessions}
             />

@@ -1,6 +1,5 @@
 package com.wa.msm.category.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.category.entity.Category;
 import com.wa.msm.category.entity.CategoryAdventure;
 import com.wa.msm.category.proxy.MSAdventureProxy;
@@ -10,6 +9,7 @@ import com.wa.msm.category.web.exception.CategoryNotFoundException;
 import com.wa.msm.category.web.exception.CategoryNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,8 @@ import java.util.Set;
 @Api(description = "API pour les opérations CRUD sur les catégories")
 @RestController
 public class CategoryController {
-
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -73,6 +73,17 @@ public class CategoryController {
         return category;
     }
 
+    @ApiOperation(value = "Récupère la liste des cinq dernières catégories , s'il en existe au moins une.")
+    @GetMapping(value = "/lastFiveCategories")
+    public List<Category> getLastFiveCategories() {
+        log.info("Début de la méthode : getCategory()");
+        List<Category> categories = new ArrayList<>(0);
+        categoryRepository.findTop5ByOrderByIdDesc().iterator().forEachRemaining(categories::add);
+        if (categories.isEmpty()) throw new CategoryNotFoundException("Il n'existe aucune catégorie ");
+        log.info("Récupération de toutes les catégories");
+        return categories;
+    }
+
     @ApiOperation(value = "Récupère la liste des catégories d'une aventure, s'il y en existe au moins une.")
     @GetMapping(value = "/adventure/{adventureId}")
     public List<Category> categoryListByAdventure(@PathVariable Long adventureId) {
@@ -98,6 +109,7 @@ public class CategoryController {
     @ApiOperation(value = "Avec ce truc, tu peux ajouter une catégorie si t'es admin. Cool hein ?")
     @PostMapping(value = "/admin")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+
         log.info("Tentative de création de la catégorie");
         validateCategory(category);
 
@@ -108,6 +120,7 @@ public class CategoryController {
     @ApiOperation(value = "Si tu veux mettre à jour une catégorie en étant admin, c'est ici.")
     @PatchMapping(value = "/admin")
     public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
+
         log.info("Tentative de mise à jour de la catégorie");
 
         if (category.getId() == null || !categoryRepository.findById(category.getId()).isPresent()) {

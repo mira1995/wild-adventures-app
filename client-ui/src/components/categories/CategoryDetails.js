@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import AdventureItem from '../adventures/AdventureItem'
-import { Row } from 'antd'
+import { Row, message } from 'antd'
 import Container from '../../Container'
 import { strings } from '../../helpers/strings'
 
@@ -12,6 +12,7 @@ class CategoryDetails extends Component {
     this.state = {
       category: [],
       adventures: [],
+      adventuresImages: [],
     }
   }
 
@@ -21,10 +22,26 @@ class CategoryDetails extends Component {
       .then(response => this.setState({ category: response.data }))
     http
       .get(`${API.ADVENTURES}/category/${this.props.match.params.categoryId}`)
-      .then(response => this.setState({ adventures: response.data }))
+      .then(response => {
+        let adventuresResponse = response.data
+        adventuresResponse.map(adventure =>
+          http
+            .get(`${API.IMAGES}${API.ADVENTURES}/${adventure.id}`)
+            .then(response => {
+              let { adventures } = this.state
+              adventure.image = response.data[0]
+              adventures.push(adventure)
+              this.setState({ adventures: adventures })
+            })
+            .catch(() =>
+              message.error(strings.statusCode.gettingAdventureError)
+            )
+        )
+      })
   }
 
   render() {
+    const { adventures } = this.state
     return (
       <Container>
         <div>
@@ -35,11 +52,15 @@ class CategoryDetails extends Component {
           <h2>{strings.categories.adventuresList}</h2>
           <div>
             <Row type="flex" align="center">
-              {this.state.adventures.map(adventure => (
+              {adventures.map(adventure => (
                 <AdventureItem
                   key={adventure.id}
                   index={adventure.id}
-                  imagePath="/images/background.jpg"
+                  imagePath={
+                    adventure.image
+                      ? `/images/adventures/${adventure.image.uri}`
+                      : '/images/background.jpg'
+                  }
                   adventure={adventure}
                 />
               ))}

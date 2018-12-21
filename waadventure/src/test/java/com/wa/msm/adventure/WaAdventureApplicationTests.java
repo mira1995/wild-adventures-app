@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -45,5 +46,32 @@ public class WaAdventureApplicationTests {
 		Assertions.assertEquals(adventure.getTitle(), adventureDb.get().getTitle());
 		Assertions.assertEquals(adventure.getId(), adventureDb.get().getId());
 
+	}
+
+	@Test
+	public void whenFindLast5_thenReturnAdventures(){
+
+		//given
+		Adventure adventure = new Adventure();
+		adventure.setTitle("Jolie aventure");
+		adventure.setDescription("Une jolie aventure");
+		adventure.setLocation("Paris");
+		adventure.setStatus("PAIEMENT_ATTENTE");
+		entityManager.persist(adventure);
+		entityManager.flush();
+
+		Adventure adventure1 = new Adventure();
+		adventure1.setTitle("Jolie aventure");
+		adventure1.setDescription("Une jolie aventure");
+		adventure1.setLocation("Paris");
+		adventure1.setStatus("PAIEMENT_ATTENTE");
+		entityManager.persist(adventure1);
+		entityManager.flush();
+
+		//when
+		Iterable<Adventure> adventuresDb = adventureRepository.findTop5ByOrderByIdDesc();
+
+		//then
+		adventuresDb.iterator().forEachRemaining(adventureDb -> Assertions.assertEquals(adventure.getTitle(), adventureDb.getTitle()));
 	}
 }

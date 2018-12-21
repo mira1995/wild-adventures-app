@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row } from 'antd'
+import { Row, message } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import CategoryItem from './CategoryItem'
@@ -13,9 +13,20 @@ class Categories extends Component {
   }
 
   componentWillMount() {
-    http
-      .get(`${API.CATEGORIES}/getAll`)
-      .then(response => this.setState({ categories: response.data }))
+    http.get(`${API.CATEGORIES}/getAll`).then(response => {
+      let categoriesResponse = response.data
+      categoriesResponse.map(category =>
+        http
+          .get(`${API.IMAGES}${API.CATEGORIES}/${category.id}`)
+          .then(response => {
+            let { categories } = this.state
+            category.image = response.data[0]
+            categories.push(category)
+            this.setState({ categories: categories })
+          })
+          .catch(() => message.error(strings.statusCode.gettingAdventureError))
+      )
+    })
   }
 
   formatContent(content) {
@@ -39,7 +50,11 @@ class Categories extends Component {
               <CategoryItem
                 key={category.id}
                 index={category.id}
-                imagePath="/images/background.jpg"
+                imagePath={
+                  category.image
+                    ? `/images/categories/${category.image.uri}`
+                    : '/images/background.jpg'
+                }
                 title={category.title}
                 description={this.formatContent(category.description)}
               />

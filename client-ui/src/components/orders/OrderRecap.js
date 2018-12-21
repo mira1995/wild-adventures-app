@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
-import { http } from './../../configurations/axiosConf'
-import { API } from '../../helpers/constants'
 import { message, Table } from 'antd'
 import RemoveSessionButton from './RemoveSessionButton'
 import NbOrderUpdateInput from './NbOrderUpdateInput'
-import { strings } from '../../helpers/strings'
 
 class OrderRecap extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orderSessions: null,
+      orderSessions: this.props.orderSessions,
       adventureTitles: [],
       subTotals: [],
       total: 0,
@@ -44,73 +41,42 @@ class OrderRecap extends Component {
         )
       )
     } else {
-      message.error(strings.statusCode.orderLength)
+      message.error('Votre commande doit au moins contenir une aventure')
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    console.log(nextProps.orderSessions)
-    let orderSessions = nextProps.orderSessions
-    let { adventureTitles } = prevState
-    let { subTotals } = prevState
-    orderSessions.map(orderSession => {
-      let session = null
-      let adventure = null
-
-      http
-        .get(`${API.ADVENTURES}/sessions/single/${orderSession.sessionId}`)
-        .then(response => {
-          session = response.data
-          http
-            .get(`${API.ADVENTURES}/getOne/${session.adventureId}`)
-            .then(response => {
-              adventure = response.data
-              orderSession.adventureTitle = `${adventure.title} ${
-                strings.orders.from
-              } ${session.startDate} ${strings.orders.to} ${session.endDate}`
-              adventureTitles.push(orderSession.adventureTitle)
-              orderSession.subTotal = session.price * orderSession.nbOrder
-              subTotals.push(orderSession.subTotal)
-              /* nextProps.total += orderSession.subTotal */
-            })
-            .catch(() =>
-              message.error(strings.statusCode.gettingAdventureError)
-            )
-        })
-        .catch(() => message.error(strings.statusCode.gettingSessionError))
-      return orderSession
-    })
-    /* nextProps.action(nextProps.orderSessions) */
-    return nextProps
+  _toggleOrderSessions(record) {
+    const action = { type: 'UPDATE_ORDERSESSIONS', value: record }
+    this.props.dispatch(action)
   }
 
   render() {
     const columns = !this.props.updateComponent
       ? [
           {
-            title: strings.orders.adventure,
+            title: 'Aventure',
             dataIndex: 'adventureTitle',
             key: 'adventureTitle',
           },
           {
-            title: strings.orders.numberParticipants,
+            title: 'Nombre de participant',
             dataIndex: 'nbOrder',
             key: 'nbOrder',
           },
           {
-            title: strings.orders.totalEuro,
+            title: 'Total en euros',
             dataIndex: 'subTotal',
             rowKey: 'subTotal',
           },
         ]
       : [
           {
-            title: strings.orders.adventure,
+            title: 'Aventure',
             dataIndex: 'adventureTitle',
             key: 'adventureTitle',
           },
           {
-            title: strings.orders.numberParticipants,
+            title: 'Nombre de participant',
             key: 'nbOrder',
             render: (text, record) => (
               <div>
@@ -122,12 +88,12 @@ class OrderRecap extends Component {
             ),
           },
           {
-            title: strings.orders.totalEuro,
+            title: 'Total en euros',
             dataIndex: 'subTotal',
             rowKey: 'subTotal',
           },
           {
-            title: strings.orders.suppression,
+            title: 'Suppression',
             key: 'delete',
             render: (text, record) => (
               <div>
@@ -139,8 +105,16 @@ class OrderRecap extends Component {
             ),
           },
         ]
+    console.log(this.props)
 
-    const { orderSessions } = this.state
+    let { orderSessions } = this.props
+    console.log(orderSessions)
+    if (orderSessions) {
+      console.log(orderSessions)
+      orderSessions.map((orderSession, index) =>
+        this.props.formalizeSession(orderSession, index)
+      )
+    }
     console.log(orderSessions)
     return (
       <div className="orderRecap">

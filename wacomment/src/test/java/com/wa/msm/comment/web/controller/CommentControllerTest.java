@@ -118,7 +118,7 @@ public class CommentControllerTest {
                 msUserAccountProxy.getUserById(Mockito.anyLong())).thenReturn(Optional.ofNullable(userAccount));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/add").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -136,7 +136,7 @@ public class CommentControllerTest {
     @Transactional
     public void test2_commentListTest(){
         persistJdd();
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+adventure.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAll/"+adventure.getId()).accept(MediaType.APPLICATION_JSON);
         List<Comment> comments = new ArrayList<>();
         comments.add(comment);
         try{
@@ -159,7 +159,7 @@ public class CommentControllerTest {
         persistJdd();
         comment.setReported(true);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/update").accept(MediaType.APPLICATION_JSON).content(jsonComment.write(comment).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -175,7 +175,7 @@ public class CommentControllerTest {
     public void test4_deleteByIdTest(){
         persistJdd();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/"+comment.getId()).accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/delete/"+comment.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
@@ -189,7 +189,7 @@ public class CommentControllerTest {
     public void test5_deleteByAdventureId(){
         persistJdd();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/adventure/"+adventure.getId()).accept(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/adventure/"+adventure.getId()).accept(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());

@@ -33,7 +33,7 @@ class CommentItem extends Component {
   }
 
   render() {
-    const { content, comments, children, isActive, isChild } = this.props
+    const { content, comments, children, isActive, isChild, isAnonymous } = this.props
     return (
       <Col span={24}>
         <Card title={`${this.state.user.pseudo} ${strings.comments.said}`}>
@@ -41,13 +41,13 @@ class CommentItem extends Component {
           <p />
           {children}
           <p>
-            {!isActive &&
+            {!isAnonymous && !isActive &&
               !isChild && (
                 <Link to="#" onClick={this.answerComment}>
                   {strings.comments.reply}
                 </Link>
               )}
-            {isActive &&
+            {!isAnonymous && isActive &&
               !isChild && (
                 <Link to="#" onClick={this.cancelAnswer}>
                   {strings.comments.cancel}

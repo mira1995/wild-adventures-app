@@ -58,6 +58,7 @@ public class AdventureImageControllerTest extends AbstractImageControllerTest {
     private JacksonTester <AdventureImage> jsonAdventureImage;
     private JacksonTester <AdventureImageKey> jsonAdventureImageKey;
     private JacksonTester <List<Image>> jsonListImage;
+    private static final String urlPrefix = "/api/adventures";
 
     @BeforeEach
     @Transactional
@@ -91,7 +92,7 @@ public class AdventureImageControllerTest extends AbstractImageControllerTest {
                 msAdventureProxy.getAdventure(Mockito.anyLong())).thenReturn(Optional.ofNullable(adventure));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image/adventure").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImage.write(adventureImage).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImage.write(adventureImage).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -109,7 +110,7 @@ public class AdventureImageControllerTest extends AbstractImageControllerTest {
                 msAdventureProxy.getAdventure(Mockito.anyLong())).thenReturn(Optional.ofNullable(adventure));
         persistJddAdventureImage();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/image/adventure").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImageKey.write(adventureImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImageKey.write(adventureImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
@@ -127,7 +128,7 @@ public class AdventureImageControllerTest extends AbstractImageControllerTest {
                 msAdventureProxy.getAdventure(Mockito.anyLong())).thenReturn(Optional.ofNullable(adventure));
         persistJddAdventureImage();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image/adventure/exist").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImageKey.write(adventureImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/exist").accept(MediaType.APPLICATION_JSON).content(jsonAdventureImageKey.write(adventureImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.OK.value(),response.getStatus());
@@ -148,7 +149,7 @@ public class AdventureImageControllerTest extends AbstractImageControllerTest {
         List<Image> imageList = new ArrayList<>();
         imageList.add(image);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/image/adventure/"+adventure.getId()).accept(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/"+adventure.getId()).accept(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.OK.value(),response.getStatus());

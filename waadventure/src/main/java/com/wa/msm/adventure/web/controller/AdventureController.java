@@ -1,6 +1,5 @@
 package com.wa.msm.adventure.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.adventure.bean.CategoryBean;
 import com.wa.msm.adventure.entity.Adventure;
 import com.wa.msm.adventure.proxy.MSCategoryProxy;
@@ -10,6 +9,7 @@ import com.wa.msm.adventure.web.exception.AdventureNotFoundException;
 import com.wa.msm.adventure.web.exception.AdventureNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +53,10 @@ public class AdventureController implements HealthIndicator {
         return Health.up().build();
     }
 
-    @ApiOperation(value = "Récupère la liste des aventures, s'il y en existe au moins une.")
+    @ApiOperation(value = "Récupère la liste des aventures, s'il en existe au moins une.")
     @GetMapping(value = "/getAll")
     public List<Adventure> adventureList() {
         log.info("Tentative de récupération de la liste des aventures");
-
         List<Adventure> adventures = new ArrayList<>(0);
         adventureRepository.findAll().iterator().forEachRemaining(adventures::add);
         if (adventures.isEmpty()) {
@@ -67,6 +66,17 @@ public class AdventureController implements HealthIndicator {
         }
 
         log.info("Liste des aventures récupérée");
+        return adventures;
+    }
+
+    @ApiOperation(value = "Récupère la liste des cinq dernières aventures publiées, s'il en existe au moins une.")
+    @GetMapping(value= "/last5ById")
+    public List<Adventure> findLastFiveAdventure(){
+        log.info("Début de la méthode : findLastFiveAdventure()");
+        List<Adventure> adventures = new ArrayList<>(0);
+        adventureRepository.findTop5ByOrderByIdDesc().iterator().forEachRemaining(adventures::add);
+        if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+        log.info("Récupération de la liste des cinq dernières aventures");
         return adventures;
     }
 
@@ -82,13 +92,14 @@ public class AdventureController implements HealthIndicator {
         category.ifPresent(categoryBean ->
                 categoryBean.getCategoryAdventures().forEach(categoryAdventureBean ->
                         adventureRepository.findById(categoryAdventureBean.getAdventureId()).ifPresent(adventures::add)));
+        if (adventures.isEmpty()) throw new AdventureNotFoundException("Il n'existe aucune aventures.");
+        log.info("Récupération des aventures liées à la catégorie d'id "+categoryId);
         if (adventures.isEmpty()) {
             String message = "Il n'existe aucune aventures.";
             log.error(message);
             throw new AdventureNotFoundException(message);
         }
 
-        log.info("Récupération des aventures liées à la catégorie d'ID " + categoryId);
         return adventures;
     }
 
