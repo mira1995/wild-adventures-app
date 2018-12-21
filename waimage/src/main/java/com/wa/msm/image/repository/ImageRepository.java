@@ -9,4 +9,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Integer countByUri(String uri);
 
     List<Image> findByIdIn(List<Long> idList);
+
+    Image findTopByOrderByIdDesc();
 }

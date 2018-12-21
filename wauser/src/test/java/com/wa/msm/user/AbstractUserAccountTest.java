@@ -36,7 +36,7 @@ public abstract class AbstractUserAccountTest {
         userAccount.setPassword("tititata");
         userAccount.setPseudo("test");
         userAccount.setPostalCode(75000);
-        userAccount.setRole("USR");
+        userAccount.setRole("USER");
 
     }
 

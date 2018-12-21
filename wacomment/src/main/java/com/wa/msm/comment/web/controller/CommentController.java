@@ -1,6 +1,5 @@
 package com.wa.msm.comment.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.comment.entity.Comment;
 import com.wa.msm.comment.proxy.MSAdventureProxy;
 import com.wa.msm.comment.proxy.MSUserAccountProxy;
@@ -9,6 +8,7 @@ import com.wa.msm.comment.web.exception.CommentNotFoundException;
 import com.wa.msm.comment.web.exception.CommentNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

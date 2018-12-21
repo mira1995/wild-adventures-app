@@ -58,6 +58,7 @@ public class CategoryImageControllerTest extends AbstractImageControllerTest {
     private JacksonTester <CategoryImage> jsonCategoryImage;
     private JacksonTester <CategoryImageKey> jsonCategoryImageKey;
     private JacksonTester <List<Image>> jsonListImage;
+    private static final String urlPrefix = "/api/categories";
 
     @BeforeEach
     @Transactional
@@ -89,7 +90,7 @@ public class CategoryImageControllerTest extends AbstractImageControllerTest {
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image/category").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImage.write(categoryImage).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImage.write(categoryImage).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -107,7 +108,7 @@ public class CategoryImageControllerTest extends AbstractImageControllerTest {
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
         persistJddCategoryImage();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/image/category").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImageKey.write(categoryImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(urlPrefix+"/admin").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImageKey.write(categoryImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
@@ -125,7 +126,7 @@ public class CategoryImageControllerTest extends AbstractImageControllerTest {
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
         persistJddCategoryImage();
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/image/category/exist").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImageKey.write(categoryImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/exist").accept(MediaType.APPLICATION_JSON).content(jsonCategoryImageKey.write(categoryImageKey).getJson()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.OK.value(),response.getStatus());
@@ -146,7 +147,7 @@ public class CategoryImageControllerTest extends AbstractImageControllerTest {
         List<Image> imageList = new ArrayList<>();
         imageList.add(image);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/image/category/"+category.getId()).accept(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/"+category.getId()).accept(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.OK.value(),response.getStatus());

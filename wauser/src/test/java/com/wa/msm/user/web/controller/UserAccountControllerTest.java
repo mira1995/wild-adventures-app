@@ -51,6 +51,8 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
     @Autowired
     private UserAccountRepository userAccountRepository;
 
+    private static final String urlPrefix = "/api";
+
     @BeforeEach
     public void setUpTest(){
         ImageTypeBean imageTypeBean = new ImageTypeBean();
@@ -77,7 +79,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -98,7 +100,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(urlPrefix+"/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON);
 
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -120,7 +122,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
         cal.set(2001, Calendar.JANUARY, 1);
         userAccount.setBirthDate(cal);
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.patch(urlPrefix+"/").accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.CREATED.value(),response.getStatus());
@@ -140,7 +142,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
 
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(urlPrefix+"/"+userAccount.getId()).accept(MediaType.APPLICATION_JSON).content(jsonUserAccount.write(userAccount).getJson()).contentType(MediaType.APPLICATION_JSON) ;
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             MockHttpServletResponse response = result.getResponse();
             Assertions.assertEquals(HttpStatus.GONE.value(),response.getStatus());
@@ -157,7 +159,7 @@ public class UserAccountControllerTest extends AbstractUserAccountTest {
         Mockito.when(
                 msImageProxy.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(profileImage));
         try{
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/email").accept(MediaType.APPLICATION_JSON).content(userAccount.getEmail()).contentType(MediaType.APPLICATION_JSON);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.post(urlPrefix+"/email").accept(MediaType.APPLICATION_JSON).content(userAccount.getEmail()).contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assertions.assertEquals(result.getResponse().getStatus() , HttpStatus.OK.value());
             Assertions.assertEquals(result.getResponse().getContentAsString().substring(0,50), jsonUserAccount.write(userAccount).getJson().substring(0,50));

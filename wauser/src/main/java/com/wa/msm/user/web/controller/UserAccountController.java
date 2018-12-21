@@ -1,6 +1,5 @@
 package com.wa.msm.user.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.user.bean.UserAccountImageBean;
 import com.wa.msm.user.entity.UserAccount;
 import com.wa.msm.user.proxy.MSImageProxy;
@@ -10,10 +9,10 @@ import com.wa.msm.user.web.exception.UserAccountNotFoundException;
 import com.wa.msm.user.web.exception.UserAccountNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

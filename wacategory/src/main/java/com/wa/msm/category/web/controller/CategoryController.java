@@ -1,6 +1,5 @@
 package com.wa.msm.category.web.controller;
 
-import com.sun.deploy.util.StringUtils;
 import com.wa.msm.category.entity.Category;
 import com.wa.msm.category.entity.CategoryAdventure;
 import com.wa.msm.category.proxy.MSAdventureProxy;
@@ -10,6 +9,7 @@ import com.wa.msm.category.web.exception.CategoryNotFoundException;
 import com.wa.msm.category.web.exception.CategoryNotValidException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
