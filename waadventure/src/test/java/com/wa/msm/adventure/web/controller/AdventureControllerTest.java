@@ -128,7 +128,7 @@ public class AdventureControllerTest {
     @Transactional
     public void test2_getAdventureTest(){
         persistJDD();
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/"+adventurePersisted.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getOne/"+adventurePersisted.getId()).accept(MediaType.APPLICATION_JSON);
         try{
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             Assertions.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
@@ -167,7 +167,7 @@ public class AdventureControllerTest {
         Mockito.when(
                 msCategoryProxy.getCategory(Mockito.anyLong())).thenReturn(Optional.ofNullable(category));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAll").accept(MediaType.APPLICATION_JSON);
 
         List<Adventure> adventures = new ArrayList<>();
         adventures.add(adventurePersisted);

@@ -234,6 +234,7 @@ class AdventureDetails extends Component {
                   userId={comment.userId}
                   comments={comment.comments}
                   answerAction={this.handleAnswerClick}
+                  isAnonymous={this.state.isAnonymous}
                   isActive={this.state.activeComment === comment.id}
                 >
                   {!this.state.isAnonymous &&

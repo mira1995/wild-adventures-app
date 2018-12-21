@@ -29,7 +29,7 @@ public class CheckoutController {
 
     @CrossOrigin
     @PostMapping("/charge")
-    public ResponseEntity<Charge> charge(@RequestBody ChargeRequest chargeRequest){
+    public ResponseEntity<String> charge(@RequestBody ChargeRequest chargeRequest){
         log.info("Début de la méthode : charge()");
         Charge charge = null;
         try{
@@ -44,7 +44,7 @@ public class CheckoutController {
             throw  new ChargeException("Erreur lors de la transaction via Stripe");
         }
 
-        return new ResponseEntity<>(charge, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Paiement effectué", HttpStatus.ACCEPTED);
     }
 
 }
