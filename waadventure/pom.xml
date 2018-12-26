@@ -27,7 +27,7 @@
 		<junit-platform.version>1.3.2</junit-platform.version>
 		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
 		<commons-lang3.version>3.8.1</commons-lang3.version>
-		<jacoco.version>0.6.4.201312101107</jacoco.version>
+		<jacoco.version>0.7.6.201602180812</jacoco.version>
 	</properties>
 
 	<dependencies>
@@ -198,6 +198,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 </project>
