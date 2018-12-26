@@ -26,6 +26,8 @@
 		<h2-db.version>1.4.194</h2-db.version>
 		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
 		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<jacoco.version>0.8.0</jacoco.version>
+		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 	</properties>
 
 	<dependencies>
@@ -157,6 +159,23 @@
 						<version>1.0.0</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<configuration>
+					<destFile>${sonar.jacoco.reportPath}</destFile>
+					<append>true</append>
+				</configuration>
+				<executions>
+					<execution>
+						<id>agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
