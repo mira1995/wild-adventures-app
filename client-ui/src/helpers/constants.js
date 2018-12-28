@@ -26,7 +26,7 @@ export const URI = {
   UPDATEDEMAND: '/update',
 }
 export const API = {
-  BASE_URL: 'http://localhost:9000',
+  BASE_URL: 'http://ec2-35-180-243-219.eu-west-3.compute.amazonaws.com:9000',
   AUTH: '/auth',
   CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
