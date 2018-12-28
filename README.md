@@ -63,7 +63,7 @@ sur [_OpenClassrooms_](https://www.openclassrooms.com).
 
 ![](docs/images/wauser.png?raw=true)
 
-###Déploiement
+### Déploiement
 
 Le déploiement est réalisé sur la plateforme aws. L'application est buildé dans un environnement d'intégration continue grâce jenkins. 
 L'intégrité du code et le résultat des tests sont analysés par un serveur sonarqube. Enfin le code buildé est déployé immédiatement après le build sur cette plateforme.
