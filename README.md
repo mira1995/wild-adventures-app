@@ -34,7 +34,7 @@ sur [_OpenClassrooms_](https://www.openclassrooms.com).
 
 ### Diagramme de classes
 
-![](docs/images/Fonctionnel__ClassDiagram_11.png?raw=true)
+![](docs/images/Fonctionnel__ClassDiagram.png?raw=true)
 
 
 ### MPD
