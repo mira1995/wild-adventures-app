@@ -168,7 +168,7 @@ public class AdventureController implements HealthIndicator {
             adventureRepository.deleteById(adventureToDelete.get().getId());
         }
 
-        String message = "L'aventure pour id \" + id + \" a bien été supprimé.";
+        String message = "L'aventure pour id " + id + " a bien été supprimé.";
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.GONE);
     }
