@@ -11,9 +11,9 @@ import java.util.Optional;
 @RibbonClient(name = "wa-image")
 public interface MSImageProxy {
 
-    @GetMapping(value = "/api/user/{imageId}")
+    @GetMapping(value = "/api/users/{imageId}")
     Optional<UserAccountImageBean> findById(@PathVariable("imageId") Long imageId);
 
-    @GetMapping(value = "/api/user/exist/{imageId}")
+    @GetMapping(value = "/api/users/exist/{imageId}")
     Boolean imageExist(@PathVariable("imageId") Long imageId);
 }

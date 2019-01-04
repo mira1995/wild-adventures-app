@@ -8,6 +8,16 @@
 		{
 			"name": "createUserAccountImage",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -20,14 +30,16 @@
 					"raw": "{\n\t\"alt\" : \"hello world\",\n\t\"description\" : \"hello to the world\",\n\t\"uri\" : \"/test/helloworld.jpg\",\n\t\"type\" : {\n\t\t\"code\" : \"USR\",\n\t\t\"name\" : \"user\"\n\t}\n}"
 				},
 				"url": {
-					"raw": "localhost:9003/image/user",
+					"raw": "http://{{host}}:{{port}}/images/api/users",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9003",
+					"port": "{{port}}",
 					"path": [
-						"image",
-						"user"
+						"images",
+						"api",
+						"users"
 					]
 				}
 			},
@@ -36,19 +48,34 @@
 		{
 			"name": "findUserAccountImageById",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "localhost:9003/image/user/1",
+					"raw": "http://{{host}}:{{port}}/images/api/users/13",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9003",
+					"port": "{{port}}",
 					"path": [
-						"image",
-						"user",
-						"1"
+						"images",
+						"api",
+						"users",
+						"13"
 					]
 				}
 			},
@@ -57,6 +84,16 @@
 		{
 			"name": "updateUserAccountImage",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PATCH",
 				"header": [
 					{
@@ -69,11 +106,11 @@
 					"raw": "{\n\t\"id\" : 1,\n\t\"alt\" : \"test\",\n\t\"description\" : \"test\",\n\t\"uri\" : \"/test/helloworld2.jpg\",\n\t\"type\" : {\n\t\t\"code\" : \"USR\",\n\t\t\"name\" : \"user\"\n\t}\n}"
 				},
 				"url": {
-					"raw": "localhost:9003/image/user",
+					"raw": "localhost:9005/image/user",
 					"host": [
 						"localhost"
 					],
-					"port": "9003",
+					"port": "9005",
 					"path": [
 						"image",
 						"user"
@@ -85,18 +122,364 @@
 		{
 			"name": "removeUserAccountImage",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "localhost:9003/image/user/1",
+					"raw": "http://{{host}}:{{port}}/images/api/users/13",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"users",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"alt\" : \"hello world\",\n\t\"description\" : \"hello to the world\",\n\t\"uri\" : \"/test200/helloworld.jpg\",\n\t\"type\" : {\n\t\t\"code\" : \"CAT\",\n\t\t\"name\" : \"category\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findImageById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:9005/image/1",
 					"host": [
 						"localhost"
 					],
-					"port": "9003",
+					"port": "9005",
 					"path": [
 						"image",
-						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 10,\n    \"alt\": \"hello world\",\n    \"description\": \"hello to the world\",\n    \"uri\": \"/test72/helloworld.jpg\",\n    \"type\": {\n        \"code\": \"ADV\",\n        \"name\": \"adventure\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/admin/15",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"admin",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAdventureImage",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"imageId\": 1,\n\t\"adventureId\":1\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/adventures/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"adventures",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeAdventureImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"imageId\": 1,\n    \"adventureId\": 1\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/adventures/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"adventures",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findImagesByAdventureId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:9005/image/adventure/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9005",
+					"path": [
+						"image",
+						"adventure",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createCategoryImage",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"imageId\": 6,\n\t\"categoryId\":1\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/categories/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"categories",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeCategoryImage",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"imageId\": 6,\n    \"categoryId\": 1\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/categories/admin",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"categories",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findImagesByCategoryId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"api",
+						"categories",
 						"1"
 					]
 				}

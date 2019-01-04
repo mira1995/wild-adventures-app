@@ -15,7 +15,8 @@ INSERT INTO waimage.image(alt, description, uri, type_code) VALUES
 	('Trek categorie', E'Trek categorie 1 une categorie d\'aventure wild adventures', 'trek.jpg', 'CAT' ),
 	('Desert categorie', E'Desert categorie 1 une categorie d\'aventure wild adventures', 'desert.jpg', 'CAT' ),
 	('Thrill categorie', E'Thrill categorie 1 une categorie d\'aventure wild adventures', 'thrill.jpg', 'CAT' ),
-	('Escape game categorie', E'Escape game categorie 1 une categorie d\'aventure wild adventures', 'escape-game.jpg', 'CAT' );
+	('Escape game categorie', E'Escape game categorie 1 une categorie d\'aventure wild adventures', 'escape-game.jpg', 'CAT' ),
+	('My Image','My profile image', 'myprofileimage.jpg', 'USR');
 	
 INSERT INTO waimage.image_adventure(image_id, adventure_id) VALUES
 	(1,1),
@@ -32,4 +33,7 @@ INSERT INTO waimage.image_category(image_id, category_id) VALUES
 	(10,5),
 	(11,6),
 	(12,7);
+	
+INSERT INTO waimage.image_useraccount(image_id) VALUES
+	(13);
 	
