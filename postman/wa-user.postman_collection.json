@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "aea44d26-5013-4462-938b-07e0b1ab1d00",
+		"name": "wa-user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createUserAccount",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pseudo\": \"test2\",\n    \"password\": \"password123\",\n    \"email\": \"test2@test.com\",\n    \"firstname\" : \"titi\",\n    \"lastname\" : \"toto\",\n    \"address\" : \"rue des Maronniers\",\n    \"postalCode\" : 75000,\n    \"city\" : \"Paris\",\n    \"country\" : \"France\",\n    \"phoneNumber\": \"0123456789\",\n    \"birthDate\" : \"2000-04-23T18:25:43.511Z\",\n    \"profileImageId\" : 13,\n    \"active\" : true\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/users/api",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"users",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findUserAccountById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWNxdWVsaW5lbWF2b2lzaW5lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE1NDU5NDgyMDAsImV4cCI6MTU0NjAzNDYwMH0.22ASkf45OmqHI1QdST6kQgVTz5NwucftX7dDV5zRZPeMrcgKLvL8aWRVg6ngu_SKV9EAfaRjN_G-y71YvDn3Zg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/users/api/1",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"users",
+						"api",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUserAccount",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"1\",\n    \"pseudo\": \"test\",\n    \"password\": \"password12345\",\n    \"email\": \"test@titi.com\",\n    \"firstname\" : \"titi\",\n    \"lastname\" : \"toto\",\n    \"address\" : \"rue des pommiers\",\n    \"postalCode\" : 95000,\n    \"city\" : \"Eabonne\",\n    \"country\" : \"France\",\n    \"phoneNumber\": \"0123456789\",\n    \"birthDate\" : \"2000-04-23T18:25:43.511Z\",\n    \"role\": \"USR\",\n    \"active\" : true\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/users/api",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"users",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/users/api/2",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"users",
+						"api",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "frindUserAccountByEmail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "b.aubin95@gmail.com"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/users/api/email",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"users",
+						"api",
+						"email"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

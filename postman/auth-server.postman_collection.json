@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "4f36dc51-fc61-4bd1-935f-a30b74de42bf",
+		"name": "auth-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getToken: admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"nicolasboueme@gmail.com\", \"password\": \"BolDeRiz\"}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getToken: user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"jacquelinemavoisine@gmail.com\", \"password\": \"jambonbeurre\"}"
+				},
+				"url": {
+					"raw": "http://localhost:9000/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

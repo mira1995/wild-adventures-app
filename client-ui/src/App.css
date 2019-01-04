@@ -1,0 +1,22 @@
+body {
+  background: url('/images/background.jpg') no-repeat center fixed;
+  background-size: cover;
+}
+
+.customContainer {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0 10px;
+  opacity: 50%;
+}
+
+.customContainer h1 {
+  text-align: center;
+}
+
+.cardCol {
+  height: 100%;
+}
+
+.lastFiveCategories{
+  margin-bottom:20px;
+}

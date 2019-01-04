@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "5d8630b1-8ec1-42f7-9ec3-6e79074b5349",
+		"name": "wa-comment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "commentList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/comments/getAll/1",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"comments",
+						"getAll",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addComment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\":1, \"userId\": 1}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/comments/add",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"comments",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateComment",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 2, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/comments/update",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"comments",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteComment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/comments/delete/1",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"comments",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
