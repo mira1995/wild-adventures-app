@@ -5,7 +5,7 @@
 
 	<groupId>com.wa.msm</groupId>
 	<artifactId>waimage</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>wa-image</name>

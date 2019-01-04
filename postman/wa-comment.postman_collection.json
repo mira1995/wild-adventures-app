@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6020adf4-d9a9-4472-8115-3e47c38786ec",
+		"_postman_id": "5d8630b1-8ec1-42f7-9ec3-6e79074b5349",
 		"name": "wa-comment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,14 +15,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9001/comments/1",
+					"raw": "http://{{host}}:{{port}}/comments/getAll/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9001",
+					"port": "{{port}}",
 					"path": [
 						"comments",
+						"getAll",
 						"1"
 					]
 				}
@@ -41,17 +42,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 1}"
+					"raw": "{\"content\": \"Coucou, je suis un commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\":1, \"userId\": 1}"
 				},
 				"url": {
-					"raw": "http://localhost:9000/comments",
+					"raw": "http://{{host}}:{{port}}/comments/add",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9000",
+					"port": "{{port}}",
 					"path": [
-						"comments"
+						"comments",
+						"add"
 					]
 				}
 			},
@@ -72,14 +74,15 @@
 					"raw": "{\"id\": 2, \"content\": \"Coucou, je suis un JOLIE commentaire.\", \"reported\": false, \"comments\": [{\"content\": \"Coucou, je suis un PETIT commentaire.\", \"reported\": false, \"comments\": null, \"adventureId\": 1, \"userId\": 2}], \"adventureId\": 1, \"userId\": 1}"
 				},
 				"url": {
-					"raw": "http://localhost:9001/comment",
+					"raw": "http://{{host}}:{{port}}/comments/update",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9001",
+					"port": "{{port}}",
 					"path": [
-						"comment"
+						"comments",
+						"update"
 					]
 				}
 			},
@@ -95,15 +98,16 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9001/comment/7",
+					"raw": "http://{{host}}:{{port}}/comments/delete/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9001",
+					"port": "{{port}}",
 					"path": [
-						"comment",
-						"7"
+						"comments",
+						"delete",
+						"1"
 					]
 				}
 			},

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "892c0a19-f32d-42e3-b2d3-e120fc67055d",
+		"_postman_id": "8d44e595-61fc-4cdf-a8ca-a793a0e55346",
 		"name": "wa-category",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -13,7 +13,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -30,12 +30,12 @@
 					"raw": "{\"title\": \"La super catégorie\", \"description\": \"Ceci est une catégorie trop top\"}"
 				},
 				"url": {
-					"raw": "http://localhost:9000/categories/admin",
+					"raw": "http://{{host}}:{{port}}/categories/admin",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9000",
+					"port": "{{port}}",
 					"path": [
 						"categories",
 						"admin"
@@ -54,14 +54,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9002/categories",
+					"raw": "http://{{host}}:{{port}}/categories/getAll",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9002",
+					"port": "{{port}}",
 					"path": [
-						"categories"
+						"categories",
+						"getAll"
 					]
 				}
 			},
@@ -77,12 +78,12 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9002/categories/adventure/1",
+					"raw": "http://{{host}}:{{port}}/categories/adventure/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9002",
+					"port": "{{port}}",
 					"path": [
 						"categories",
 						"adventure",
@@ -102,14 +103,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9000/categories/1",
+					"raw": "http://{{host}}:{{port}}/categories/getOne/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9000",
+					"port": "{{port}}",
 					"path": [
 						"categories",
+						"getOne",
 						"1"
 					]
 				}
@@ -124,7 +126,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -141,12 +143,12 @@
 					"raw": "{\"id\": 1, \"title\": \"Mon super titre\", \"description\": \"Je suis une description QUI CASSE TOUT !!\", \"categoryAdventures\": [{\"categoryId\": 1, \"adventureId\": 1}]}"
 				},
 				"url": {
-					"raw": "http://localhost:9000/categories/admin",
+					"raw": "http://{{host}}:{{port}}/categories/admin",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9000",
+					"port": "{{port}}",
 					"path": [
 						"categories",
 						"admin"
@@ -163,7 +165,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWNvbGFzYm91ZW1lQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNTQxMzQ5MzU3LCJleHAiOjE1NDE0MzU3NTd9.C99NW8wE1HT9qGOEjtig9ue_XV-Femn8l3jzOLsp2BQC6aiZtpAWyYao0gVJ-ZkrFOEvPrlTXF6ezKp1cUZuuA",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -175,12 +177,12 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:9000/categories/admin/1",
+					"raw": "http://{{host}}:{{port}}/categories/admin/1",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "9000",
+					"port": "{{port}}",
 					"path": [
 						"categories",
 						"admin",
