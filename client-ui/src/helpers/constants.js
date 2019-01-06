@@ -26,7 +26,7 @@ export const URI = {
   UPDATEDEMAND: '/update',
 }
 export const API = {
-  BASE_URL: 'http://www.wild-adventures.fr:9000',
+  BASE_URL: 'http://localhost:9000',
   AUTH: '/auth',
   CATEGORIES: '/categories',
   ADVENTURES: '/adventures',
