@@ -28,3 +28,7 @@ body {
   text-align: center;
   border-radius: 5px;
 }
+
+.confirmButton {
+  margin: 10px 0;
+}

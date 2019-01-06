@@ -21,6 +21,9 @@ function toggleMenu(state = initialState, action) {
         case URI.REGISTER:
           current = MENU.REGISTER
           break
+        case URI.MYORDERS:
+          current = MENU.MYORDERS
+          break
         case URI.LOGOUT:
           current = MENU.HOME
           break

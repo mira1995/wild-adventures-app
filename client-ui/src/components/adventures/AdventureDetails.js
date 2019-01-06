@@ -111,9 +111,9 @@ class AdventureDetails extends Component {
 
   formatEndAndStartDate = session => {
     /* const format = 'L' */
-    const format = 'L'
-    session.startDate = moment(session.startDate).format(format)
-    session.endDate = moment(session.endDate).format(format)
+    const format = 'DD-MM-YYYY'
+    session.stringStartDate = moment(session.startDate).format(format)
+    session.stringEndDate = moment(session.endDate).format(format)
   }
 
   isInBuyingBox = record => {
@@ -136,13 +136,13 @@ class AdventureDetails extends Component {
     const columns = [
       {
         title: strings.adventures.from,
-        dataIndex: 'startDate',
-        key: 'startDate',
+        dataIndex: 'stringStartDate',
+        key: 'stringStartDate',
       },
       {
         title: strings.adventures.to,
-        dataIndex: 'endDate',
-        key: 'endDate',
+        dataIndex: 'stringEndDate',
+        key: 'stringEndDate',
       },
       {
         title: strings.adventures.price,

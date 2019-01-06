@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken'
 import OrderRecap from './OrderRecap'
 import { DEMANDSTATUS } from './../../helpers/constants'
 import { strings } from '../../helpers/strings'
+import moment from 'moment'
 
 class UpdateDemand extends Component {
   constructor(props) {
@@ -141,7 +142,8 @@ class UpdateDemand extends Component {
       <Container>
         <h1>{strings.orders.orderUpdateRequest}</h1>
         <h2>
-          {strings.orders.orderUpdateDate} {orderItem && orderItem.orderDate}
+          {strings.orders.orderUpdateDate}{' '}
+          {orderItem && moment(orderItem.orderDate).format('DD-MM-YYYY')}
         </h2>
         {orderItem &&
           orderItem.orderSessions && (

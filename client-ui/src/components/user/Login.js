@@ -9,7 +9,6 @@ import { http } from '../../configurations/axiosConf'
 import { TOGGLE_AUTH, TOGGLE_MENU } from '../../store/actions/types'
 import { BEARER_TOKEN, URI, API } from '../../helpers/constants'
 import { strings } from '../../helpers/strings'
-import Container from '../../Container'
 
 class Login extends Component {
   handleSubmit = event => {

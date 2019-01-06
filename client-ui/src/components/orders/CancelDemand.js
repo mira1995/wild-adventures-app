@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken'
 import OrderRecap from './OrderRecap'
 import { DEMANDSTATUS } from './../../helpers/constants'
 import { strings } from '../../helpers/strings'
+import moment from 'moment'
 
 class CancelDemand extends Component {
   constructor(props) {
@@ -131,7 +132,7 @@ class CancelDemand extends Component {
         <h1>{strings.orders.orderCancellationRequest}</h1>
         <h2>
           {strings.orders.orderCancellationDate}{' '}
-          {orderItem && orderItem.orderDate}
+          {orderItem && moment(orderItem.orderDate).format('DD-MM-YYYY')}
         </h2>
         {orderItem &&
           orderItem.orderSessions && (

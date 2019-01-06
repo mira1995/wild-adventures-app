@@ -106,8 +106,8 @@ class OrderForm extends Component {
           <OrderItem
             key={index}
             title={`${item.adventureName} ${strings.orders.from} ${
-              item.startDate
-            } ${strings.orders.to} ${item.endDate}`}
+              item.stringStartDate
+            } ${strings.orders.to} ${item.stringEndDate}`}
             nbOrder={item.nbOrder}
             index={index}
             item={item}
@@ -117,17 +117,22 @@ class OrderForm extends Component {
           />
         ))}
         {buyingBox.length > 0 && (
-          <Row>
-            <Col offest={6} span={12}>
-              <h2>
-                {strings.orders.total} : {total}€
-              </h2>
-
-              <Button type="primary" onClick={this.continueOrder}>
-                {strings.orders.continueOrder}
-              </Button>
-            </Col>
-          </Row>
+          <div>
+            <Row>
+              <Col span={24} type="flex" justify="center" align="center">
+                <h2>
+                  {strings.orders.total} : {total}€
+                </h2>
+              </Col>
+            </Row>
+            <Row className="confirmButton">
+              <Col span={24} type="flex" justify="center" align="center">
+                <Button type="primary" onClick={this.continueOrder}>
+                  {strings.orders.continueOrder}
+                </Button>
+              </Col>
+            </Row>
+          </div>
         )}
         {!buyingBox.length > 0 && <p>{strings.orders.noSessionsCart}</p>}
       </Container>

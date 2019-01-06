@@ -8,6 +8,7 @@ import { Table, Button, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { URI } from './../../helpers/constants'
 import { strings } from '../../helpers/strings'
+import moment from 'moment'
 
 class MyOrders extends Component {
   constructor(props) {
@@ -73,6 +74,12 @@ class MyOrders extends Component {
     }
   }
 
+  orderDateColumnRender = record => {
+    const format = 'DD-MM-YYYY'
+    const orderDate = moment(record.orderDate).format(format)
+    return <div>{orderDate}</div>
+  }
+
   statusColumnRender = record => {
     switch (record.status) {
       case ORDERSTATUS.NOT_PAID:
@@ -92,8 +99,10 @@ class MyOrders extends Component {
     const columns = [
       {
         title: strings.orders.orderDate,
-        dataIndex: 'orderDate',
         rowKey: 'orderDate',
+        render: (text, record) => (
+          <div>{this.orderDateColumnRender(record)}</div>
+        ),
       },
       {
         title: strings.orders.status,

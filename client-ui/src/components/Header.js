@@ -124,7 +124,8 @@ class Header extends Component {
             {buyingBox.length > 0 &&
               buyingBox.map(item => (
                 <MenuItem>
-                  {item.adventureName} du {item.startDate} au {item.endDate}
+                  {item.adventureName} du {item.stringStartDate} au{' '}
+                  {item.stringEndDate}
                 </MenuItem>
               ))}
             {buyingBox.length > 0 && (

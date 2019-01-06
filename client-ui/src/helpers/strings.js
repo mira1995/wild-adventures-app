@@ -112,7 +112,7 @@ export let strings = new LocalizedStrings({
     },
     orders: {
       peopleAdventure: 'Number of people participating in the adventure.',
-      totalSession: 'Total for this session.',
+      totalSession: 'Total for this session',
       remove: 'Remove',
       orderUpdateRequest: 'Request for update of order',
       orderUpdateDate: 'Update of the order of the',
@@ -286,7 +286,7 @@ export let strings = new LocalizedStrings({
     },
     orders: {
       peopleAdventure: "Nombre de Personnes participants à l'aventure.",
-      totalSession: 'Total pour cette session.',
+      totalSession: 'Total pour cette session',
       remove: 'Supprimer',
       orderUpdateRequest: 'Demande de mise à jour de commande',
       orderUpdateDate: 'Mise à jour de la commande du',
