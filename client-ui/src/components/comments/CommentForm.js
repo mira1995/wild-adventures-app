@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, message, Row, Col } from 'antd'
 import { http } from '../../configurations/axiosConf'
 import { API } from '../../helpers/constants'
 import jwt from 'jsonwebtoken'
@@ -85,13 +85,23 @@ class CommentForm extends Component {
               placeholder={strings.comments.form.contentPlaceholder}
             />
           )}
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            {strings.comments.send}
-          </Button>
+          <Row>
+            <Col
+              span={8}
+              offset={8}
+              type="flex"
+              justify="center"
+              align="center"
+            >
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                {strings.comments.send}
+              </Button>
+            </Col>
+          </Row>
         </FormItem>
       </Form>
     )
