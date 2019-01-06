@@ -60,7 +60,7 @@ class AdventureDetails extends Component {
   // Use fx arrow to bind this
   handleSubmit = comment => {
     let { comments } = this.state
-    if (this.getIndex(comments, comment.id)) {
+    if (this.getIndex(comments, comment.id) >= 0) {
       comments[this.getIndex(comments, comment.id)].comments = comment.comments
     } else {
       comments.push(comment)
@@ -71,6 +71,7 @@ class AdventureDetails extends Component {
 
   getIndex(comments, id) {
     for (var i = 0; i < comments.length; i++) {
+      console.log(comments[i].id)
       if (comments[i].id === id) {
         return i
       }
