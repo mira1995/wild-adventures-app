@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
 import { API, URI } from '../../helpers/constants'
 import { Link } from 'react-router-dom'
-import { Row, Table, Button } from 'antd'
+import { Row, Table, Button, Carousel } from 'antd'
 import CommentItem from '../comments/CommentItem'
 import CommentForm from './../comments/CommentForm'
 import { BEARER_TOKEN } from './../../helpers/constants'
@@ -10,7 +10,6 @@ import Container from './../../Container'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-
 import { strings } from '../../helpers/strings'
 
 class AdventureDetails extends Component {
@@ -22,6 +21,7 @@ class AdventureDetails extends Component {
       categories: [],
       sessions: [],
       comments: [],
+      images: [],
       isAnonymous: this.checkIfAnonymous(),
       activeComment: null,
     }
@@ -44,6 +44,13 @@ class AdventureDetails extends Component {
     http
       .get(`${API.SESSIONS}/${this.props.match.params.adventureId}`)
       .then(response => this.setState({ sessions: response.data }))
+    http
+      .get(
+        `${API.IMAGES}${API.ADVENTURES}/${this.props.match.params.adventureId}`
+      )
+      .then(response => {
+        this.setState({ images: response.data })
+      })
   }
 
   checkIfAnonymous() {
@@ -129,9 +136,17 @@ class AdventureDetails extends Component {
   }
 
   render() {
-    const { adventure, sessions } = this.state
+    const { adventure, sessions, images } = this.state
     console.log(adventure)
     this.formatSessionsDates(sessions)
+
+    const imageStyle = {
+      height: '500px',
+      textAlign: 'center',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    }
 
     const columns = [
       {
@@ -182,6 +197,21 @@ class AdventureDetails extends Component {
       <Container>
         <div>
           <h1>{adventure.title}</h1>
+          {images && (
+            <div className="imageCarousel">
+              <Carousel autoplay>
+                {images.map(image => (
+                  <div key={image.id}>
+                    <img
+                      style={imageStyle}
+                      alt={`${image.alt}`}
+                      src={`/images/adventures/${image.uri}`}
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          )}
           <div>
             <p>{adventure.description}</p>
             <p>

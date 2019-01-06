@@ -32,3 +32,19 @@ body {
 .confirmButton {
   margin: 10px 0;
 }
+
+.ant-carousel .slick-slide {
+  text-align: center;
+  height: 500px;
+  line-height: 500px;
+  background: rgba(54, 77, 121, 0.2);
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
+
+.imageCarousel {
+  margin-bottom: 25px;
+}
