@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import Container from '../../Container'
-import { Input, Form, Button, message } from 'antd'
+import { Input, Form, Button, message, Row, Col } from 'antd'
 import { http } from './../../configurations/axiosConf'
 import { API, URI, ORDERSTATUS } from '../../helpers/constants'
 import { connect } from 'react-redux'
@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken'
 import OrderRecap from './OrderRecap'
 import { DEMANDSTATUS } from './../../helpers/constants'
 import { strings } from '../../helpers/strings'
+import moment from 'moment'
 
 class CancelDemand extends Component {
   constructor(props) {
@@ -131,7 +132,7 @@ class CancelDemand extends Component {
         <h1>{strings.orders.orderCancellationRequest}</h1>
         <h2>
           {strings.orders.orderCancellationDate}{' '}
-          {orderItem && orderItem.orderDate}
+          {orderItem && moment(orderItem.orderDate).format('DD-MM-YYYY')}
         </h2>
         {orderItem &&
           orderItem.orderSessions && (
@@ -160,13 +161,23 @@ class CancelDemand extends Component {
                 placeholder={strings.orders.form.messagePlaceholder}
               />
             )}
-            <Button
-              type="danger"
-              htmlType="submit"
-              className="login-form-button"
-            >
-              {strings.orders.orderCancellation}
-            </Button>
+            <Row>
+              <Col
+                span={12}
+                offset={6}
+                type="flex"
+                justify="center"
+                align="center"
+              >
+                <Button
+                  type="danger"
+                  htmlType="submit"
+                  className="login-form-button"
+                >
+                  {strings.orders.orderCancellation}
+                </Button>
+              </Col>
+            </Row>
           </FormItem>
         </Form>
       </Container>

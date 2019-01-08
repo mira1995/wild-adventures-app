@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { http } from './../../configurations/axiosConf'
 import { API, URI } from '../../helpers/constants'
 import { Link } from 'react-router-dom'
-import { Row, Table, Button } from 'antd'
+import { Row, Table, Button, Carousel } from 'antd'
 import CommentItem from '../comments/CommentItem'
 import CommentForm from './../comments/CommentForm'
 import { BEARER_TOKEN } from './../../helpers/constants'
@@ -10,7 +10,6 @@ import Container from './../../Container'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-
 import { strings } from '../../helpers/strings'
 
 class AdventureDetails extends Component {
@@ -22,6 +21,7 @@ class AdventureDetails extends Component {
       categories: [],
       sessions: [],
       comments: [],
+      images: [],
       isAnonymous: this.checkIfAnonymous(),
       activeComment: null,
     }
@@ -44,6 +44,13 @@ class AdventureDetails extends Component {
     http
       .get(`${API.SESSIONS}/${this.props.match.params.adventureId}`)
       .then(response => this.setState({ sessions: response.data }))
+    http
+      .get(
+        `${API.IMAGES}${API.ADVENTURES}/${this.props.match.params.adventureId}`
+      )
+      .then(response => {
+        this.setState({ images: response.data })
+      })
   }
 
   checkIfAnonymous() {
@@ -53,7 +60,7 @@ class AdventureDetails extends Component {
   // Use fx arrow to bind this
   handleSubmit = comment => {
     let { comments } = this.state
-    if (this.getIndex(comments, comment.id)) {
+    if (this.getIndex(comments, comment.id) >= 0) {
       comments[this.getIndex(comments, comment.id)].comments = comment.comments
     } else {
       comments.push(comment)
@@ -64,6 +71,7 @@ class AdventureDetails extends Component {
 
   getIndex(comments, id) {
     for (var i = 0; i < comments.length; i++) {
+      console.log(comments[i].id)
       if (comments[i].id === id) {
         return i
       }
@@ -111,9 +119,9 @@ class AdventureDetails extends Component {
 
   formatEndAndStartDate = session => {
     /* const format = 'L' */
-    const format = 'L'
-    session.startDate = moment(session.startDate).format(format)
-    session.endDate = moment(session.endDate).format(format)
+    const format = 'DD-MM-YYYY'
+    session.stringStartDate = moment(session.startDate).format(format)
+    session.stringEndDate = moment(session.endDate).format(format)
   }
 
   isInBuyingBox = record => {
@@ -129,20 +137,28 @@ class AdventureDetails extends Component {
   }
 
   render() {
-    const { adventure, sessions } = this.state
+    const { adventure, sessions, images } = this.state
     console.log(adventure)
     this.formatSessionsDates(sessions)
+
+    const imageStyle = {
+      height: '500px',
+      textAlign: 'center',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    }
 
     const columns = [
       {
         title: strings.adventures.from,
-        dataIndex: 'startDate',
-        key: 'startDate',
+        dataIndex: 'stringStartDate',
+        key: 'stringStartDate',
       },
       {
         title: strings.adventures.to,
-        dataIndex: 'endDate',
-        key: 'endDate',
+        dataIndex: 'stringEndDate',
+        key: 'stringEndDate',
       },
       {
         title: strings.adventures.price,
@@ -182,6 +198,21 @@ class AdventureDetails extends Component {
       <Container>
         <div>
           <h1>{adventure.title}</h1>
+          {images && (
+            <div className="imageCarousel">
+              <Carousel autoplay>
+                {images.map(image => (
+                  <div key={image.id}>
+                    <img
+                      style={imageStyle}
+                      alt={`${image.alt}`}
+                      src={`/images/adventures/${image.uri}`}
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          )}
           <div>
             <p>{adventure.description}</p>
             <p>

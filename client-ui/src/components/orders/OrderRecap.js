@@ -59,11 +59,6 @@ class OrderRecap extends Component {
             key: 'adventureTitle',
           },
           {
-            title: 'Nombre de participant',
-            dataIndex: 'nbOrder',
-            key: 'nbOrder',
-          },
-          {
             title: 'Total en euros',
             dataIndex: 'subTotal',
             rowKey: 'subTotal',

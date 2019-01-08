@@ -7,7 +7,7 @@ import { URI } from './../../helpers/constants'
 import StripeCheckout from 'react-stripe-checkout'
 import OrderRecap from './OrderRecap'
 import { strings } from '../../helpers/strings'
-import { message } from 'antd'
+import { message, Row, Col } from 'antd'
 class Payment extends Component {
   constructor(props) {
     super(props)
@@ -128,15 +128,19 @@ class Payment extends Component {
                   action={this.initiateState}
                   orderSessions={order.orderSessions}
                 />
-                <StripeCheckout
-                  token={this.onToken}
-                  currency="EUR"
-                  locale="fr"
-                  amount={total * 100}
-                  email="info@wild-adventures.com"
-                  name="Wild Adventures CIE"
-                  stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
-                />
+                <Row className="confirmButton">
+                  <Col span={24} type="flex" justify="center" align="center">
+                    <StripeCheckout
+                      token={this.onToken}
+                      currency="EUR"
+                      locale="fr"
+                      amount={total * 100}
+                      email="info@wild-adventures.com"
+                      name="Wild Adventures CIE"
+                      stripeKey="pk_test_iIBoWaypautkR3Zr9nZNgI9H"
+                    />
+                  </Col>
+                </Row>
               </div>
             )}
         </div>

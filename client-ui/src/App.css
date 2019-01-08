@@ -17,6 +17,34 @@ body {
   height: 100%;
 }
 
-.lastFiveCategories{
-  margin-bottom:20px;
+.lastFiveCategories {
+  margin-bottom: 20px;
+}
+
+.login-form {
+  padding: 10px 10px 10px 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: 50px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.confirmButton {
+  margin: 10px 0;
+}
+
+.ant-carousel .slick-slide {
+  text-align: center;
+  height: 500px;
+  line-height: 500px;
+  background: rgba(54, 77, 121, 0.2);
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
+
+.imageCarousel {
+  margin-bottom: 25px;
 }
