@@ -99,7 +99,6 @@ class Payment extends Component {
     http
       .post(`${API.ORDERS}/charge`, chargeRequest)
       .then(() => message.warning(`We are in business.`))
-      .catch(() => message.error(strings.statusCode.orderChargeError))
     this.payOrder()
   }
 

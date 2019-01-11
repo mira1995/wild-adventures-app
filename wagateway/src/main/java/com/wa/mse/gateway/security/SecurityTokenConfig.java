@@ -38,7 +38,6 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/adventures/admin/**").hasRole("ADMIN")
                 .antMatchers("/adventures/sessions/admin/**").hasRole("ADMIN")
                 .antMatchers("/users/api/admin/**").hasRole("ADMIN")
-                //.antMatchers("/users/**").hasRole("USER")
                 .antMatchers("/images/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/images/api/adventure/admin/**").hasRole("ADMIN")
                 .antMatchers("/images/api/category/admin/**").hasRole("ADMIN")
@@ -46,7 +45,6 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/orders/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/orders/api/demands/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
-        // TODO: Demande du token pour les actions utilisateurs et cie
     }
 
     @Bean
